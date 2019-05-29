@@ -1,0 +1,6 @@
+{
+  "recursive": true,
+  "spec": "lib/**/*.spec.js",
+  "timeout": "10000",
+  "exit": true
+}
