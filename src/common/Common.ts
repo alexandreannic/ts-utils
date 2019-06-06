@@ -16,3 +16,14 @@ export type DeepPartial<T> = {
       ? ReadonlyArray<DeepPartial<U>>
       : DeepPartial<T[P]>
 };
+
+type Filter<T> = (t: T) => boolean
+
+export const multipleFilters = <T>(...filters: Array<boolean | Filter<T>>) => (list: T[]) => {
+  if (filters.length === 0) return list;
+  return list.filter(t => filters
+    .filter(filter => filter instanceof Function)
+    // @ts-ignore
+    .every(filter => filter(t))
+  );
+};
