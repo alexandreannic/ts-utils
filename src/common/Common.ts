@@ -17,13 +17,21 @@ export type DeepPartial<T> = {
       : DeepPartial<T[P]>
 };
 
-type Filter<T> = (t: T) => boolean
+type Filter<T> = (value: T, index: number, array: T[]) => boolean
 
+/**
+ * The goal is to be able to add filters conditionally using this pattern
+ * multipleFilters(
+ *  condition && callback,
+ *  condition2 && callback2,
+ *  ...
+ * )(list)
+ */
 export const multipleFilters = <T>(...filters: Array<boolean | Filter<T>>) => (list: T[]) => {
   if (filters.length === 0) return list;
-  return list.filter(t => filters
+  return list.filter((t: T, index: number, array: T[]) => filters
     .filter(filter => filter instanceof Function)
     // @ts-ignore
-    .every(filter => filter(t))
+    .every(filter => filter(t, index, array))
   );
 };
