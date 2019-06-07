@@ -30,6 +30,5 @@ describe('validateObject', function () {
   it('should not throw an error', function () {
     const conf = { host: 'mediarithmics.com', port: 80, username: 'hubit' };
     expect(() => validateObject<Config>(['host', 'port', 'username'], conf)).to.not.throw();
-
   });
 });
