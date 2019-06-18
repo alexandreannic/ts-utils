@@ -17,14 +17,14 @@ export class Sftp {
 
   static readonly tmpDownloadedFolder = `${os.tmpdir()}/mediarithmics-sftp-${uuid()}/`;
 
-  private constructor(private sftp: SFTPWrapper) {
+  private constructor(private sftp: SFTPWrapper, private client: Client) {
   }
 
   createReadStream = this.sftp.createReadStream.bind(this.sftp);
 
   createWriteStream = this.sftp.createWriteStream.bind(this.sftp);
 
-  end = this.sftp.end.bind(this.sftp);
+  end = this.client.end.bind(this.client);
 
   // @ts-ignore
   // Seems to be a typescript limitation which cannot handle function overload properly
@@ -72,14 +72,14 @@ export class Sftp {
   };
 
   static connect = async (config: ConnectConfig): Promise<Sftp> => {
-    const sftpWrapper = await Sftp.getSftpWrapper(config);
-    return new Sftp(sftpWrapper);
+    const client = new Client();
+    client.connect(config);
+    const sftpWrapper = await Sftp.getSftpWrapper(client);
+    return new Sftp(sftpWrapper, client);
   };
 
-  private static getSftpWrapper = async (config: ConnectConfig): Promise<SFTPWrapper> => {
+  private static getSftpWrapper = async (client: Client): Promise<SFTPWrapper> => {
     return new Promise((resolve, reject) => {
-      const client = new Client();
-      client.connect(config);
       client.on('ready', () => {
         client.sftp((err: Error, sftp: SFTPWrapper) => {
           if (err) {
