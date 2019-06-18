@@ -1,3 +1,5 @@
+import * as fs from 'fs-extra';
+
 /**
  * Functional for loop.
  * mapFor(n, callback)
@@ -38,4 +40,10 @@ export const multipleFilters = <T>(...filters: Array<boolean | Filter<T>>) => (l
     // @ts-ignore
     .every(filter => filter(t, index, array))
   );
+};
+
+export const createFolderIfNotExists = (folder: string): void => {
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder);
+  }
 };
