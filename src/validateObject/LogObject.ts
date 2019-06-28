@@ -27,7 +27,7 @@ export const logObject = (
         log(formatLog(prefix, k));
         logObject(o[k], {prefix: `${indent}${prefix}`, log, indent, truncate, hiddenKeys: subPath});
       } else {
-        log(formatLog(prefix, k, parseValue(o[k], hiddenKeys.indexOf(k) > -1, truncate)));
+        log(formatLog(prefix, k, parseValue(o[k], isHidden, truncate)));
       }
     }
   });
