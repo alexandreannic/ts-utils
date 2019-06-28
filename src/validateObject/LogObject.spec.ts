@@ -22,8 +22,8 @@ const conf = {
 
 const trim = (str: string) => str.replace(/\s/g, '');
 
-describe('getMissingPropertiesDeep', function () {
-  it('should correctly print nested object', function () {
+describe('logObject', function () {
+  it('should correctly print nested object using truncate', function () {
     let res = '';
     const expectedRes = `
       - server:
@@ -48,7 +48,7 @@ describe('getMissingPropertiesDeep', function () {
     expect(trim(res)).to.be.equal(trim(expectedRes));
   });
 
-  it('should correctly print nested object with hidden properties', function () {
+  it('should correctly print nested object using hiddenKeys', function () {
     let res = '';
     const expectedRes = `
       - server:
@@ -63,6 +63,56 @@ describe('getMissingPropertiesDeep', function () {
     logObject(conf, {
       truncate: 20,
       hiddenKeys: ['server.database', 'client.apiKey'],
+      log: (msg: string) => res += msg
+    });
+
+    expect(trim(res)).to.be.equal(trim(expectedRes));
+  });
+
+  it('should correctly print nested object using prefix', function () {
+    let res = '';
+    const expectedRes = `
+      > server: 
+        > host: mediarithmics.com
+        > port: 22
+        > database: 
+          > name: hubit
+          > password: hubit
+          > tables: 
+            > user: true
+            > profile: false
+        > policy: 1
+      > client: 
+        > apiKey: kpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeaj
+    `;
+
+    logObject(conf, {
+      prefix: '> ',
+      log: (msg: string) => res += msg
+    });
+
+    expect(trim(res)).to.be.equal(trim(expectedRes));
+  });
+
+  it('should correctly print nested object using indent', function () {
+    let res = '';
+    const expectedRes = `
+      - server: 
+      ..- host: mediarithmics.com
+      ..- port: 22
+      ..- database: 
+      ....- name: hubit
+      ....- password: hubit
+      ....- tables: 
+      ......- user: true
+      ......- profile: false
+      ..- policy: 1
+      - client: 
+      ..- apiKey: kpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeajkpioegjioeajgioeaj
+  `;
+
+    logObject(conf, {
+      indent: '..',
       log: (msg: string) => res += msg
     });
 
