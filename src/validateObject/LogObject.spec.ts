@@ -26,18 +26,18 @@ describe('getMissingPropertiesDeep', function () {
   it('should correctly print nested object', function () {
     let res = '';
     const expectedRes = `
-    - server:
-      - host: mediarithmics.com
-      - port: 22
-      - database:
-        - name: hubit
-        - password: hubit
-        - tables:
-          - user: true
-          - profile: false
-      - policy: 1
-    - client:
-      - apiKey: kpioegjioeajgioeajkp...
+      - server:
+        - host: mediarithmics.com
+        - port: 22
+        - database:
+          - name: hubit
+          - password: hubit
+          - tables:
+            - user: true
+            - profile: false
+        - policy: 1
+      - client:
+        - apiKey: kpioegjioeajgioeajkp...
     `;
 
     logObject(conf, {
