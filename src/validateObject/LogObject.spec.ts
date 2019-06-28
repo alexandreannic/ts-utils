@@ -25,18 +25,19 @@ const trim = (str: string) => str.replace(/\s/g, '');
 describe('getMissingPropertiesDeep', function () {
   it('should correctly print nested object', function () {
     let res = '';
-    const expectedRes = `- server:
-  - host: mediarithmics.com
-  - port: 22
-  - database:
-    - name: hubit
-    - password: hubit
-    - tables:
-      - user: true
-      - profile: false
-  - policy: 1
-- client:
-  - apiKey: kpioegjioeajgioeajkp...
+    const expectedRes = `
+    - server:
+      - host: mediarithmics.com
+      - port: 22
+      - database:
+        - name: hubit
+        - password: hubit
+        - tables:
+          - user: true
+          - profile: false
+      - policy: 1
+    - client:
+      - apiKey: kpioegjioeajgioeajkp...
     `;
 
     logObject(conf, {
@@ -49,13 +50,14 @@ describe('getMissingPropertiesDeep', function () {
 
   it('should correctly print nested object with hidden properties', function () {
     let res = '';
-    const expectedRes = `- server:
-  - host: mediarithmics.com
-  - port: 22
-  - database: <hidden>
-  - policy: 1
-- client:
-  - apiKey: <hidden>
+    const expectedRes = `
+      - server:
+        - host: mediarithmics.com
+        - port: 22
+        - database: <hidden>
+        - policy: 1
+      - client:
+        - apiKey: <hidden>
     `;
 
     logObject(conf, {
