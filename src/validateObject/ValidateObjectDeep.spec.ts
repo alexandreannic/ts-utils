@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {getMissingPropertiesDeep, validateObjectDeep} from './ValidateObjectDeep';
 
 const conf = {
+  debugMode: false,
   server: {
     host: 'mediarithmics.com',
     database: {
@@ -22,6 +23,7 @@ describe('getMissingPropertiesDeep', function () {
 
   it('should return an empty list', function () {
     const missingFields = getMissingPropertiesDeep([
+      'debugMode',
       'server.host',
       'server.database.name',
     ], conf);

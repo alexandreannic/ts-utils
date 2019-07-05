@@ -4,7 +4,7 @@ export const getMissingPropertiesDeep = (
   requiredProperties: Array<string>,
   object: object
 ): Array<string> => {
-  return requiredProperties.filter((path: string) => !_.get(object, path));
+  return requiredProperties.filter((path: string) => _.get(object, path) === undefined);
 };
 
 export const validateObjectDeep = <T extends object>(
