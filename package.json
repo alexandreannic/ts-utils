@@ -1,11 +1,12 @@
 {
   "name": "@mediarithmics-ps/utils",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "scripts": {
     "test": "npm run build && mocha",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "npm run build"
   },
   "devDependencies": {
     "chai": "^4.2.0",
