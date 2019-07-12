@@ -15,6 +15,11 @@ describe('prefixLogger', function () {
     expect(loggedMessage).to.be.equal('PREFIX Hello world [object Object]');
   });
 
+  it('should not mutate the original log', function () {
+    prefixLog('PREFIX')(mockConsoleLog)('Hello world', {a: 'a'});
+    expect(mockConsoleLog('Hello world', {a: 'a'})).to.be.equal('Hello world [object Object]');
+  });
+
   it('should prefixLogger correctly', function () {
     const winstonMock = {
       debug: mockConsoleLog,
@@ -27,5 +32,19 @@ describe('prefixLogger', function () {
 
     expect((prefixedWinstonMock.info)('Hello world', [2, 3]))
       .to.be.equal('PREFIX Hello world 2,3');
+  });
+
+  it('should not mutate the original logger', function () {
+    const winstonMock = {
+      debug: mockConsoleLog,
+      info: mockConsoleLog,
+      other: {
+        log: mockConsoleLog,
+      }
+    } as any;
+    prefixLogger('PREFIX')(winstonMock, ['debug', 'info', 'other.log']);
+
+    expect((winstonMock.debug)('Hello world', 1))
+      .to.be.equal('Hello world 1');
   });
 });
