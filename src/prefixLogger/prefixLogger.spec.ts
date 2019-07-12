@@ -34,6 +34,19 @@ describe('prefixLogger', function () {
       .to.be.equal('PREFIX Hello world 2,3');
   });
 
+  it('should work when nested and do a FIFO prefixing', function () {
+    const winstonMock = {
+      debug: mockConsoleLog,
+      info: mockConsoleLog,
+    } as any;
+    const fstWinstonLog = prefixLogger('[FST]')(winstonMock);
+    const ftpWinstonLog = prefixLogger('[FTP]')(fstWinstonLog);
+
+    expect((ftpWinstonLog.debug)('Hello world', 1))
+      .to.be.equal('[FST] [FTP] Hello world 1');
+
+  });
+
   it('should not mutate the original logger', function () {
     const winstonMock = {
       debug: mockConsoleLog,
