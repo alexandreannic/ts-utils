@@ -6,3 +6,4 @@ export * from './elapsedTime/ElapsedTime';
 export * from './countLine/countLine';
 export * from './gzip/Gzip';
 export * from './prefixLogger/prefixLogger';
+export * from './progress/Progress';

@@ -3,7 +3,7 @@ import {formatPerformance, toPercent} from '..';
 
 export class Progress {
 
-  constructor(private totalLines: number, private t0 = performance.now()) {
+  constructor(private totalLines: number, public t0 = performance.now()) {
   }
 
   readonly snapshot = (lines: number) => {
