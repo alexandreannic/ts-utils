@@ -47,3 +47,5 @@ export const createFolderIfNotExists = (folder: string): void => {
     fs.mkdirSync(folder);
   }
 };
+
+export const toPercent = (value: number): string => value.toFixed(2) + '%';

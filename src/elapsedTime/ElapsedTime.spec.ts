@@ -1,6 +1,12 @@
-import { getElapsedTime } from './ElapsedTime';
-import { expect } from 'chai';
-import { performance } from 'perf_hooks';
+import {formatPerformance, getElapsedTime} from './ElapsedTime';
+import {expect} from 'chai';
+import {performance} from 'perf_hooks';
+
+describe('formatPerformance', function () {
+  it('should correctly format', function () {
+    expect(formatPerformance(47000).toString()).to.be.equal('0 Hr 0 Min 47 Sec');
+  });
+});
 
 describe('getElapsedTime', function () {
   it('should print 2 sec', function (done) {
