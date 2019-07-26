@@ -7,3 +7,5 @@ export * from './countLine/countLine';
 export * from './gzip/Gzip';
 export * from './prefixLogger/prefixLogger';
 export * from './progress/Progress';
+export * from './env/Env';
+export * from './env/EnvParser';
