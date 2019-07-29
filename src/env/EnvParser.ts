@@ -1,8 +1,8 @@
 export const int = (x?: string): undefined | number => x ? parseInt(x) : undefined;
 
-export const defaultValue = (value: string) => (x?: string): string => x || value;
+export const defaultValue = <T>(value: T) => (x?: T): T => x || value;
 
-export const required = (x?: string): string => {
+export const required = <T>(x?: T): T => {
   if (!x) throw new Error();
   return x;
 };

@@ -1,6 +1,6 @@
 {
   "name": "@mediarithmics-ps/utils",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "scripts": {
