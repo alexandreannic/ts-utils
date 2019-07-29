@@ -1,6 +1,6 @@
 {
   "recursive": true,
-  "spec": "lib/**/Env.spec.js",
+  "spec": "lib/**/*.js",
   "timeout": "10000",
   "exit": true
 }
