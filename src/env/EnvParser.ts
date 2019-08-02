@@ -3,7 +3,7 @@ export const int = (x?: string): undefined | number => x ? parseInt(x) : undefin
 export const defaultValue = <T>(value: T) => (x?: T): T => x || value;
 
 export const required = <T>(x?: T): T => {
-  if (!x) throw new Error(`[Env parser] ${x} is required but undefined.`);
+  if (!x) throw new Error(`Value is required but undefined.`);
   return x;
 };
 

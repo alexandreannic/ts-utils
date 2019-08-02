@@ -11,12 +11,16 @@ interface Pipe {
 }
 
 export const env: Pipe = (...funcs: any[]) => (envname: string) => {
-  const envValue = process.env[envname];
-  if (funcs.length === 0) {
-    return process.env[envname];
+  try {
+    const envValue = process.env[envname];
+    if (funcs.length === 0) {
+      return process.env[envname];
+    }
+    if (funcs.length === 1) {
+      return funcs[0](envValue);
+    }
+    return (funcs.reduce((a: Function, b: Function) => (...args: any[]) => b(a(...args))))(envValue);
+  } catch (e) {
+    throw new Error(`[utils/Env] ${envname}: ${e.message}`);
   }
-  if (funcs.length === 1) {
-    return funcs[0](envValue);
-  }
-  return (funcs.reduce((a: Function, b: Function) => (...args: any[]) => b(a(...args))))(envValue);
 };
