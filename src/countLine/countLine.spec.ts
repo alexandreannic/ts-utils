@@ -1,5 +1,6 @@
-import {countLines, countLinesSync} from './countLine';
+import {countLines, countLinesSync, countLinesFromStream } from './countLine';
 import {expect} from 'chai';
+import { Readable } from 'stream';
 
 describe('countLine', function () {
 
@@ -25,5 +26,18 @@ describe('countLineSync', function () {
 
   it('should throw an error', function () {
     expect(() => countLinesSync('/unexistingfile.void')).to.throw();
+  });
+});
+
+describe('countLineFromReadStream', function () {
+
+  it('should return the correct number', async function() {
+    const readStream = new Readable();
+    readStream.push('this is a first line');
+    readStream.push('this is a second line');
+    readStream.push('this is a third line');
+    readStream.push(null);
+    const linesParsed = await countLinesFromStream(readStream);
+    expect(linesParsed).to.eq(3);
   });
 });
