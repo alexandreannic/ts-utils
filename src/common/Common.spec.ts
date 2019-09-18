@@ -1,5 +1,5 @@
-import { mapFor, multipleFilters } from './Common';
-import { expect } from 'chai';
+import {mapFor, multipleFilters} from './Common';
+import {expect} from 'chai';
 
 describe('mapFor', function () {
   it('should create an array 0..20', function () {

@@ -1,5 +1,6 @@
 import {performance} from 'perf_hooks';
-import {formatPerformance, toPercent} from '..';
+import {toPercent} from '..';
+import {duration} from '../duration/Duration';
 
 export class Progress {
 
@@ -13,7 +14,7 @@ export class Progress {
     const linesPerSecond = lines / timeElapsed * 1000;
     return {
       percent: toPercent(percent),
-      remainingTime: formatPerformance(remainingTime),
+      remainingTime: duration(remainingTime),
       linesPerSecond: linesPerSecond,
     };
   };
