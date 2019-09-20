@@ -2,6 +2,7 @@ import {exec, execSync} from 'child_process';
 import {promisify} from 'util';
 import {Readable, Transform} from 'stream';
 import {createWriteStream} from 'fs';
+import { pipeLineItems } from '@mediarithmics-ps/file-stream-toolbelt';
 
 // TODO Only working for an UNIX env. It should be edited using stream.
 
@@ -23,11 +24,13 @@ export const countLinesFromStream = async (stream: Readable) => {
         cb(null, line);
       }
     });
+    const lineSplitter = pipeLineItems.lineSplitter();
     const noop = createWriteStream('/dev/null');
     noop.on('finish', () => {
       resolve(lines);
     });
     stream
+      .pipe(lineSplitter)
       .pipe(parser)
       .pipe(noop);
   });

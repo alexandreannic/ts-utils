@@ -33,9 +33,9 @@ describe('countLineFromReadStream', function () {
 
   it('should return the correct number', async function() {
     const readStream = new Readable();
-    readStream.push('this is a first line');
-    readStream.push('this is a second line');
-    readStream.push('this is a third line');
+    readStream.push('this is a first line\n');
+    readStream.push('this is a second line\n');
+    readStream.push('this is a third line\n');
     readStream.push(null);
     const linesParsed = await countLinesFromStream(readStream);
     expect(linesParsed).to.eq(3);
