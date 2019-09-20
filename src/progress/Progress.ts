@@ -11,7 +11,7 @@ export class Progress {
     const timeElapsed = performance.now() - this.t0;
     const percent = this.getPercent(lines);
     const remainingTime = timeElapsed * (100 / percent) - timeElapsed;
-    const linesPerSecond = lines / timeElapsed * 1000;
+    const linesPerSecond = lines / duration(timeElapsed).toSeconds;
     return {
       percent: toPercent(percent),
       remainingTime: duration(remainingTime),
