@@ -37,12 +37,13 @@ export const duration: DurationConstructor = (value: number, unit?: TimeUnit) =>
     valueOf: (): number => toMs,
     toString: (): string => {
       const print = (value: number, suffix: string) => value > 0 ? `${value} ${suffix} ` : '';
-      return (''
+      const output = (''
         + `${print(toDays(toMs), 'Days')}`
         + `${print(toHours(toMs % DAY()), 'Hr')}`
         + `${print(toMinutes(toMs % HOUR()), 'Min')}`
         + `${print(toSeconds(toMs % MINUTE()), 'Sec')}`
       ).trim();
+      return output === '' ? '0 Sec' : output;
     }
   } as never as DurationReturn;
 };
