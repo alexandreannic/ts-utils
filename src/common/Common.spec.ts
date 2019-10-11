@@ -1,4 +1,4 @@
-import {mapFor, multipleFilters} from './Common';
+import {filterUndefined, mapFor, multipleFilters, throwIfUndefined, toPromise} from './Common';
 import {expect} from 'chai';
 
 describe('mapFor', function () {
@@ -34,5 +34,47 @@ describe('multipleFilters', function () {
       filterC && ((x: string) => x.indexOf('c') === -1),
     )(data);
     expect(filteredData).to.be.deep.equal(['bbb', 'c']);
+  });
+});
+
+describe('filterUndefined', function () {
+  it('should correctly filter and infer type', async function () {
+    const fetchData = (): Promise<Array<number | undefined>> => Promise.resolve([undefined, 1, undefined, 2, undefined]);
+    const res: number[] = await fetchData().then(filterUndefined);
+    expect(res).to.deep.eq([1, 2]);
+  });
+});
+
+describe('throwIfUndefined', function () {
+  it('should not throw and infer type', async function () {
+    const fetchData = (): Promise<number | undefined> => Promise.resolve(1);
+    const res: number = await fetchData().then(throwIfUndefined('fetch data should be defined'));
+    expect(res).to.deep.eq(1);
+  });
+
+  it('should throw and infer type', async function () {
+    try {
+      const fetchData = (): Promise<number | undefined> => Promise.resolve(undefined);
+      const res: number = await fetchData().then(throwIfUndefined('fetch data should be defined'));
+      expect(false, 'should throw an error').to.be.true;
+    } catch (e) {
+      expect(true, 'should throw an error').to.be.true;
+    }
+  });
+});
+
+describe('toPromise', function () {
+  it('should not throw and infer type', async function () {
+    const fnNotThrowing = (x: number) => x + 1;
+    const res = await toPromise(() => fnNotThrowing(0)).then(x => x + 1);
+    expect(res).to.eq(2);
+  });
+
+  it('should not throw and infer type', async function () {
+    const fnThrowing = () => {
+      throw new Error();
+    };
+    const res = await toPromise(fnThrowing).catch(e => 1);
+    expect(res).to.eq(1);
   });
 });

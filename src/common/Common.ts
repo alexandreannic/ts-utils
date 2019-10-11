@@ -1,5 +1,3 @@
-import * as fs from 'fs-extra';
-
 /**
  * Functional for loop.
  * mapFor(n, callback)
@@ -13,14 +11,6 @@ export const mapFor = <T>(n: number, callback: (i: number) => T): T[] => {
     result[i] = callback(i);
   }
   return result;
-};
-
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
-    ? Array<DeepPartial<U>>
-    : T[P] extends ReadonlyArray<infer U>
-      ? ReadonlyArray<DeepPartial<U>>
-      : DeepPartial<T[P]>
 };
 
 type Filter<T> = (value: T, index: number, array: T[]) => boolean
@@ -42,10 +32,34 @@ export const multipleFilters = <T>(...filters: Array<boolean | Filter<T>>) => (l
   );
 };
 
-export const createFolderIfNotExists = (folder: string): void => {
-  if (!fs.existsSync(folder)) {
-    fs.mkdirSync(folder);
-  }
-};
-
 export const toPercent = (value: number): string => value.toFixed(2) + '%';
+
+/**
+ * Why this function that convert another method to a promise ? Because promises are cools !
+ */
+export const toPromise = <T>(call: () => T): Promise<T> => new Promise((resolve, reject) => {
+  try {
+    resolve(call());
+  } catch (e) {
+    reject(e);
+  }
+});
+
+/**
+ * Principally designed to be used in a promise chain and automatically cast the function's result from Array<T | undefined> to T.
+ * E.G.
+ * const fetchingData: () => Promise<Array<T | undefined>> = ...
+ * const data: T[] = await fetchingData().then(filterUndefined);
+ */
+export const filterUndefined = <T>(data: Array<T | undefined>): T[] => data.filter(_ => _ !== undefined) as T[];
+
+/**
+ * Principally designed to be used in a promise chain and automatically cast the function's result from T | undefined to T.
+ * E.G.
+ * const fetchingData: () => Promise<T | undefined> = ...
+ * const data: T = await fetchingData().then(throwIfUndefined);
+ */
+export const throwIfUndefined = (message: string = 'Unexpected undefined value.') => <T>(data?: T): T => {
+  if (data === undefined) throw new Error(message);
+  return data;
+};
