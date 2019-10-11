@@ -8,12 +8,13 @@ export class Progress {
   }
 
   readonly snapshot = (lines: number) => {
-    const timeElapsed = performance.now() - this.t0;
+    const elapsedTime = performance.now() - this.t0;
     const percent = this.getPercent(lines);
-    const remainingTime = timeElapsed * (100 / percent) - timeElapsed;
-    const linesPerSecond = lines / duration(timeElapsed).toSeconds;
+    const remainingTime = elapsedTime * (100 / percent) - elapsedTime;
+    const linesPerSecond = lines / duration(elapsedTime).toSeconds;
     return {
-      percent: toPercent(percent),
+      percent,
+      elapsedTime: duration(elapsedTime),
       remainingTime: duration(remainingTime),
       linesPerSecond: linesPerSecond,
     };
