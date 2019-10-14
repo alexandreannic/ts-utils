@@ -1,4 +1,5 @@
 export * from './common/Common';
+export * from './common/CommonType';
 export * from './validateObject/ValidateObject';
 export * from './validateObject/ValidateObjectDeep';
 export * from './validateObject/LogObject';
