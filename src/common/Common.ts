@@ -63,3 +63,14 @@ export const throwIfUndefined = (message: string = 'Unexpected undefined value.'
   if (data === undefined) throw new Error(message);
   return data;
 };
+
+/**
+ * Principally designed to be used in a promise chain and automatically cast the function's result from T | undefined to T.
+ * E.G.
+ * const fetchUser: () => Promise<User> = ...
+ * const frenchUser = await fetchUsers().then(throwIf(user => user.nationality !== 'fr', 'User should be french'));
+ */
+export const throwIf = <T>(condition: (t: T) => boolean, message: string) => (data: T): T => {
+  if (condition(data)) throw new Error(message);
+  return data;
+};
