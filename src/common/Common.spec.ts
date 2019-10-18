@@ -1,4 +1,4 @@
-import {filterUndefined, mapFor, multipleFilters, throwIfUndefined, toPromise} from './Common';
+import {filterUndefined, mapFor, multipleFilters, throwIf, throwIfUndefined, toPromise} from './Common';
 import {expect} from 'chai';
 
 describe('mapFor', function () {
@@ -76,5 +76,25 @@ describe('toPromise', function () {
     };
     const res = await toPromise(fnThrowing).catch(e => 1);
     expect(res).to.eq(1);
+  });
+});
+
+
+describe('throwIf', function () {
+
+  it('should not throw', async function () {
+    const fetchUser = (): Promise<{nationality: string}> => Promise.resolve({nationality: 'fr'});
+    const frenchUser = await fetchUser().then(throwIf(_ => _.nationality !== 'fr', 'Must be french'));
+    expect(true).to.be.true;
+  });
+
+  it('should throw', async function () {
+    try {
+      const fetchUser = (): Promise<{nationality: string}> => Promise.resolve({nationality: 'en'});
+      const frenchUser = await fetchUser().then(throwIf(_ => _.nationality !== 'fr', 'Must be french'));
+      expect(false, 'should throw an error').to.be.true;
+    } catch (e) {
+      expect(true, 'should throw an error').to.be.true;
+    }
   });
 });
