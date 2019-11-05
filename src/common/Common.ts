@@ -79,6 +79,7 @@ export const queryStringToObject = (qs: string): {[key: string]: string} => qs
   .replace(/^\??/, '')
   .split('&')
   .map(_ => _.split('='))
+  .filter(_ => _[0] !== '')
   .reduce((acc, [key, value]) => ({...acc, [key]: value}), {});
 
 export const objectToQueryString = (obj: {[key: string]: string | number | boolean}): string => '?' + Object.keys(obj)
