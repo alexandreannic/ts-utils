@@ -7,3 +7,7 @@
 # 2.2.0
 
 - Add functions `queryStringToObject` and `objectToQueryString`
+
+# 2.2.1
+
+- Fix an issue when `queryStringToObject` function was receiving an empty string
