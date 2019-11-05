@@ -74,3 +74,14 @@ export const throwIf = <T>(condition: (t: T) => boolean, message: string) => (da
   if (condition(data)) throw new Error(message);
   return data;
 };
+
+export const queryStringToObject = (qs: string): {[key: string]: string} => qs
+  .replace(/^\??/, '')
+  .split('&')
+  .map(_ => _.split('='))
+  .reduce((acc, [key, value]) => ({...acc, [key]: value}), {});
+
+export const objectToQueryString = (obj: {[key: string]: string | number | boolean}): string => '?' + Object.keys(obj)
+  .filter(k => obj[k] !== undefined)
+  .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`)
+  .join('&');
