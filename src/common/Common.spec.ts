@@ -113,6 +113,9 @@ describe('queryStringToObject', function () {
       sortBy: '',
     });
   });
+  it('should works with undefined parameters', function () {
+    expect(queryStringToObject('')).deep.eq({});
+  });
 });
 
 describe('objectToQueryString', function () {
