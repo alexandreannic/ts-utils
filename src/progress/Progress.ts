@@ -1,26 +1,43 @@
 import {performance} from 'perf_hooks';
-import {toPercent} from '..';
 import {duration} from '../duration/Duration';
 
 export class Progress {
 
-  constructor(private totalLines: number, public t0 = performance.now()) {
+  constructor(public totalLines: number, public t0 = performance.now()) {
   }
 
+  private previoustN: number = this.t0;
+  private previousLines: number = 0;
+
   readonly snapshot = (lines: number) => {
-    const elapsedTime = performance.now() - this.t0;
-    const percent = this.getPercent(lines);
-    const remainingTime = elapsedTime * (100 / percent) - elapsedTime;
-    const linesPerSecond = lines / duration(elapsedTime).toSeconds;
+    const percent = lines / this.totalLines * 100;
+    const tN = performance.now();
+    const {
+      elapsedTime,
+      remainingTime: remainingTimeAvg,
+      linesPerSecond: linesPerSecondAvg,
+    } = this.getMetrics(0, lines, this.t0, tN);
+    const {
+      remainingTime,
+      linesPerSecond,
+    } = this.getMetrics(this.previousLines, lines, this.previoustN, tN);
+    this.previoustN = tN;
+    this.previousLines = lines;
     return {
       percent,
-      elapsedTime: duration(elapsedTime),
-      remainingTime: duration(remainingTime),
-      linesPerSecond: linesPerSecond,
+      elapsedTime,
+      remainingTime,
+      remainingTimeAvg,
+      linesPerSecond,
+      linesPerSecondAvg,
     };
   };
 
-  private readonly getPercent = (lines: number) => {
-    return lines / this.totalLines * 100;
+  private readonly getMetrics = (t0Lines: number, t1Lines: number, t0: number, t1: number) => {
+    const linesDone = t1Lines - t0Lines;
+    const elapsedTime = t1 - t0;
+    const linesPerSecond = linesDone / duration(elapsedTime).toSeconds;
+    const remainingTime = (this.totalLines - t1Lines) / (linesDone / elapsedTime);
+    return {elapsedTime: duration(elapsedTime), remainingTime: duration(remainingTime), linesPerSecond,};
   };
 }
