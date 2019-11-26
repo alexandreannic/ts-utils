@@ -22,3 +22,10 @@
 
 ##### FileSplitter
 - Implement based on existing mics version but fixing asynchronous issue.
+
+# 2.3.2
+
+### Fixes
+
+##### FileSplitter
+- Fix undefined output file path 
