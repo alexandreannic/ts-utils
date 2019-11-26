@@ -25,7 +25,7 @@ export const fileSplitter = (
 
   const fileExt: string = path.extname(filepath);
   const baseName: string = path.basename(filepath, fileExt);
-  const partitionsPaths = mapFor(nbOfPartitions - 1, i => `${outputDirPath}/${baseName}_${i + 1}`);
+  const partitionsPaths = mapFor(nbOfPartitions, i => `${outputDirPath}/${baseName}_${i + 1}`);
 
   return new Promise((resolve, reject) => {
     let currentWriteStream: fs.WriteStream;
@@ -35,7 +35,7 @@ export const fileSplitter = (
     byline(fs.createReadStream(filepath, {encoding: 'utf8'}))
       .pipe(new Transform({
         objectMode: true,
-        transform: (line: string, encoding, done) => {
+        transform: (line: string, encoding, callback) => {
           if (lineIndex === 0) {
             log(`[fileSplitter] Start filling in partition ${partitionIndex + 1}`);
             if (currentWriteStream) {
@@ -43,7 +43,7 @@ export const fileSplitter = (
             }
             currentWriteStream = fs.createWriteStream(partitionsPaths[partitionIndex++]);
           }
-          currentWriteStream.write(line + os.EOL, done);
+          currentWriteStream.write(line + os.EOL, callback);
           lineIndex = ++lineIndex % nbOfLinesPerPartition;
         }
       }))
