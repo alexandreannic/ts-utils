@@ -12,10 +12,13 @@
 
 - Fix an issue when `queryStringToObject` function was receiving an empty string
 
-# X.X.X
+# 2.3.0
 
 ### Features
 
 ##### Progress
 - `linesPerSecond` and `remainingTime` are now respectively named `linesPerSecondAvg` and `remainingTimeAvg`.
 - `linesPerSecond` and `remainingTime` now contains the value related to the previous computed snapshot.
+
+##### FileSplitter
+- Implement based on existing mics version but fixing asynchronous issue.
