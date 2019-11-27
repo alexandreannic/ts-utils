@@ -1,6 +1,6 @@
 {
   "name": "@mediarithmics-ps/utils",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "scripts": {
@@ -21,9 +21,10 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "@mediarithmics-ps/file-stream-toolbelt": "^1.8.3",
+    "@types/fs-extra": "^8.0.1",
     "byline": "^5.0.0",
     "dotenv": "^8.2.0",
+    "fs-extra": "^8.1.0",
     "lodash": "^4.17.15"
   }
 }
