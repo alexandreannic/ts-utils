@@ -29,3 +29,15 @@
 
 ##### FileSplitter
 - Fix undefined output file path 
+
+
+# 2.4.0
+
+### Improvements
+
+##### countLineFromStream
+- Replace file-stream-toolbelt by byline library
+
+##### FileSplitter
+- Add `fs-extra` dependancy
+
