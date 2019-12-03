@@ -3,7 +3,7 @@ import stringify from 'csv-stringify/lib/sync';
 import parse from 'csv-parse/lib/sync';
 import { expect } from 'chai';
 
-import { History, DefaultRecord } from './history';
+import { History, DefaultRecord } from './History';
 
 
 interface CustomRecord extends DefaultRecord {
