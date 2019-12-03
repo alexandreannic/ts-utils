@@ -1,6 +1,6 @@
 {
   "name": "@mediarithmics-ps/utils",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "scripts": {
@@ -21,8 +21,12 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
+    "@types/csv-parse": "^1.2.2",
+    "@types/csv-stringify": "^3.1.0",
     "@types/fs-extra": "^8.0.1",
     "byline": "^5.0.0",
+    "csv-parse": "^4.8.2",
+    "csv-stringify": "^5.3.3",
     "dotenv": "^8.2.0",
     "fs-extra": "^8.1.0",
     "lodash": "^4.17.15"
