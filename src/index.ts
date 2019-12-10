@@ -4,7 +4,7 @@ export * from './validateObject/ValidateObject';
 export * from './validateObject/ValidateObjectDeep';
 export * from './validateObject/LogObject';
 export * from './duration/Duration';
-// export * from './countLine/countLine';
+export * from './countLine/countLine';
 export * from './gzip/Gzip';
 export * from './prefixLogger/prefixLogger';
 export * from './progress/Progress';
