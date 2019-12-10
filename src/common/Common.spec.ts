@@ -1,4 +1,4 @@
-import {filterUndefined, mapFor, multipleFilters, throwIf, throwIfUndefined, toPromise} from './Common';
+import {filterUndefined, mapFor, multipleFilters, throwIf, throwIfUndefined, toPromise, shuffleArray} from './Common';
 import {expect} from 'chai';
 
 describe('mapFor', function () {
@@ -96,5 +96,19 @@ describe('throwIf', function () {
     } catch (e) {
       expect(true, 'should throw an error').to.be.true;
     }
+  });
+});
+
+
+describe('shuffleArray', function () {
+
+  it('should shuffle the array and keep all values', async function () {
+    const inputArray = ["1", "2", "3", "4"];
+    const outputArray = shuffleArray(["1", "2", "3", "4"]);
+    expect(outputArray).to.not.equal(inputArray);
+    expect(outputArray).to.includes("1");
+    expect(outputArray).to.includes("2");
+    expect(outputArray).to.includes("3");
+    expect(outputArray).to.includes("4");
   });
 });
