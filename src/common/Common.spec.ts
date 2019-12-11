@@ -1,4 +1,4 @@
-import {filterUndefined, mapFor, multipleFilters, throwIf, throwIfUndefined, toPromise, shuffleArray} from './Common';
+import {filterUndefined, mapFor, multipleFilters, objectToQueryString, queryStringToObject, throwIf, throwIfUndefined, toPromise, shuffleArray} from './Common';
 import {expect} from 'chai';
 
 describe('mapFor', function () {
@@ -110,5 +110,53 @@ describe('shuffleArray', function () {
     expect(outputArray).to.includes("2");
     expect(outputArray).to.includes("3");
     expect(outputArray).to.includes("4");
+    
+describe('queryStringToObject', function () {
+  it('should works', function () {
+    expect(queryStringToObject('?orderBy=desc&sortBy=createdAt')).deep.eq({
+      orderBy: 'desc',
+      sortBy: 'createdAt',
+    });
+  });
+
+  it('should works with undefined parameters', function () {
+    expect(queryStringToObject('?orderBy=&sortBy=')).deep.eq({
+      orderBy: '',
+      sortBy: '',
+    });
+  });
+  it('should works with undefined parameters', function () {
+    expect(queryStringToObject('')).deep.eq({});
+  });
+});
+
+describe('objectToQueryString', function () {
+  it('should works', async function () {
+    expect(objectToQueryString({
+      orderBy: 'desc',
+      sortBy: 'createdAt',
+    })).eq('?orderBy=desc&sortBy=createdAt');
+  });
+
+  it('should works with undefined parameters', function () {
+    expect(objectToQueryString({
+      orderBy: '',
+      sortBy: '',
+    })).eq('?orderBy=&sortBy=');
+  });
+});
+
+describe('objectToQueryString queryStringToObject', function () {
+  it('objectToQueryString > queryStringToObject', async function () {
+    const object = {
+      orderBy: 'desc',
+      sortBy: 'createdAt',
+    };
+    expect(queryStringToObject(objectToQueryString(object))).deep.eq(object);
+  });
+
+  it('objectToQueryString < queryStringToObject', function () {
+    const string = '?orderBy=&sortBy=';
+    expect(objectToQueryString(queryStringToObject(string))).eq(string);
   });
 });
