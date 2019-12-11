@@ -1,5 +1,5 @@
-import {filterUndefined, mapFor, multipleFilters, objectToQueryString, queryStringToObject, throwIf, throwIfUndefined, toPromise} from './Common';
-import {expect} from 'chai';
+import { filterUndefined, mapFor, multipleFilters, objectToQueryString, queryStringToObject, throwIf, throwIfUndefined, toPromise, shuffleArray } from './Common';
+import { expect } from 'chai';
 
 describe('mapFor', function () {
   it('should create an array 0..20', function () {
@@ -83,19 +83,33 @@ describe('toPromise', function () {
 describe('throwIf', function () {
 
   it('should not throw', async function () {
-    const fetchUser = (): Promise<{nationality: string}> => Promise.resolve({nationality: 'fr'});
+    const fetchUser = (): Promise<{ nationality: string }> => Promise.resolve({ nationality: 'fr' });
     const frenchUser = await fetchUser().then(throwIf(_ => _.nationality !== 'fr', 'Must be french'));
     expect(true).to.be.true;
   });
 
   it('should throw', async function () {
     try {
-      const fetchUser = (): Promise<{nationality: string}> => Promise.resolve({nationality: 'en'});
+      const fetchUser = (): Promise<{ nationality: string }> => Promise.resolve({ nationality: 'en' });
       const frenchUser = await fetchUser().then(throwIf(_ => _.nationality !== 'fr', 'Must be french'));
       expect(false, 'should throw an error').to.be.true;
     } catch (e) {
       expect(true, 'should throw an error').to.be.true;
     }
+  });
+});
+
+
+describe('shuffleArray', function () {
+
+  it('should shuffle the array and keep all values', async function () {
+    const inputArray = ["1", "2", "3", "4"];
+    const outputArray = shuffleArray(["1", "2", "3", "4"]);
+    expect(outputArray).to.not.equal(inputArray);
+    expect(outputArray).to.includes("1");
+    expect(outputArray).to.includes("2");
+    expect(outputArray).to.includes("3");
+    expect(outputArray).to.includes("4");
   });
 });
 

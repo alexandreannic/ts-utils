@@ -75,6 +75,22 @@ export const throwIf = <T>(condition: (t: T) => boolean, message: string) => (da
   return data;
 };
 
+/**
+ * Take an array as a parameter and shuffle it following the Fisher-Yates Algorithm.
+ * Not that it's on purpose that the input array is overriden has it's the most efficient way to shuffle an array.
+ * input an array of any type
+ * output the input array shuffled
+ */
+export const shuffleArray = <T>(array: T[]): T[] => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i)
+    const temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
+  return array;
+}
+
 export const queryStringToObject = (qs: string): {[key: string]: string} => qs
   .replace(/^\??/, '')
   .split('&')

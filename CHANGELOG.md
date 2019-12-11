@@ -41,3 +41,7 @@
 ##### FileSplitter
 - Add `fs-extra` dependancy
 
+
+# 2.6.0
+- Add function `shuffleArray`
+- Update dependencies

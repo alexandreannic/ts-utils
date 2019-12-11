@@ -1,6 +1,6 @@
 {
   "name": "@mediarithmics-ps/utils",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "scripts": {
@@ -10,25 +10,19 @@
   },
   "devDependencies": {
     "@types/byline": "^4.2.31",
-    "@types/chai": "^4.2.3",
-    "@types/dotenv": "^6.1.1",
-    "@types/lodash": "^4.14.144",
+    "@types/chai": "^4.2.7",
+    "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.2",
+    "@types/node": "^12.12.17",
     "@types/winston": "^2.4.4",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
-    "typescript": "^3.6.4"
+    "typescript": "^3.7.3"
   },
   "dependencies": {
-    "@types/csv-parse": "^1.2.2",
-    "@types/csv-stringify": "^3.1.0",
-    "@types/fs-extra": "^8.0.1",
+    "@mediarithmics-ps/file-stream-toolbelt": "^1.9.1",
     "byline": "^5.0.0",
-    "csv-parse": "^4.8.2",
-    "csv-stringify": "^5.3.3",
-    "dotenv": "^8.2.0",
-    "fs-extra": "^8.1.0",
+    "csv-stringify": "^5.3.4",
     "lodash": "^4.17.15"
   }
 }
