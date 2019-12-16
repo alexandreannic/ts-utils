@@ -45,7 +45,7 @@
 - Add function `shuffleArray`
 - Update dependencies
 
-# X.X.X
+# 2.6.1
 
 ### Fixes
 
