@@ -6,6 +6,7 @@ process.env.PORT = '3000';
 process.env.IS_PRODUCTION = 'true';
 process.env.IS_DEV = 'false';
 process.env.API_TOKEN = 'api:token';
+process.env.SOME_NUMBER = '0';
 
 describe('Env', function () {
   it('Should parse we no parameter', function () {
@@ -59,5 +60,10 @@ describe('Env', function () {
 
     const res = env(int, required)('PORT');
     expect(res, 'should be equal to env variable').to.be.eq(3000);
+  });
+
+  it('should test compose', function () {
+    const res = env(int, defaultValue('10'))('SOME_NUMBER');
+    expect(res).eq(0);
   });
 });
