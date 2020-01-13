@@ -1,8 +1,8 @@
-# @mediarithmics-ps/utils
+# ts-utils
 
 ### About
 
-Bunch of utils components designed to help development of the `client-projects` scripts.
+Bunch of utils and standalone components.
 
 ### Install
 

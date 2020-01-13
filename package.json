@@ -1,5 +1,5 @@
 {
-  "name": "@mediarithmics-ps/utils",
+  "name": "@alexandreannic/utils",
   "version": "2.6.1",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
@@ -14,15 +14,16 @@
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.17",
+    "@types/request-promise": "^4.1.45",
     "@types/winston": "^2.4.4",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "typescript": "^3.7.3"
   },
   "dependencies": {
-    "@mediarithmics-ps/file-stream-toolbelt": "^1.9.1",
     "byline": "^5.0.0",
     "csv-stringify": "^5.3.4",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "request-promise": "^4.2.5"
   }
 }
