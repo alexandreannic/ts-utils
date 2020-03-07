@@ -1,9 +1,8 @@
-import {performance} from 'perf_hooks';
 import {duration} from '../duration/Duration';
 
 export class Progress {
 
-  constructor(public totalLines: number, public t0 = performance.now()) {
+  constructor(public totalLines: number, public t0 = new Date().getTime()) {
   }
 
   private previoustN: number = this.t0;
@@ -11,7 +10,7 @@ export class Progress {
 
   readonly snapshot = (lines: number) => {
     const percent = lines / this.totalLines * 100;
-    const tN = performance.now();
+    const tN = new Date().getTime();
     const {
       elapsedTime,
       remainingTime: remainingTimeAvg,

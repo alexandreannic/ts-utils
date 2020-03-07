@@ -11,4 +11,3 @@ export * from './progress/Progress';
 export * from './env/Env';
 export * from './env/EnvParser';
 export * from './fileSplitter/FileSplitter';
-export * from './history/History';
