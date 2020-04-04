@@ -2,7 +2,7 @@
 
 ### About
 
-Bunch of utils and standalone components.
+Bunch of utils and standalone components. Strongly tested !
 
 ### Install
 
