@@ -51,3 +51,12 @@
 
 #####  Env
 - Fix implicit boolean casting when using `defaultValue`.
+
+
+# X.X.X
+
+### Features
+##### Lazy
+
+- Initial version. It reproduces the behavior of the `lazy` Scala keyword.
+
