@@ -1,5 +1,5 @@
-import {expect} from 'chai';
-import {Duration, duration, MINUTE, SECOND} from './Duration';
+import {expect} from 'chai'
+import {Duration, duration, MINUTE, SECOND} from './Duration'
 
 describe('Duration', function () {
   it('Should correctly convert', function () {
@@ -11,6 +11,7 @@ describe('Duration', function () {
     expect(d.toDays).to.eq(0);
 
   });
+
   it('Should correctly convert (2)', function () {
     const d = duration(4000);
     expect(d.valueOf()).to.eq(4000);

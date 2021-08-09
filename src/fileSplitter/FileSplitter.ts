@@ -1,9 +1,9 @@
-import {countLinesSync, mapFor} from '..';
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import * as os from 'os';
-import {Transform} from 'stream';
-import byline from 'byline';
+import {countLinesSync, mapFor} from '..'
+import * as fs from 'fs-extra'
+import * as path from 'path'
+import * as os from 'os'
+import {Transform} from 'stream'
+import byline from 'byline'
 
 export const fileSplitter = (
   filepath: string,
@@ -25,7 +25,7 @@ export const fileSplitter = (
 
   const fileExt: string = path.extname(filepath);
   const baseName: string = path.basename(filepath, fileExt);
-  const partitionsPaths = mapFor(nbOfPartitions, i => `${outputDirPath}/${baseName}_${i + 1}`);
+  const partitionsPaths = mapFor(nbOfPartitions, (i: number) => `${outputDirPath}/${baseName}_${i + 1}`);
 
   return new Promise((resolve, reject) => {
     let currentWriteStream: fs.WriteStream;

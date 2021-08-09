@@ -12,3 +12,4 @@ export * from './env/Env';
 export * from './env/EnvParser';
 export * from './fileSplitter/FileSplitter';
 export * from './lazy/Lazy';
+export * from './enum/Enum';
