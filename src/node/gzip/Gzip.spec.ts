@@ -2,7 +2,8 @@ import {expect} from 'chai';
 import {gunzipFile, gzipFile} from './Gzip';
 import * as fs from 'fs';
 
-const fixturePath = `${__dirname}/../../src/gzip/fixture`;
+
+const fixturePath = `${__dirname}/../../../src/node/gzip/fixture`;
 
 describe('Gzip', function () {
   it('should gunzipFile', async function () {
