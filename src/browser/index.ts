@@ -10,5 +10,6 @@ export * from './env/Env';
 export * from './env/EnvParser';
 export * from './lazy/Lazy';
 export * from './enum/Enum';
+export * from './mapPromise/MapPromise';
 
 
