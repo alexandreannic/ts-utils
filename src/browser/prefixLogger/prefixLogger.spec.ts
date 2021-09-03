@@ -1,6 +1,5 @@
-import {prefixLog, prefixLogger} from './prefixLogger';
-import {expect} from 'chai';
-import * as winston from 'winston';
+import {prefixLog, prefixLogger} from './prefixLogger'
+import {expect} from 'chai'
 
 const mockConsoleLog = (message?: any, ...optionalParams: any[]): string => {
   return message + ' ' + optionalParams.join(' ');

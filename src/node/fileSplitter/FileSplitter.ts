@@ -1,4 +1,4 @@
-import {countLinesSync, mapFor} from '..'
+import {countLinesSync, mapFor} from '../../index'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import * as os from 'os'
