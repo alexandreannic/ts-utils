@@ -4,13 +4,17 @@ import {Readable, Transform} from 'stream';
 import {createWriteStream} from 'fs';
 import byline from 'byline';
 
-// TODO Only working for an UNIX env. It should be edited using stream.
-
+/**
+ * Only working for an UNIX env
+ */
 export const countLines = async (filePath: string): Promise<number> => {
   return promisify(exec)(`wc -l ${filePath}`)
     .then(res => parseInt(res.stdout));
 };
 
+/**
+ * Only working for an UNIX env
+ */
 export const countLinesSync = (filePath: string): number => {
   return parseInt(execSync(`wc -l ${filePath}`).toString());
 };

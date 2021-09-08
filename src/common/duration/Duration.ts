@@ -3,7 +3,7 @@ export const MINUTE = (x: number = 1): number => x * 60 * SECOND();
 export const HOUR = (x: number = 1): number => x * 60 * MINUTE();
 export const DAY = (x: number = 1): number => x * 24 * HOUR();
 
-export type TimeUnit = typeof SECOND | typeof MINUTE | typeof HOUR | typeof DAY;
+export type TimeUnit = (_?: number) => number;
 
 export type Duration = number;
 
