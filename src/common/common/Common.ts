@@ -35,7 +35,7 @@ export const multipleFilters = <T>(...filters: Array<boolean | Filter<T>>) => (l
 export const toPercent = (value: number): string => value.toFixed(2) + '%';
 
 /**
- * Why this function that convert another method to a promise ? Because promises are cools !
+ * Promises are sometimes more convenient to manipulate !
  */
 export const toPromise = <T>(call: () => T): Promise<T> => new Promise((resolve, reject) => {
   try {
@@ -90,15 +90,3 @@ export const shuffleArray = <T>(array: T[]): T[] => {
   }
   return array;
 }
-
-export const queryStringToObject = (qs: string): {[key: string]: string} => qs
-  .replace(/^\??/, '')
-  .split('&')
-  .map(_ => _.split('='))
-  .filter(_ => _[0] !== '')
-  .reduce((acc, [key, value]) => ({...acc, [key]: value}), {});
-
-export const objectToQueryString = (obj: {[key: string]: string | number | boolean}): string => '?' + Object.keys(obj)
-  .filter(k => obj[k] !== undefined)
-  .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`)
-  .join('&');
