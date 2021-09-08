@@ -26,16 +26,18 @@ describe('Lazy', function () {
     let sideEffect = 0;
 
     const users = [{id: 1, name: 'n1'}, {id: 2, name: 'n2'}, {id: 3, name: 'n3'}, {id: 4, name: 'n4'}, {id: 5, name: 'n5'}];
-    const findByUserId = lazy((id: number, uselessArgForTypeChecking?: string) => {
+    const findByUserId = lazy((id: number, complexArgs: {a: string, b: number}, uselessArgForTypeChecking?: string) => {
       ++sideEffect;
       return users.find(_ => _.id === id);
     });
 
-    expect(findByUserId(3)?.name).eq('n3');
+    expect(findByUserId(3, {a: '1', b: 1})?.name).eq('n3');
     expect(sideEffect).eq(1);
-    expect(findByUserId(4)?.name).eq('n4');
+    expect(findByUserId(4, {a: '1', b: 1})?.name).eq('n4');
     expect(sideEffect).eq(2);
-    expect(findByUserId(3)?.name).eq('n3');
+    expect(findByUserId(3, {a: '1', b: 1})?.name).eq('n3');
     expect(sideEffect).eq(2);
+    expect(findByUserId(3, {a: '2', b: 2})?.name).eq('n3');
+    expect(sideEffect).eq(3);
   });
 });
