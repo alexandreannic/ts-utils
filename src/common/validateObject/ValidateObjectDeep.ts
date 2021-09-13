@@ -1,10 +1,10 @@
-import _ from 'lodash';
+import _get from 'lodash.get'
 
 export const getMissingPropertiesDeep = (
   requiredProperties: Array<string>,
   object: object
 ): Array<string> => {
-  return requiredProperties.filter((path: string) => _.get(object, path) === undefined);
+  return requiredProperties.filter((path: string) => _get(object, path) === undefined);
 };
 
 export const validateObjectDeep = <T extends object>(
