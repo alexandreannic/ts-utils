@@ -3,7 +3,7 @@ export const MINUTE = (x: number = 1): number => x * 60 * SECOND();
 export const HOUR = (x: number = 1): number => x * 60 * MINUTE();
 export const DAY = (x: number = 1): number => x * 24 * HOUR();
 
-export type TimeUnit = (_?: number) => number;
+export type TimeUnit = 'second' | 'minute' | 'hour' | 'day'
 
 export type Duration = number;
 
@@ -21,13 +21,28 @@ interface DurationConstructor {
   (value: any, unit?: TimeUnit): DurationReturn;
 }
 
-const toSeconds = (x: number) => Math.floor(x / 1000);
-const toMinutes = (x: number) => Math.floor(toSeconds(x) / 60);
-const toHours = (x: number) => Math.floor(toMinutes(x) / 60);
-const toDays = (x: number) => Math.floor(toHours(x) / 24);
+const toSeconds = (x: number) => Math.floor(x / 1000)
+const toMinutes = (x: number) => Math.floor(toSeconds(x) / 60)
+const toHours = (x: number) => Math.floor(toMinutes(x) / 60)
+const toDays = (x: number) => Math.floor(toHours(x) / 24)
+
+const parseTimeUnit = (str?: TimeUnit): (_: number) => number => {
+  switch (str) {
+    case 'second':
+      return SECOND
+    case 'minute':
+      return MINUTE
+    case 'hour':
+      return HOUR
+    case 'day':
+      return DAY
+    default:
+      return _ => _
+  }
+}
 
 export const duration: DurationConstructor = (value: number, unit?: TimeUnit) => {
-  const toMs = unit ? unit(value) : value;
+  const toMs = parseTimeUnit(unit)(value)
   return {
     toMs,
     toSeconds: toSeconds(toMs),

@@ -1,9 +1,9 @@
 import {expect} from 'chai'
-import {Duration, duration, MINUTE, SECOND} from './Duration'
+import {Duration, duration} from './Duration'
 
 describe('Duration', function () {
   it('Should correctly convert', function () {
-    const d = duration(10, MINUTE);
+    const d = duration(10, 'minute');
     expect(d.toSeconds).to.eq(600);
     expect(d.toMs).to.eq(600000);
     expect(d.toMinutes).to.eq(10);
@@ -24,7 +24,7 @@ describe('Duration', function () {
     let callCounter = 0;
     const markCalled = () => callCounter++;
     setTimeout(markCalled, 1000);
-    setTimeout(markCalled, duration(2, SECOND));
+    setTimeout(markCalled, duration(2, 'second'));
     setTimeout(markCalled, 3000);
     setTimeout(() => {
       expect(callCounter).eq(2);
@@ -33,6 +33,6 @@ describe('Duration', function () {
   });
 
   it('should correctly format to string', function () {
-    expect(duration(75, MINUTE).toString()).to.be.equal('1 Hr 15 Min');
+    expect(duration(75, 'minute').toString()).to.be.equal('1 Hr 15 Min');
   });
 });
