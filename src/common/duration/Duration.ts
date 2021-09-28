@@ -5,9 +5,9 @@ export const DAY = (x: number = 1): number => x * 24 * HOUR();
 
 export type TimeUnit = 'second' | 'minute' | 'hour' | 'day'
 
-export type Duration = number;
+// export type Duration = number;
 
-export type DurationReturn = number & {
+export type Duration = number & {
   toMs: number
   toSeconds: number
   toMinutes: number
@@ -18,7 +18,7 @@ export type DurationReturn = number & {
 };
 
 interface DurationConstructor {
-  (value: any, unit?: TimeUnit): DurationReturn;
+  (value: number, unit?: TimeUnit): Duration;
 }
 
 const toSeconds = (x: number) => Math.floor(x / 1000)
@@ -42,6 +42,9 @@ const parseTimeUnit = (str?: TimeUnit): (_: number) => number => {
 }
 
 export const duration: DurationConstructor = (value: number, unit?: TimeUnit) => {
+  if (isNaN(value)) {
+    throw new Error(`[ts-utils/Duration] value '${value}' is not a valid number.`)
+  }
   const toMs = parseTimeUnit(unit)(value)
   return {
     toMs,
@@ -51,14 +54,14 @@ export const duration: DurationConstructor = (value: number, unit?: TimeUnit) =>
     toDays: toDays(toMs),
     valueOf: (): number => toMs,
     toString: (): string => {
-      const print = (value: number, suffix: string) => value > 0 ? `${value} ${suffix} ` : '';
+      const print = (value: number, suffix: string) => value > 0 ? `${value} ${suffix} ` : ''
       const output = (''
         + `${print(toDays(toMs), 'Days')}`
         + `${print(toHours(toMs % DAY()), 'Hr')}`
         + `${print(toMinutes(toMs % HOUR()), 'Min')}`
         + `${print(toSeconds(toMs % MINUTE()), 'Sec')}`
-      ).trim();
-      return output === '' ? '0 Sec' : output;
+      ).trim()
+      return output === '' ? '0 Sec' : output
     }
-  } as never as DurationReturn;
+  } as never as Duration
 };
