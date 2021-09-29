@@ -20,7 +20,7 @@ export const env: Pipe = (...funcs: any[]) => (envname: string) => {
       return funcs[0](envValue);
     }
     return (funcs.reduce((a: Function, b: Function) => (...args: any[]) => b(a(...args))))(envValue);
-  } catch (e) {
+  } catch (e: any) {
     throw new Error(`[utils/Env] ${envname}: ${e.message}`);
   }
 };
