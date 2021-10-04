@@ -7,3 +7,7 @@ export type DeepPartial<T> = {
 };
 
 export type Index<T> = {[key: string]: T};
+
+export type PromiseReturn<T> = T extends PromiseLike<infer U> ? U : T
+
+export type PromiseFnResult<T extends (...args: any[]) => Promise<object>> = PromiseReturn<ReturnType<T>>
