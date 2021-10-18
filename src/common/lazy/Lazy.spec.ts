@@ -1,9 +1,8 @@
 import {lazy} from './Lazy';
 import {expect} from 'chai';
+import {sleep} from '../delay/Delay'
 
-const sleep = (ms: number) => new Promise(_ => setTimeout(_, ms));
-
-const getTime = () => parseInt('' + new Date().getTime() / 1000);
+export const getTime = () => parseInt('' + new Date().getTime() / 1000);
 
 describe('Lazy', function () {
 
