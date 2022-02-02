@@ -1,9 +1,10 @@
-import {countLinesSync, mapFor} from '../../index'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import * as os from 'os'
 import {Transform} from 'stream'
 import byline from 'byline'
+import {countLinesSync} from '../countLine/countLine'
+import {mapFor} from '../../common'
 
 export const fileSplitter = (
   filepath: string,
