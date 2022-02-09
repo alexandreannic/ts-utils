@@ -1,22 +1,24 @@
-import {bool, defaultValue, int, required} from './EnvParser';
-import {env} from './Env';
-import {expect} from 'chai';
+import {bool, defaultValue, int, required} from './EnvParser'
+import {env as _env} from './Env'
+import {expect} from 'chai'
 
-process.env.PORT = '3000';
-process.env.IS_PRODUCTION = 'true';
-process.env.IS_DEV = 'false';
-process.env.API_TOKEN = 'api:token';
-process.env.SOME_NUMBER = '0';
+process.env.PORT = '3000'
+process.env.IS_PRODUCTION = 'true'
+process.env.IS_DEV = 'false'
+process.env.API_TOKEN = 'api:token'
+process.env.SOME_NUMBER = '0'
+
+const env = _env(process.env)
 
 describe('Env', function () {
   it('Should parse we no parameter', function () {
-    const port = env()('PORT');
-    expect(port, 'forward env').to.eq('3000');
-  });
+    const port = env()('PORT')
+    expect(port, 'forward env').to.eq('3000')
+  })
 
   it('Should parse an int', function () {
-    const port = env(int)('PORT');
-    expect(port, 'parse a number').to.eq(3000);
+    const port = env(int)('PORT')
+    expect(port, 'parse a number').to.eq(3000)
   });
 
   it('should test required', function () {
