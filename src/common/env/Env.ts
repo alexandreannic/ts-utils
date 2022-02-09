@@ -10,16 +10,16 @@ interface Pipe {
   <R>(...funcs: Function[]): Func<string, R>
 }
 
-export const env: Pipe = (...funcs: any[]) => (envname: string) => {
+export const env = (env: {[key: string]: string | undefined} = process.env): Pipe => (...funcs: any[]) => (envname: string) => {
   try {
-    const envValue = process.env[envname];
+    const envValue = env[envname]
     if (funcs.length === 0) {
-      return process.env[envname];
+      return envValue
     }
     if (funcs.length === 1) {
-      return funcs[0](envValue);
+      return funcs[0](envValue)
     }
-    return (funcs.reduce((a: Function, b: Function) => (...args: any[]) => b(a(...args))))(envValue);
+    return (funcs.reduce((a: Function, b: Function) => (...args: any[]) => b(a(...args))))(envValue)
   } catch (e: any) {
     throw new Error(`[utils/Env] ${envname}: ${e.message}`);
   }
