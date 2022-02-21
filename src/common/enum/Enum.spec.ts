@@ -7,13 +7,6 @@ enum Status {
   WARNING = 'Warning',
 }
 
-enum XX {
-  OK = 'Ok',
-  ERROR = 'Error',
-  WARNING = 'Warning',
-}
-
-
 describe('Enum', function () {
   it('Should type and get keys correctly', function () {
     const keys: readonly ('OK' | 'ERROR' | 'WARNING')[] = Enum.keys(Status)
@@ -34,5 +27,17 @@ describe('Enum', function () {
     expect(Enum.getKeyByValue(Status, 'Warning')).eq('WARNING')
     expect(Enum.getKeyByValue(Status, 'unknown value')).to.undefined
   })
-})
 
+  it('Should work when used in a regular object', function () {
+    const blabla = {
+      [Status.OK]: 'ok',
+      [Status.ERROR]: 1,
+      [Status.WARNING]: undefined,
+    }
+    expect(Object.entries(blabla)).deep.eq([
+      [Status.OK, 'ok'],
+      [Status.ERROR, 1],
+      [Status.WARNING, undefined],
+    ])
+  })
+})
