@@ -7,7 +7,8 @@
   "scripts": {
     "test": "npm run build && mocha",
     "build": "tsc",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "release": "ts-node release.ts"
   },
   "devDependencies": {
     "@types/byline": "^4.2.31",
@@ -24,6 +25,7 @@
   "dependencies": {
     "byline": "^5.0.0",
     "fs-extra": "^8.1.0",
-    "lodash.get": "^4.4.2"
+    "lodash.get": "^4.4.2",
+    "ts-node": "^10.7.0"
   }
 }
