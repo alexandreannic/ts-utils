@@ -1,3 +1,4 @@
+export * from './cache/Cache'
 export * from './common/Common'
 export * from './common/CommonType'
 export * from './delay/Delay'
