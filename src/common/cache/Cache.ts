@@ -7,14 +7,23 @@ export interface CacheData<V> {
   value: V;
 }
 
-export class Cache<V = any> {
+export class Cache<V = undefined> {
 
-  constructor(
-    private defaultExpiration: Duration = duration(1, 'hour'),
-    private cleaningCheckupInterval: Duration = duration(2, 'day'),
-  ) {
+  constructor({
+    ttl = duration(1, 'hour'),
+    cleaningCheckupInterval = duration(2, 'day'),
+  }: {
+    ttl?: Duration,
+    cleaningCheckupInterval?: Duration,
+  } = {}) {
+    this.ttl = ttl
+    this.cleaningCheckupInterval = cleaningCheckupInterval
     this.intervalRef = setInterval(this.cleanCheckup, cleaningCheckupInterval)
   }
+
+  private readonly ttl: Duration
+
+  private readonly cleaningCheckupInterval: Duration
 
   private readonly intervalRef
 
@@ -22,20 +31,20 @@ export class Cache<V = any> {
 
   private readonly isExpired = (_: CacheData<V>) => _.expiration && _.lastUpdate.getTime() + _.expiration < new Date().getTime()
 
-  readonly get = (key: string): V | undefined => {
+  readonly get = <T = any>(key: string): undefined | (V extends undefined ? T : V) => {
     const data = this.cache.get(key)
     if (data) {
       if (this.isExpired(data)) {
         this.remove(key)
       } else {
-        return data.value
+        return data.value as any
       }
     }
   }
 
-  readonly getAll = (): V[] => {
+  readonly getAll = (): (V extends undefined ? any : V)[] => {
     this.cleanCheckup()
-    return filterUndefined(Array.from(this.cache.values()).map(_ => _.value))
+    return filterUndefined(Array.from(this.cache.values()).map(_ => _.value)) as any
   }
 
   readonly getAllKeys = (): string[] => {
@@ -43,13 +52,16 @@ export class Cache<V = any> {
     return Array.from(this.cache.keys())
   }
 
-  readonly set = (key: string, value: V, expiration?: Duration): void => {
+  readonly set = <T = any>(key: string, value: V extends undefined ? T : V, ttl?: Duration): void => {
     this.cache.set(key, {
+      // @ts-ignore
       value,
-      expiration: expiration || this.defaultExpiration,
+      expiration: ttl || this.ttl,
       lastUpdate: new Date(),
     })
   }
+
+  readonly has = (key: string): boolean => this.cache.has(key)
 
   readonly remove = (key: string): void => {
     this.cache.delete(key)
@@ -61,7 +73,7 @@ export class Cache<V = any> {
 
   private cleanCheckup = () => {
     this.cache.forEach((data: CacheData<V>, key: string) => {
-      if (data.expiration && data.lastUpdate.getTime() + data.expiration < new Date().getTime()) {
+      if (this.isExpired(data)) {
         this.remove(key)
       }
     })
