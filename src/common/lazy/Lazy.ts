@@ -1,4 +1,4 @@
-const hashArgs = (args: any[]) => {
+export const hashArgs = (args: any[]) => {
   let res = ''
   args.forEach(arg => {
     if (typeof arg == 'string' || typeof arg == 'boolean' || typeof arg == 'number') res += ('|' + arg)

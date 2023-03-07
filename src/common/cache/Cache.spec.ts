@@ -2,6 +2,7 @@ import {expect} from 'chai'
 import {Cache} from './Cache'
 import {duration} from '../duration/Duration'
 import {sleep} from '../delay/Delay'
+import {getTime} from '../lazy/Lazy.spec'
 
 interface User {
   name: string
@@ -49,7 +50,7 @@ describe('Cache', function () {
     expect(cache.get('francis')).eq(undefined)
   })
 
-  it('should get only not expired', async function() {
+  it('should get only not expired', async function () {
     const cache = new Cache<User>()
     cache.set('mike', user2, duration(.1, 'second'))
     cache.set('francis', user, duration(.3, 'second'))
@@ -57,7 +58,7 @@ describe('Cache', function () {
     expect(cache.getAll()).deep.eq([user])
   })
 
-  it('should remove one', async function() {
+  it('should remove one', async function () {
     const cache = new Cache<User>()
     cache.set('mike', user2, duration(10, 'second'))
     cache.set('francis', user, duration(10, 'second'))
@@ -90,5 +91,41 @@ describe('Cache', function () {
     const u: User | undefined = cache.get<{ignoredType: Symbol}>('user')
     const users: User[] = cache.getAll()
     expect(true).to.true
+  })
+
+  it('should avoid reprocess request', async function () {
+    let sideEffect = 0
+    const request = Cache.request(async (id: number) => {
+      ++sideEffect
+      return id
+    }, {ttl: duration(10, 'minute')})
+
+    expect(await request(3)).eq(3)
+    expect(sideEffect).eq(1)
+
+    expect(await request(4)).eq(4)
+    expect(sideEffect).eq(2)
+
+    expect(await request(3)).eq(3)
+    expect(sideEffect).eq(2)
+
+    expect(await request(3)).eq(3)
+    expect(sideEffect).eq(2)
+  })
+
+  it('should consider ttl', async function () {
+    let sideEffect = 0
+    const request = Cache.request(async (id: number) => {
+      ++sideEffect
+      return id
+    }, {ttl: duration(.5, 'second')})
+
+    await request(3)
+    expect(sideEffect).eq(1)
+    await request(3)
+    expect(sideEffect).eq(1)
+    await sleep(duration(1, 'second'))
+    await request(3)
+    expect(sideEffect).eq(2)
   })
 })

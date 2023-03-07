@@ -1,5 +1,6 @@
 import {duration, Duration} from '../duration/Duration'
 import {filterUndefined} from '../common/Common'
+import {hashArgs} from '../lazy/Lazy'
 
 export interface CacheData<V> {
   lastUpdate: Date;
@@ -7,15 +8,34 @@ export interface CacheData<V> {
   value: V;
 }
 
+export interface CacheParams {
+  ttl?: Duration,
+  cleaningCheckupInterval?: Duration,
+}
 export class Cache<V = undefined> {
+
+  /**
+   * TODO(Alex): Really similar to lazy(). Check if it could be factorized.
+   * TODO(Alex): Also check if to force Promise return type is necessary.
+   */
+  static readonly request = <T, P extends Array<any>>(fn: ((...p: P) => Promise<T>), params?: CacheParams): (...p: P) => Promise<T> => {
+    const cache = new Cache(params)
+    return async (...p: P) => {
+      const argsHashed = hashArgs(p)
+      const cachedValue = cache.get(argsHashed)
+      if (cachedValue === undefined) {
+        const value = await fn(...p)
+        cache.set(argsHashed, value)
+        return value
+      }
+      return cachedValue
+    }
+  };
 
   constructor({
     ttl = duration(1, 'hour'),
     cleaningCheckupInterval = duration(2, 'day'),
-  }: {
-    ttl?: Duration,
-    cleaningCheckupInterval?: Duration,
-  } = {}) {
+  }: CacheParams = {}) {
     this.ttl = ttl
     this.cleaningCheckupInterval = cleaningCheckupInterval
     this.intervalRef = setInterval(this.cleanCheckup, cleaningCheckupInterval)
