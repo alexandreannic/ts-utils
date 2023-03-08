@@ -1,7 +1,6 @@
 import {Progress} from './Progress';
 import {expect} from 'chai';
-
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+import {sleep} from '../delay/Delay'
 
 describe('progress', function () {
 
