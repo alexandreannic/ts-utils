@@ -46,6 +46,23 @@ export class _Arr<T> extends Array<T> {
     return this.filter(_ => _ !== undefined && _ !== null) as any
   }
 
+  readonly sumObjects = (): T extends Record<string, number> ? (Record<keyof T, number> | undefined) : never => {
+    if(!this.head) {
+      return undefined as any
+    }
+    const init = Object.keys(this.head).reduce((sum, k) => ({...sum, [k]: 0}), {} as Record<keyof T, number>)
+    return this.reduce((acc, curr) => {
+      const res = ({
+        ...acc,
+        ...(Object.keys(curr) as (keyof T)[]).reduce<Partial<Record<keyof T, number>>>((sum, k) => ({
+          ...sum,
+          [k]: acc[k] + (curr[k] as unknown as number)
+        }), {})
+      })
+      return res
+    }, init) as any
+  }
+
   readonly head = this[0]
 
   readonly last = this[this.length - 1]
