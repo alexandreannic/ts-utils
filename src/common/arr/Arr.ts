@@ -47,7 +47,7 @@ export class _Arr<T> extends Array<T> {
   }
 
   readonly sumObjects = (): T extends Record<string, number> ? (Record<keyof T, number> | undefined) : never => {
-    if(!this.head) {
+    if (!this.head) {
       return undefined as any
     }
     const init = Object.keys(this.head).reduce((sum, k) => ({...sum, [k]: 0}), {} as Record<keyof T, number>)
@@ -61,6 +61,19 @@ export class _Arr<T> extends Array<T> {
       })
       return res
     }, init) as any
+  }
+
+  readonly groupBy = <R extends string | number | boolean>(fn: (_: T) => R): Record<string, T[]> => {
+    const res: Record<string, T[]> = {}
+    this.reduce<Record<string, T[]>>((acc, curr) => {
+      const key = '' + fn(curr)
+      if(!res[key]) {
+        res[key] = []
+      }
+      res[key].push(curr)
+      return res
+    }, {})
+    return res
   }
 
   readonly head = this[0]
