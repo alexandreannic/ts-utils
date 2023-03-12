@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import {Arr} from './Arr'
 
-describe.only('Arr', function () {
+describe('Arr', function () {
 
   it('get', function () {
     const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
@@ -57,13 +57,15 @@ describe.only('Arr', function () {
     const after = Arr(before).compact().get
     expect(after).deep.eq([1, 2])
   })
+})
 
-  it.only('should work with empty array', function () {
+describe('sumObjects', function () {
+  it('should work with empty array', function () {
     const data = Arr([] as {a: number}[])
     expect(data.sumObjects()).deep.eq(undefined)
   })
 
-  it.only('should sum object keys', function () {
+  it('should sum object keys', function () {
     const data = Arr([{BK1: 1, HKF: 2}, {BK1: 5, HKF: 12}])
     expect(data.sumObjects()).deep.eq({
       BK1: 6,
@@ -71,7 +73,7 @@ describe.only('Arr', function () {
     })
   })
 
-  it.only('should sum object keys with missing value', function () {
+  it('should sum object keys with missing value', function () {
     const data = Arr([{BK1: 1, HKF: 2}, {BK1: 5}])
     expect(data.sumObjects()).deep.eq({
       BK1: 6,
@@ -79,8 +81,39 @@ describe.only('Arr', function () {
     })
   })
 
-  it.only('should type as never if object contains string', function () {
+  it('should type as never if object contains string', function () {
     const dataWrong = Arr([{BK1: '1', HKF: 2}, {BK1: '5', HKF: 12}])
     const testType: never = dataWrong.sumObjects()
+  })
+})
+
+describe('groupBy', function () {
+  it('groupBy length', function () {
+    const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
+    expect(arr.groupBy(_ => _.length)).deep.eq({
+      5: ['apple', 'grape'], 6: ['banana', 'orange'], 4: ['pear', 'kiwi']
+    })
+  })
+
+  it('groupBy by boolean', function () {
+    const arr = Arr([2, 4, 23, 342, 21, 4, 100,])
+    expect(arr.groupBy(_ => _ > 22)).deep.eq({
+      false: [2, 4, 21, 4,],
+      true: [23, 342, 100],
+    })
+  })
+
+  it('groupBy objects by value', function () {
+    const arr = Arr([
+      {name: 'Alice', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Dave', age: 35},
+    ])
+    expect(arr.groupBy(_ => _.age)).deep.eq({
+      25: [{name: 'Alice', age: 25}, {name: 'Charlie', age: 25}],
+      30: [{name: 'Bob', age: 30}],
+      35: [{name: 'Dave', age: 35}]
+    })
   })
 })
