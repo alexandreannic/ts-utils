@@ -103,6 +103,15 @@ describe('groupBy', function () {
     })
   })
 
+  it.only('groupBy by value', function () {
+    const arr = Arr(['vin', 'vol', 'dnip', 'vol', 'vol', 'dnip'])
+    expect(arr.groupBy(_ => _)).deep.eq({
+      dnip: ['dnip', 'dnip'],
+      vol: ['vol', 'vol', 'vol'],
+      vin: ['vin'],
+    })
+  })
+
   it('groupBy objects by value', function () {
     const arr = Arr([
       {name: 'Alice', age: 25},
