@@ -87,6 +87,46 @@ describe('sumObjects', function () {
   })
 })
 
+describe('reduceObj', function () {
+  it('should works', function () {
+    const users = Arr([
+      {name: 'Alice', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Dave', age: 35},
+    ])
+    const res = users.reduceObject(_ => [_.name, _])
+    expect(res).deep.eq({
+      Alice: {name: 'Alice', age: 25},
+      Bob: {name: 'Bob', age: 30},
+      Charlie: {name: 'Charlie', age: 25},
+      Dave: {name: 'Dave', age: 35},
+    })
+
+  })
+
+  it('should sum', function () {
+    const users = Arr([
+      {name: 'Charlie', age: 25},
+      {name: 'Alice', age: 25},
+      {name: 'Alice', age: 22},
+      {name: 'Charlie', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+    ])
+    const res = users.reduceObject<number>((_, acc) => {
+      const sum = 1 + (acc[_.name] ?? 0)
+      return [_.name, sum]
+    })
+    expect(res).deep.eq({
+      Alice: 2,
+      Bob: 1,
+      Charlie: 3,
+    })
+
+  })
+})
+
 describe('groupBy', function () {
   it('groupBy length', function () {
     const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
@@ -103,6 +143,15 @@ describe('groupBy', function () {
     })
   })
 
+  it('groupBy by value', function () {
+    const arr = Arr(['vin', 'vol', 'dnip', 'vol', 'vol', 'dnip'])
+    expect(arr.groupBy(_ => _)).deep.eq({
+      dnip: ['dnip', 'dnip'],
+      vol: ['vol', 'vol', 'vol'],
+      vin: ['vin'],
+    })
+  })
+
   it('groupBy objects by value', function () {
     const arr = Arr([
       {name: 'Alice', age: 25},
@@ -114,6 +163,17 @@ describe('groupBy', function () {
       25: [{name: 'Alice', age: 25}, {name: 'Charlie', age: 25}],
       30: [{name: 'Bob', age: 30}],
       35: [{name: 'Dave', age: 35}]
+    })
+  })
+
+  it('should works with undefined value', function () {
+    const arr = Arr([1, undefined, 2, 2, 1, 3])
+    const res: Record<string, (number | undefined)[]> = arr.groupBy(_ => _)
+    expect(res).deep.eq({
+      1: [1, 1],
+      2: [2, 2],
+      3: [3],
+      undefined: [undefined]
     })
   })
 })
