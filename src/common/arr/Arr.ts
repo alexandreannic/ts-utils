@@ -9,6 +9,9 @@ interface Filter<T> {
 
 type Primitive = number | string | boolean
 
+// If you need to support numbers and symbols as keys:
+export type Dictionary<K extends keyof any, T> = { [P in K]?: T }
+
 export class _Arr<T> extends Array<T> {
 
   // constructor(...get: T[]) {
@@ -68,11 +71,11 @@ export class _Arr<T> extends Array<T> {
   /**
    * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
    */
-  readonly reduceObject = <R>(fn: (_: T, acc: Record<string | number, R>) => [string | number | boolean | undefined, R]): Record<string | number, R> => {
-    const obj: Record<string | number, R> = {}
+  readonly reduceObject = <R extends Record<any, any>>(fn: (_: T, acc: R) => [keyof R, R[keyof R]]): R => {
+    const obj: R = {} as R
     this.map(t => {
       const kv = fn(t, obj)
-      obj[kv[0] + ''] = kv[1]
+      obj[kv[0]] = kv[1]
     })
     return obj
   }

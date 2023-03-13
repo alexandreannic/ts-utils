@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Arr} from './Arr'
+import {Arr, Dictionary} from './Arr'
 
 describe('Arr', function () {
 
@@ -87,16 +87,41 @@ describe('sumObjects', function () {
   })
 })
 
+type Oblast = 'karkiv' | 'dni'
+
+interface Form {
+  oblast? :Oblast
+}
+
 describe('reduceObj', function () {
-  it.only('should works with undefined', function () {
+  it('should works with undefined', function () {
+    const arr: Form[] = [
+      {oblast: 'karkiv'},
+      {oblast: undefined},
+      {oblast: 'dni'},
+      {oblast: undefined},
+      {oblast: 'dni'},
+    ]
+    const res: Record<Oblast, number> = Arr(arr).reduceObject<Record<NonNullable<Oblast>, number>>((_, acc) => {
+      return [_.oblast!, (acc[_.oblast!] ?? 0) + 1]
+    })
+    expect(res).deep.eq({
+      karkiv: 1,
+      dni: 2,
+      undefined: 2,
+    })
+  })
+
+  it('should works with undefined', function () {
     const arr = Arr([1, undefined, 2, 2, 1, 3])
-    const res = arr.reduceObject<number>((_, acc) => {
-      return [_, (acc[_!] ?? 0) + 1]
+    const res = arr.reduceObject<Record<number, number>>((_, acc) => {
+      return [_!, (acc[_!] ?? 0) + 1]
     })
     expect(res).deep.eq({
       1: 2, 2: 2, 3: 1, undefined: 1
     })
   })
+
 
   it('should works', function () {
     const users = Arr([
@@ -124,7 +149,7 @@ describe('reduceObj', function () {
       {name: 'Bob', age: 30},
       {name: 'Charlie', age: 25},
     ])
-    const res = users.reduceObject<number>((_, acc) => {
+    const res = users.reduceObject<Record<string, number>>((_, acc) => {
       const sum = 1 + (acc[_.name] ?? 0)
       return [_.name, sum]
     })
