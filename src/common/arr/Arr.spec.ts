@@ -88,6 +88,16 @@ describe('sumObjects', function () {
 })
 
 describe('reduceObj', function () {
+  it.only('should works with undefined', function () {
+    const arr = Arr([1, undefined, 2, 2, 1, 3])
+    const res = arr.reduceObject<number>((_, acc) => {
+      return [_, (acc[_!] ?? 0) + 1]
+    })
+    expect(res).deep.eq({
+      1: 2, 2: 2, 3: 1, undefined: 1
+    })
+  })
+
   it('should works', function () {
     const users = Arr([
       {name: 'Alice', age: 25},

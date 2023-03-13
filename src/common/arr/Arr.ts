@@ -7,6 +7,8 @@ interface Filter<T> {
   (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): _Arr<T>;
 }
 
+type Primitive = number | string | boolean
+
 export class _Arr<T> extends Array<T> {
 
   // constructor(...get: T[]) {
@@ -66,16 +68,16 @@ export class _Arr<T> extends Array<T> {
   /**
    * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
    */
-  readonly reduceObject = <R>(fn: (_: T, acc: Record<string, R>) => [string, R]): Record<string, R> => {
-    const obj: Record<string, R> = {}
+  readonly reduceObject = <R>(fn: (_: T, acc: Record<string | number, R>) => [string | number | boolean | undefined, R]): Record<string | number, R> => {
+    const obj: Record<string | number, R> = {}
     this.map(t => {
       const kv = fn(t, obj)
-      obj[kv[0]] = kv[1]
+      obj[kv[0] + ''] = kv[1]
     })
     return obj
   }
 
-  readonly groupBy = <R extends undefined | string | number | boolean>(fn: (_: T) => R): Record<string, T[]> => {
+  readonly groupBy = <R extends undefined | Primitive>(fn: (_: T) => R): Record<string, T[]> => {
     const res: Record<string, T[]> = {}
     this.reduce<Record<string, T[]>>((acc, curr) => {
       const key = '' + fn(curr)
