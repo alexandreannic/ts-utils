@@ -63,11 +63,23 @@ export class _Arr<T> extends Array<T> {
     }, init) as any
   }
 
-  readonly groupBy = <R extends string | number | boolean>(fn: (_: T) => R): Record<string, T[]> => {
+  /**
+   * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
+   */
+  readonly reduceObject = <R>(fn: (_: T, acc: Record<string, R>) => [string, R]): Record<string, R> => {
+    const obj: Record<string, R> = {}
+    this.map(t => {
+      const kv = fn(t, obj)
+      obj[kv[0]] = kv[1]
+    })
+    return obj
+  }
+
+  readonly groupBy = <R extends undefined | string | number | boolean>(fn: (_: T) => R): Record<string, T[]> => {
     const res: Record<string, T[]> = {}
     this.reduce<Record<string, T[]>>((acc, curr) => {
       const key = '' + fn(curr)
-      if(!res[key]) {
+      if (!res[key]) {
         res[key] = []
       }
       res[key].push(curr)

@@ -15,6 +15,6 @@ export * from './prefixLogger/prefixLogger'
 export * from './progress/Progress'
 export * from './validateObject/ValidateObject'
 export * from './validateObject/ValidateObjectDeep'
-export * from './validateObject/LogObject';
+export * from './validateObject/LogObject'
 
 
