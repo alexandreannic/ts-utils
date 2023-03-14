@@ -44,7 +44,9 @@ export class _Arr<T> extends Array<T> {
 
   // @ts-ignore
   readonly sum: (T extends number ? (fn?: SumFn<T>) => number : (fn: SumFn<T>) => number) = (fn = _ => _) => {
-    return this.get.reduce((acc, curr) => acc + fn(curr), 0)
+    let sum = 0
+    this.forEach(_ => sum += fn(_))
+    return sum
   }
 
   compact(): T extends undefined | null ? never : _Arr<T> {
