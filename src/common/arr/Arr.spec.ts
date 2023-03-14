@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Arr, Dictionary} from './Arr'
+import {Arr} from './Arr'
 
 describe('Arr', function () {
 
