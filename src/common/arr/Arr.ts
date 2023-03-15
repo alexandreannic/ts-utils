@@ -1,16 +1,18 @@
 export const Arr = <T>(t: T[]) => new _Arr(...t)
 
-type SumFn<T> = (_: T) => number
+type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
 interface Filter<T> {
-  <S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any): _Arr<S>;
-  (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): _Arr<T>;
+  <S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any): _Arr<S>
+  (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): _Arr<T>
 }
 
-type Primitive = number | string | boolean
+// interface Count<T> {
+//   <S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any): number
+//   (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): number
+// }
 
-// If you need to support numbers and symbols as keys:
-export type Dictionary<K extends keyof any, T> = { [P in K]?: T }
+type Primitive = number | string | boolean
 
 export class _Arr<T> extends Array<T> {
 
@@ -21,6 +23,15 @@ export class _Arr<T> extends Array<T> {
   //
   // readonly arr: T[]
 
+
+  // @ts-ignore
+  readonly count: (T extends number ? (fn?: PredicateFn<T, boolean>) => boolean : (fn: PredicateFn<T, boolean>) => boolean) = (fn = (value, index, array) => value) => {
+    let x = 0
+    this.forEach((v, i, a) => {
+      if (fn(v, i, a)) x += 1
+    })
+    return x
+  }
 
   filter: Filter<T> = (predicate: any, thisArg: any) => {
     return new _Arr(...super.filter(predicate, thisArg))
@@ -43,9 +54,9 @@ export class _Arr<T> extends Array<T> {
   }
 
   // @ts-ignore
-  readonly sum: (T extends number ? (fn?: SumFn<T>) => number : (fn: SumFn<T>) => number) = (fn = _ => _) => {
+  readonly sum: (T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number) = (fn = (value, index, array) => value) => {
     let sum = 0
-    this.forEach(_ => sum += fn(_))
+    this.forEach((v, i, arr) => sum += fn(v, i, arr))
     return sum
   }
 
@@ -73,11 +84,13 @@ export class _Arr<T> extends Array<T> {
   /**
    * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
    */
-  readonly reduceObject = <R extends Record<any, any>>(fn: (_: T, acc: R) => [keyof R, R[keyof R]]): R => {
+  readonly reduceObject = <R extends Record<any, any>>(fn: (_: T, acc: R) => undefined | [keyof R, R[keyof R]]): R => {
     const obj: R = {} as R
     this.map(t => {
       const kv = fn(t, obj)
-      obj[kv[0]] = kv[1]
+      if (kv) {
+        obj[kv[0]] = kv[1]
+      }
     })
     return obj
   }

@@ -1,6 +1,7 @@
 import {expect} from 'chai'
 import {Arr} from './Arr'
 
+
 describe('Arr', function () {
 
   it('get', function () {
@@ -90,11 +91,29 @@ describe('sumObjects', function () {
 type Oblast = 'karkiv' | 'dni'
 
 interface Form {
-  oblast? :Oblast
+  oblast?: Oblast
 }
 
+describe.only('count', function () {
+
+  it('should count', function () {
+    const arr = Arr([25, 30, 25, 35,])
+    arr.count()
+  })
+
+  it('should count object property', function () {
+    const arr = Arr([
+      {name: 'Alice', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Dave', age: 35},
+    ])
+    expect(arr.count(_ => _.age > 26)).eq(2)
+  })
+})
+
 describe('reduceObj', function () {
-  it('should works with undefined', function () {
+  it('should works with undefined and accepts filter', function () {
     const arr: Form[] = [
       {oblast: 'karkiv'},
       {oblast: undefined},
@@ -103,11 +122,12 @@ describe('reduceObj', function () {
       {oblast: 'dni'},
     ]
     const res: Record<Oblast, number> = Arr(arr).reduceObject<Record<NonNullable<Oblast>, number>>((_, acc) => {
-      return [_.oblast!, (acc[_.oblast!] ?? 0) + 1]
+      if (_.oblast !== 'dni') {
+        return [_.oblast!, (acc[_.oblast!] ?? 0) + 1]
+      }
     })
     expect(res).deep.eq({
       karkiv: 1,
-      dni: 2,
       undefined: 2,
     })
   })
@@ -158,6 +178,13 @@ describe('reduceObj', function () {
       Bob: 1,
       Charlie: 3,
     })
+
+  })
+})
+
+describe('groupBy', function () {
+  it('should count', function () {
+    const arr = Arr([1, 12, 34, 9, 3, 14])
 
   })
 })
