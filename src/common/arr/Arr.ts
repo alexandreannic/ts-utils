@@ -25,7 +25,7 @@ export class _Arr<T> extends Array<T> {
 
 
   // @ts-ignore
-  readonly count: (T extends number ? (fn?: PredicateFn<T, boolean>) => boolean : (fn: PredicateFn<T, boolean>) => boolean) = (fn = (value, index, array) => value) => {
+  readonly count: (T extends number ? (fn?: PredicateFn<T, boolean>) => number: (fn: PredicateFn<T, boolean>) => number) = (fn = (value, index, array) => value) => {
     let x = 0
     this.forEach((v, i, a) => {
       if (fn(v, i, a)) x += 1
