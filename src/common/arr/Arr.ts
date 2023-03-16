@@ -1,4 +1,4 @@
-export const Arr = <T>(t: T[]) => new _Arr(...t)
+export const Arr = <T>(t: T[] = []) => new _Arr(...t)
 
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
