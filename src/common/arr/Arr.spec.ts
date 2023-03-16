@@ -98,7 +98,8 @@ describe.only('count', function () {
 
   it('should count', function () {
     const arr = Arr([25, 30, 25, 35,])
-    arr.count()
+    const res: number = arr.count()
+    expect(res).eq(arr.length)
   })
 
   it('should count object property', function () {
