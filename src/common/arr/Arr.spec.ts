@@ -94,7 +94,7 @@ interface Form {
   oblast?: Oblast
 }
 
-describe.only('count', function () {
+describe('count', function () {
 
   it('should count', function () {
     const arr = Arr([25, 30, 25, 35,])

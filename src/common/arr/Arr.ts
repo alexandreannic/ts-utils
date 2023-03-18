@@ -1,3 +1,5 @@
+import {Enum} from '../enum/Enum'
+
 export const Arr = <T>(t: T[] = []) => new _Arr(...t)
 
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
@@ -68,17 +70,20 @@ export class _Arr<T> extends Array<T> {
     if (!this.head) {
       return undefined as any
     }
-    const init = Object.keys(this.head).reduce((sum, k) => ({...sum, [k]: 0}), {} as Record<keyof T, number>)
-    return this.reduce((acc, curr) => {
-      const res = ({
-        ...acc,
-        ...(Object.keys(curr) as (keyof T)[]).reduce<Partial<Record<keyof T, number>>>((sum, k) => ({
-          ...sum,
-          [k]: acc[k] + (curr[k] as unknown as number)
-        }), {})
+    const res = {} as Record<keyof T, number>
+
+    Enum.keys(this.head).forEach(k => {
+      // @ts-ignore
+      res[k] = 0
+    })
+    this.forEach((item: T) => {
+      // @ts-ignore
+      Enum.keys(item).forEach(k => {
+      // @ts-ignore
+        res[k] = res[k] + item[k]
       })
-      return res
-    }, init) as any
+    })
+    return res as any
   }
 
   /**
