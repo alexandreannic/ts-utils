@@ -89,7 +89,9 @@ export class _Arr<T> extends Array<T> {
   /**
    * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
    */
-  readonly reduceObject = <R extends Record<any, any>>(fn: (_: T, acc: R) => undefined | [keyof R, R[keyof R]]): R => {
+  readonly reduceObject = <R extends Record<any, any>>(
+    fn: (_: T, acc: R) => undefined | [keyof R, R[keyof R]]
+  ): R => {
     const obj: R = {} as R
     this.map(t => {
       const kv = fn(t, obj)
