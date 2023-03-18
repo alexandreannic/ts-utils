@@ -2,10 +2,12 @@ type Entries<T> = NonNullable<{
   [K in keyof T]: NonNullable<[K, T[K]]>
 }>[keyof T][];
 
-export type _Enum<T = any> = {
-  [id: string]: T | string
-  [nu: number]: string
-}
+// export type _Enum<T = any> = {
+//   [id: string]: T | string
+//   [nu: number]: string
+// }
+
+export type _Enum<T = any> = Record<string | number, T>
 
 export class Enum {
 

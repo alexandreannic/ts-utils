@@ -13,6 +13,12 @@ const status = {
   WARNING: 'Warning',
 }
 
+interface Oblast {
+  koboKey: string
+  name: string
+  iso: string
+}
+
 describe('Enum', function () {
 
   it('Should infer as string', function () {
@@ -53,11 +59,20 @@ describe('Enum', function () {
   })
 
   it('Should correctly manage Partial<>', function () {
-    const test = (t: Partial<typeof status>) => {
+    const test = <T extends Record<any, any>>(t: Partial<T>) => {
       Enum.entries(t).map(([k, v]) => {
-        const _k: keyof typeof status = k
-        const _v: (typeof status)[keyof typeof status]= v
+        const _k: keyof T = k
+        const _v: T[keyof T] = v
       })
+    }
+  })
+
+  it('Should correctly manage Partial<>', function () {
+    const test = <T extends Record<any, any>>(t: T) => {
+      Enum.entries(t).reduce<T>((acc, [k, v]) => {
+        const test = acc[k]
+        return acc
+      }, {} as T)
     }
   })
 })
