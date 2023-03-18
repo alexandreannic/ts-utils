@@ -1,17 +1,21 @@
-type Entries<T> = {
-  [K in keyof T]: [K, T[K]];
-}[keyof T][];
+type Entries<T> = NonNullable<{
+  [K in keyof T]: NonNullable<[K, T[K]]>
+}>[keyof T][];
 
-type _Enum = {[key: string]: any}
+export type _Enum<T = any> = {
+  [id: string]: T | string
+  [nu: number]: string
+}
 
 export class Enum {
 
-  static readonly entries = <T extends _Enum>(t: T): Entries<T> => {
-    return Object.entries(t)
+  static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
+  // static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
+    return Object.entries(t) as any
   }
 
   static readonly keys = <T extends _Enum>(t: T): (keyof T)[] => {
-    return Enum.entries(t).map(([key]) => key)
+    return Object.keys(t)
   }
 
   static readonly values = <T extends _Enum>(t: T): (T[keyof T])[] => {

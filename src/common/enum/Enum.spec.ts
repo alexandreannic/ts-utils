@@ -7,7 +7,18 @@ enum Status {
   WARNING = 'Warning',
 }
 
+const status = {
+  OK: 'Ok',
+  ERROR: 'Error',
+  WARNING: 'Warning',
+}
+
 describe('Enum', function () {
+
+  it('Should infer as string', function () {
+    const x: string[] = Enum.values(Status)
+  })
+
   it('Should type and get keys correctly', function () {
     const keys: readonly ('OK' | 'ERROR' | 'WARNING')[] = Enum.keys(Status)
     expect(keys).deep.eq(['OK', 'ERROR', 'WARNING'])
@@ -19,7 +30,7 @@ describe('Enum', function () {
   })
 
   it('Should type entries and get correctly', function () {
-    const entries: (['OK', Status] | ['ERROR', Status] | ['WARNING', 'Warning'])[] = Enum.entries(Status)
+    const entries: (['OK', Status] | ['ERROR', Status] | ['WARNING', Status])[] = Enum.entries(Status)
     expect(entries).deep.eq([['OK', 'Ok'], ['ERROR', 'Error'], ['WARNING', 'Warning']])
   })
 
@@ -39,5 +50,14 @@ describe('Enum', function () {
       [Status.ERROR, 1],
       [Status.WARNING, undefined],
     ])
+  })
+
+  it('Should correctly manage Partial<>', function () {
+    const test = (t: Partial<typeof status>) => {
+      Enum.entries(t).map(([k, v]) => {
+        const _k: keyof typeof status = k
+        const _v: (typeof status)[keyof typeof status]= v
+      })
+    }
   })
 })
