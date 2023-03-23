@@ -38,8 +38,8 @@ export class _Arr<T> extends Array<T> {
     return new _Arr(...super.filter(predicate, thisArg))
   }
 
-  map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): _Arr<U> {
-    return new _Arr(...super.map(callbackfn, thisArg))
+  map<U>(callback: (value: T, index: number, array: T[]) => U, thisArg?: any): _Arr<U> {
+    return new _Arr(...super.map(callback, thisArg))
   }
 
   flatMap<U>(
@@ -47,7 +47,7 @@ export class _Arr<T> extends Array<T> {
     thisArg?: any
   ): _Arr<U> {
     // @ts-ignore
-    return new _Arr(...super.flatMap(callbackfn, thisArg))
+    return new _Arr(...super.flatMap(callback, thisArg))
   }
 
   distinct(fn: (element: T) => any) {

@@ -2,7 +2,7 @@ import {expect} from 'chai'
 import {Arr} from './Arr'
 
 
-describe('Arr', function () {
+describe.only('Arr', function () {
 
   it('get', function () {
     const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
@@ -53,6 +53,11 @@ describe('Arr', function () {
     expect(Arr([{a: 4}, {a: 7}, {a: 4}]).distinct(_ => _.a)).deep.eq([{a: 4}, {a: 7}])
   })
 
+  it('flatMap', function () {
+    const res: number[] = Arr([1, [2, 3]]).flatMap(_ => _)
+    expect(res).deep.eq([1, 2, 3])
+  })
+
   it('compact', function () {
     const before = [1, undefined, 2, null]
     const after = Arr(before).compact().get
@@ -80,11 +85,6 @@ describe('sumObjects', function () {
       BK1: 6,
       HKF: 2,
     })
-  })
-
-  it.only('test flatMap', function () {
-    const res: number[] = Arr([1, [2, 3]]).flatMap(_ => _)
-    expect(res).deep.eq([1, 2, 3])
   })
 
   it('should type as never if object contains string', function () {
