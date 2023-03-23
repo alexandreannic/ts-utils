@@ -46,7 +46,6 @@ export class _Arr<T> extends Array<T> {
     callback: (value: T, index: number, array: T[]) => U | ReadonlyArray<U>,
     thisArg?: any
   ): _Arr<U> {
-    // @ts-ignore
     return new _Arr(...super.flatMap(callback, thisArg))
   }
 
