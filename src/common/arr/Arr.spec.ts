@@ -83,7 +83,8 @@ describe('sumObjects', function () {
   })
 
   it.only('test flatMap', function () {
-    expect(Arr([1, [2, 3]]).flatMap(_ => _)).deep.eq([1, 2, 3])
+    const res: number[] = Arr([1, [2, 3]]).flatMap(_ => _)
+    expect(res).deep.eq([1, 2, 3])
   })
 
   it('should type as never if object contains string', function () {

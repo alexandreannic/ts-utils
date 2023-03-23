@@ -42,7 +42,11 @@ export class _Arr<T> extends Array<T> {
     return new _Arr(...super.map(callbackfn, thisArg))
   }
 
-  flatMap<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): _Arr<U> {
+  flatMap<U>(
+    callback: (value: T, index: number, array: T[]) => U | ReadonlyArray<U>,
+    thisArg?: any
+  ): _Arr<U> {
+    // @ts-ignore
     return new _Arr(...super.flatMap(callbackfn, thisArg))
   }
 
@@ -82,7 +86,7 @@ export class _Arr<T> extends Array<T> {
     this.forEach((item: T) => {
       // @ts-ignore
       Enum.keys(item).forEach(k => {
-      // @ts-ignore
+        // @ts-ignore
         res[k] = res[k] + item[k]
       })
     })
