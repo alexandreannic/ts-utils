@@ -34,13 +34,16 @@ export class _Arr<T> extends Array<T> {
     })
     return x
   }
-
   filter: Filter<T> = (predicate: any, thisArg: any) => {
     return new _Arr(...super.filter(predicate, thisArg))
   }
 
   map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): _Arr<U> {
     return new _Arr(...super.map(callbackfn, thisArg))
+  }
+
+  flatMap<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): _Arr<U> {
+    return new _Arr(...super.flatMap(callbackfn, thisArg))
   }
 
   distinct(fn: (element: T) => any) {

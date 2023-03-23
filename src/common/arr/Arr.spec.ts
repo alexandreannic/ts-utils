@@ -82,6 +82,10 @@ describe('sumObjects', function () {
     })
   })
 
+  it.only('test flatMap', function () {
+    expect(Arr([1, [2, 3]]).flatMap(_ => _)).deep.eq([1, 2, 3])
+  })
+
   it('should type as never if object contains string', function () {
     const dataWrong = Arr([{BK1: '1', HKF: 2}, {BK1: '5', HKF: 12}])
     const testType: never = dataWrong.sumObjects()
