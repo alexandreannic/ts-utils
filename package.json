@@ -1,6 +1,6 @@
 {
   "name": "@alexandreannic/ts-utils",
-  "version": "1.7.32",
+  "version": "1.7.33",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "private": false,
