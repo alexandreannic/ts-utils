@@ -49,16 +49,16 @@ export class _Arr<T> extends Array<T> {
     return new _Arr(...super.flatMap(callback, thisArg))
   }
 
-  distinct(fn: (element: T) => any) {
+  distinct(fn: (element: T) => any): _Arr<T> {
     const uniqueValues: Record<any, boolean> = {}
-    return this.get.reduce((result: T[], currentValue: T) => {
+    return this.get.reduce((result: _Arr<T>, currentValue: T) => {
       const key = fn(currentValue)
       if (!uniqueValues[key]) {
         uniqueValues[key] = true
         result.push(currentValue)
       }
       return result
-    }, [])
+    }, Arr([]))
   }
 
   // @ts-ignore
