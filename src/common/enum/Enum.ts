@@ -27,4 +27,13 @@ export class Enum {
   static readonly getKeyByValue = <T extends _Enum>(t: T, value: string/*T[keyof T]*/): keyof T  | undefined => {
     return Enum.entries(t).find(([k, v]) => v === value)?.[0]
   }
+
+  static readonly transform = <K extends string, V extends any, NK extends string, NV>(o: Record<K, V>, map: (k: K, v: V) => [NK, NV]): Record<NK, NV> => {
+    const res: Record<NK, NV> = {} as any
+    Enum.entries(o).forEach(([k, v]) => {
+      const [newK, newV] = map(k, v)
+      res[newK] = newV
+    })
+    return res
+  }
 }
