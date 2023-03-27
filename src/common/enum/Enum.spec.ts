@@ -76,7 +76,7 @@ describe('Enum', function () {
     }
   })
 
-  describe.only('transform', function () {
+  describe('transform', function () {
 
     it('should copy', function () {
       const obj = {

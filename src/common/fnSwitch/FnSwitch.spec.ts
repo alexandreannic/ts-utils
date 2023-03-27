@@ -22,19 +22,29 @@ describe('FnSwitch', function () {
     }, _ => 3)
     expect(port).to.eq(3)
   })
+
+  it('Should set undefined', function () {
+    enum Value {
+      yes = 'yes',
+      no = 'no',
+      unknown = 'unknown',
+    }
+  })
+
   it('Should fall in the default case function', function () {
     enum Value {
       yes = 'yes',
       no = 'no',
       unknown = 'unknown',
     }
-    const value = Value.unknown as Value
+
+    const value = Value.yes as Value
 
     const port = fnSwitch(value, {
-      [Value.yes]: 1,
+      [Value.yes]: undefined,
       [Value.no]: 2,
       [Value.unknown]: 3,
     }, _ => 4)
-    expect(port).to.eq(3)
+    expect(port).to.eq(undefined)
   })
 })

@@ -2,7 +2,7 @@ import {expect} from 'chai'
 import {Arr} from './Arr'
 
 
-describe.only('Arr', function () {
+describe('Arr', function () {
 
   it('get', function () {
     const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
@@ -62,6 +62,13 @@ describe.only('Arr', function () {
     const before = [1, undefined, 2, null]
     const after = Arr(before).compact().get
     expect(after).deep.eq([1, 2])
+  })
+
+  it('compact custom type', function () {
+    type Name = 'name1' | 'name2'
+    const before: (Name | undefined)[] = ['name1', undefined, 'name2', undefined]
+    const after: Name[] = Arr(before).compact().get.map(_ => _)
+    expect(after).deep.eq(['name1', 'name2'])
   })
 })
 
