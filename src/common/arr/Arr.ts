@@ -108,12 +108,12 @@ export class _Arr<T> extends Array<T> {
     return obj
   }
 
-  readonly groupBy = <R extends undefined | Primitive>(fn: (_: T) => R): Record<string, T[]> => {
-    const res: Record<string, T[]> = {}
-    this.reduce<Record<string, T[]>>((acc, curr) => {
+  readonly groupBy = <R extends undefined | Primitive>(fn: (_: T) => R): Record<string, _Arr<T>> => {
+    const res: Record<string, _Arr<T>> = {}
+    this.reduce<Record<string, _Arr<T>>>((acc, curr) => {
       const key = '' + fn(curr)
       if (!res[key]) {
-        res[key] = []
+        res[key] = Arr([])
       }
       res[key].push(curr)
       return res
