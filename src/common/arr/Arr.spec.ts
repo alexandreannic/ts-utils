@@ -210,13 +210,6 @@ describe('reduceObj', function () {
 })
 
 describe('groupBy', function () {
-  it('should count', function () {
-    const arr = Arr([1, 12, 34, 9, 3, 14])
-
-  })
-})
-
-describe('groupBy', function () {
   it('groupBy length', function () {
     const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
     expect(arr.groupBy(_ => _.length)).deep.eq({
@@ -226,6 +219,7 @@ describe('groupBy', function () {
 
   it('groupBy by boolean', function () {
     const arr = Arr([2, 4, 23, 342, 21, 4, 100,])
+    const test = arr.groupBy(_ => _ > 22)
     expect(arr.groupBy(_ => _ > 22)).deep.eq({
       false: [2, 4, 21, 4,],
       true: [23, 342, 100],
