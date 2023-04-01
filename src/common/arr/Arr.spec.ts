@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Arr} from './Arr'
+import {_Arr, Arr} from './Arr'
 
 
 describe('Arr', function () {
@@ -210,13 +210,6 @@ describe('reduceObj', function () {
 })
 
 describe('groupBy', function () {
-  it('should count', function () {
-    const arr = Arr([1, 12, 34, 9, 3, 14])
-
-  })
-})
-
-describe('groupBy', function () {
   it('groupBy length', function () {
     const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
     expect(arr.groupBy(_ => _.length)).deep.eq({
@@ -226,6 +219,7 @@ describe('groupBy', function () {
 
   it('groupBy by boolean', function () {
     const arr = Arr([2, 4, 23, 342, 21, 4, 100,])
+    const test = arr.groupBy(_ => _ > 22)
     expect(arr.groupBy(_ => _ > 22)).deep.eq({
       false: [2, 4, 21, 4,],
       true: [23, 342, 100],
@@ -253,6 +247,28 @@ describe('groupBy', function () {
       30: [{name: 'Bob', age: 30}],
       35: [{name: 'Dave', age: 35}]
     })
+  })
+
+  it('should infer key type when is it a subset of string', function () {
+    type Name = 'Alice' | 'Bob' | 'Charlie' | 'Dave'
+    const arr: _Arr<{name: Name, age: number}> = Arr([
+      {name: 'Alice', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Dave', age: 35},
+    ])
+    const res: Record<Name, typeof arr> = arr.groupBy(_ => _.name)
+  })
+
+  it('should infer key type when is it a subset of string', function () {
+    type Name = 'Alice' | 'Bob' | 'Charlie' | 'Dave'
+    const arr: _Arr<{name: Name, adult: boolean}> = Arr([
+      {name: 'Alice', adult: true},
+      {name: 'Bob', adult: false},
+      {name: 'Charlie', adult: true},
+      {name: 'Dave', adult: true},
+    ])
+    const res = arr.groupBy(_ => _.adult)
   })
 
   it('should works with undefined value', function () {
