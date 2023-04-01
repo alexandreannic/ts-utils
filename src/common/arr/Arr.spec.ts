@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Arr} from './Arr'
+import {_Arr, Arr} from './Arr'
 
 
 describe('Arr', function () {
@@ -247,6 +247,28 @@ describe('groupBy', function () {
       30: [{name: 'Bob', age: 30}],
       35: [{name: 'Dave', age: 35}]
     })
+  })
+
+  it('should infer key type when is it a subset of string', function () {
+    type Name = 'Alice' | 'Bob' | 'Charlie' | 'Dave'
+    const arr: _Arr<{name: Name, age: number}> = Arr([
+      {name: 'Alice', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Dave', age: 35},
+    ])
+    const res: Record<Name, typeof arr> = arr.groupBy(_ => _.name)
+  })
+
+  it('should infer key type when is it a subset of string', function () {
+    type Name = 'Alice' | 'Bob' | 'Charlie' | 'Dave'
+    const arr: _Arr<{name: Name, adult: boolean}> = Arr([
+      {name: 'Alice', adult: true},
+      {name: 'Bob', adult: false},
+      {name: 'Charlie', adult: true},
+      {name: 'Dave', adult: true},
+    ])
+    const res = arr.groupBy(_ => _.adult)
   })
 
   it('should works with undefined value', function () {

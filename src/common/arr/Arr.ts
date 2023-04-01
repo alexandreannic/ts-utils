@@ -114,10 +114,10 @@ export class _Arr<T> extends Array<T> {
     return obj
   }
 
-  readonly groupBy = <R extends undefined | string | number>(fn: (_: T) => R): Record<NonNullable<R>, _Arr<T>> => {
+  readonly groupBy = <R extends undefined | string>(fn: (_: T) => R | number | boolean): Record<NonNullable<R>, _Arr<T>> => {
     const res: Record<NonNullable<R>, _Arr<T>> = {} as any
     this.reduce<Record<NonNullable<R>, _Arr<T>>>((acc, curr) => {
-      const key = fn(curr)!
+      const key = fn(curr)! as NonNullable<R>
       if (!res[key]) {
         res[key] = Arr([])
       }
