@@ -72,6 +72,12 @@ export class _Arr<T> extends Array<T> {
     return this.filter(_ => _ !== undefined && _ !== null) as any
   }
 
+  percent(perdicate: PredicateFn<T, boolean>, base?: PredicateFn<T, boolean>): number {
+    const v = this.count(perdicate)
+    const total = base ? this.count(base) : this.length
+    return v / total
+  }
+
   readonly sumObjects = (): T extends Record<string, number> ? (Record<keyof T, number> | undefined) : never => {
     if (!this.head) {
       return undefined as any

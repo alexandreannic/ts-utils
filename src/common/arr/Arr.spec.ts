@@ -125,6 +125,20 @@ describe('count', function () {
   })
 })
 
+describe('percent', function () {
+  it('should compute percentage', function () {
+    const arr = Arr([
+      {name: 'Alice', age: 25},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Dave', age: 35},
+    ])
+    expect(arr.percent(_ => _.age === 35)).eq(.25)
+    expect(arr.percent(_ => _.age === 35, _ => _.age >= 30)).eq(.5)
+    expect(arr.percent(_ => _.age < 31)).eq(.75)
+  })
+})
+
 describe('reduceObj', function () {
   it('should works with undefined and accepts filter', function () {
     const arr: Form[] = [
