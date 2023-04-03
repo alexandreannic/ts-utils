@@ -14,6 +14,8 @@ interface Filter<T> {
 //   (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): number
 // }
 
+export type Arr<T> = _Arr<T>
+
 type Primitive = number | string | boolean
 
 export class _Arr<T> extends Array<T> {
