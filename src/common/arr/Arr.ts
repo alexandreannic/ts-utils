@@ -64,6 +64,11 @@ export class _Arr<T> extends Array<T> {
   }
 
   // @ts-ignore
+  readonly max: (T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number) = (fn = (value, index, array) => value) => {
+    return this.map(fn).sort().head
+  }
+
+  // @ts-ignore
   readonly sum: (T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number) = (fn = (value, index, array) => value) => {
     let sum = 0
     this.forEach((v, i, arr) => sum += fn(v, i, arr))

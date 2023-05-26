@@ -70,6 +70,20 @@ describe('Arr', function () {
     const after: Name[] = Arr(before).compact().get.map(_ => _)
     expect(after).deep.eq(['name1', 'name2'])
   })
+
+  describe('max', function () {
+    it.only('numbers array', function () {
+      expect(Arr([1, 2]).max()).eq(2)
+    })
+
+    it('obj array', function () {
+      expect(Arr([{age: 12}, {age: 23}, {age: -2}]).max(_ => _.age)).eq(23)
+    })
+
+    it('empty array', function () {
+      expect(Arr([] as number[]).max()).eq(undefined)
+    })
+  })
 })
 
 describe('sumObjects', function () {
