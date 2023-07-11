@@ -64,11 +64,6 @@ export class _Arr<T> extends Array<T> {
   }
 
   // @ts-ignore
-  readonly max: (T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number) = (fn = (value, index, array) => value) => {
-    return this.map(fn).sort().head
-  }
-
-  // @ts-ignore
   readonly sum: (T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number) = (fn = (value, index, array) => value) => {
     let sum = 0
     this.forEach((v, i, arr) => sum += fn(v, i, arr))
@@ -77,6 +72,23 @@ export class _Arr<T> extends Array<T> {
 
   compact(): T extends undefined | null ? never : _Arr<T> {
     return this.filter(_ => _ !== undefined && _ !== null) as any
+  }
+
+  intersect(array: T[]): _Arr<T> {
+    const countMap = new Map<T, number>()
+    for (const _ of [array, this]) {
+      for (const element of _) {
+        const count = countMap.get(element) || 0
+        countMap.set(element, count + 1)
+      }
+    }
+    const intersectedArray: T[] = []
+    for (const [element, count] of countMap) {
+      if (count > 1) {
+        intersectedArray.push(element)
+      }
+    }
+    return Arr(intersectedArray)
   }
 
   percent(perdicate: PredicateFn<T, boolean>, base?: PredicateFn<T, boolean>): number {
