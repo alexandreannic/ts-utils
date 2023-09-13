@@ -76,6 +76,56 @@ describe('Enum', function () {
     }
   })
 
+  describe('filter', function () {
+
+    it('filter by index', function () {
+      const obj = {
+        a: 'cat',
+        b: 'catwoman',
+        c: 'batman',
+      }
+      const filtered = Enum.filter(obj, (k, v, i) => i === 1)
+      expect(filtered).deep.eq({
+          b: 'catwoman',
+        }
+      )
+    })
+
+    it('filter by string value', function () {
+      const obj = {
+        a: 'cat',
+        b: 'catwoman',
+        c: 'batman',
+      }
+      const filtered = Enum.filter(obj, (k, v) => v.includes('cat'))
+      expect(filtered).deep.eq({
+          a: 'cat',
+          b: 'catwoman',
+        }
+      )
+    })
+
+    it('filter by number value', function () {
+      const obj = {
+        a: 1,
+        b: 2,
+        c: 3,
+      }
+      const filtered = Enum.filter(obj, (k, v) => v > 1)
+      expect(filtered).deep.eq({b: 2, c: 3,})
+    })
+
+    it('filter by key', function () {
+      const obj = {
+        a: 1,
+        b: 2,
+        c: 3,
+      }
+      const filtered = Enum.filter(obj, (k, v) => k === 'a')
+      expect(filtered).deep.eq({a: 1})
+    })
+  })
+
   describe('transform', function () {
 
     it('should copy', function () {
