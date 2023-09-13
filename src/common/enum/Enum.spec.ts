@@ -76,6 +76,24 @@ describe('Enum', function () {
     }
   })
 
+  describe.only('method', function () {
+    it('test all', function () {
+      const res = new Enum({
+        'cat': 1,
+        'bat': 2,
+        'catwoman': 3,
+        'batman': 4,
+      })
+        .transform((k, v) => ['_' + k, v + 1])
+        .filter((k, v) => k.includes('man'))
+        .get()
+      expect(res).deep.eq({
+        '_catwoman': 4,
+        '_batman': 5,
+      })
+    })
+  })
+
   describe('filter', function () {
 
     it('filter by index', function () {
