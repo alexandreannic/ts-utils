@@ -56,5 +56,13 @@ export class Enum<T extends Record<any, any>> {
     return new Enum<Partial<T>>(Enum.filter(this.o, fn) as any)
   }
 
+  readonly sort = (predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number) => {
+    const res: any = {}
+    Enum.entries(this.o).sort(predicate).forEach(([k, v]) => {
+      res[k] = v
+    })
+    return new Enum(res as T)
+  }
+
   readonly get = () => this.o
 }

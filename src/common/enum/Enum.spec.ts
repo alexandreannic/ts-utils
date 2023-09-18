@@ -76,20 +76,52 @@ describe('Enum', function () {
     }
   })
 
-  describe.only('method', function () {
+  describe('method', function () {
+
     it('test all', function () {
       const res = new Enum({
-        'cat': 1,
-        'bat': 2,
-        'catwoman': 3,
-        'batman': 4,
+        'cat': 2,
+        'bat': 1,
+        'catwoman': 4,
+        'batman': 3,
       })
         .transform((k, v) => ['_' + k, v + 1])
+        .sort(([ka, va], [kb, vb]) => va - vb)
         .filter((k, v) => k.includes('man'))
         .get()
       expect(res).deep.eq({
-        '_catwoman': 4,
-        '_batman': 5,
+        '_batman': 4,
+        '_catwoman': 5,
+      })
+    })
+  })
+
+  describe('sort', function () {
+
+    const data = new Enum({
+      'ironman': 2,
+      'barman': 1,
+      'catwoman': 4,
+      'batman': 3,
+    } as Record<string, number>)
+
+    it('sort by key', function () {
+      const res = data.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk)).get()
+      expect(res).deep.eq({
+        'barman': 1,
+        'batman': 3,
+        'catwoman': 4,
+        'ironman': 2,
+      })
+    })
+
+    it('sort by val', function () {
+      const res = data.sort(([ak, av], [bk, bv]) => bv - av).get()
+      expect(res).deep.eq({
+        'barman': 1,
+        'ironman': 2,
+        'batman': 3,
+        'catwoman': 4,
       })
     })
   })
