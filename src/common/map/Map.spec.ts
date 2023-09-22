@@ -40,4 +40,10 @@ describe('Map', function () {
   it('should call with 2 args', async function () {
     expect(map(obj.key.subArr, obj.key.subNumber, ([a, b], c) => a + b + c)).eq('ab2')
   })
+
+  it('should call with 5 args', async function () {
+    expect(map('a', 1, true, {}, [], (a: string, b: number, c: boolean, d: object, e: []) =>
+      a + b + c + JSON.stringify(d) + JSON.stringify(e))
+    ).eq('a1true{}[]')
+  })
 })
