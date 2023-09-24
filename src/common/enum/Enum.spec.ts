@@ -99,14 +99,14 @@ describe('Enum', function () {
   describe.only('entries', function () {
     it('', function () {
       const obj = new Enum({
-        [Status.OK]: 'ok',
+        [Status.OK]: 1,
         [Status.ERROR]: 1,
-        [Status.WARNING]: undefined,
+        [Status.WARNING]: 2,
       })
       expect(obj.entries()).deep.eq([
-        [Status.OK, 'ok'],
+        [Status.OK, 1],
         [Status.ERROR, 1],
-        [Status.WARNING, undefined],
+        [Status.WARNING, 2],
       ])
     })
   })

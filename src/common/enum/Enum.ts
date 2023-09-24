@@ -9,7 +9,7 @@ type Entries<T> = NonNullable<{
 
 export type _Enum<T = any> = Record<string | number, T>
 
-export class Enum<T extends Record<any, any>> {
+export class Enum<T extends _Enum> {
 
   static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
     // static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
@@ -64,7 +64,8 @@ export class Enum<T extends Record<any, any>> {
     return new Enum(res as T)
   }
 
-  readonly entries = () => Enum.entries(this.o)
+  // @ts-ignore
+  readonly entries = () => Enum.entries<keyof T, T[keyof T]>(this.o)
 
   readonly get = () => this.o
 }
