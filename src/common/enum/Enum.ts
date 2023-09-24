@@ -64,5 +64,7 @@ export class Enum<T extends Record<any, any>> {
     return new Enum(res as T)
   }
 
+  readonly entries = () => Enum.entries(this.o)
+
   readonly get = () => this.o
 }

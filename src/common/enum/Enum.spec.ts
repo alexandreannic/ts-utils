@@ -96,6 +96,21 @@ describe('Enum', function () {
     })
   })
 
+  describe.only('entries', function () {
+    it('', function () {
+      const obj = new Enum({
+        [Status.OK]: 'ok',
+        [Status.ERROR]: 1,
+        [Status.WARNING]: undefined,
+      })
+      expect(obj.entries()).deep.eq([
+        [Status.OK, 'ok'],
+        [Status.ERROR, 1],
+        [Status.WARNING, undefined],
+      ])
+    })
+  })
+
   describe('sort', function () {
 
     const data = new Enum({
