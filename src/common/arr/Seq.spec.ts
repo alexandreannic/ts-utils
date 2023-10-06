@@ -229,8 +229,8 @@ describe('Arr', function () {
 
     it('groupBy by boolean', function () {
       const arr = seq([2, 4, 23, 342, 21, 4, 100,])
-      const test = arr.groupBy(_ => _ > 22)
-      expect(arr.groupBy(_ => _ > 22)).deep.eq({
+      const test = arr.groupBy(_ => String(_ > 22))
+      expect(arr.groupBy(_ => String(_ > 22))).deep.eq({
         false: [2, 4, 21, 4,],
         true: [23, 342, 100],
       })
@@ -278,17 +278,17 @@ describe('Arr', function () {
         {name: 'Charlie', adult: true},
         {name: 'Dave', adult: true},
       ])
-      const res = arr.groupBy(_ => _.adult)
+      const res = arr.groupBy(_ => _.adult + '')
     })
 
     it('should works with undefined value', function () {
       const arr = seq([1, undefined, 2, 2, 1, 3])
-      const res: Record<string, (number | undefined)[]> = arr.groupBy(_ => _)
+      const res: Record<string, (number | undefined)[]> = arr.groupBy(_ => _ ?? '')
       expect(res).deep.eq({
         1: [1, 1],
         2: [2, 2],
         3: [3],
-        undefined: [undefined]
+        '': [undefined]
       })
     })
   })

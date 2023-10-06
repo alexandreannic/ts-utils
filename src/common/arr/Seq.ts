@@ -5,7 +5,7 @@ interface Filter<T> {
   (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): Seq<T>
 }
 
-type Primitive = number | string | boolean
+type Key = number | string
 
 export class Seq<T> extends Array<T> {
 
@@ -98,8 +98,8 @@ export class Seq<T> extends Array<T> {
     return obj
   }
 
-  groupBy<R extends undefined | Primitive>(fn: (_: T) => R): Record<string, Seq<T>> {
-    const res: Record<string, Seq<T>> = {}
+  groupBy<R extends Key>(fn: (_: T) => R): Record<R, Seq<T>> {
+    const res: Record<Key, Seq<T>> = {}
     this.forEach(curr => {
       const key = '' + fn(curr)
       if (!res[key]) {
