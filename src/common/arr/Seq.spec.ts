@@ -1,84 +1,89 @@
 import {expect} from 'chai'
-import {_Arr, Arr} from './Arr'
+import {Seq, seq} from './Seq'
 
+type Oblast = 'karkiv' | 'dni'
+
+interface Form {
+  oblast?: Oblast
+}
 
 describe('Arr', function () {
 
   it('get', function () {
-    const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
-    expect(arr.get).deep.eq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
+    const arr = seq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
+    expect(arr.get()).deep.eq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
   })
 
   it('head', function () {
-    const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
-    expect(arr.head).deep.eq({k1: 1, k2: 'a'})
+    const arr = seq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
+    expect(arr.head()).deep.eq({k1: 1, k2: 'a'})
   })
 
   it('last', function () {
-    const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
-    expect(arr.last).deep.eq({k1: 2, k2: 'b'})
+    const arr = seq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
+    expect(arr.last()).deep.eq({k1: 2, k2: 'b'})
   })
 
   it('filter', function () {
-    expect(Arr([1, 2, 3]).filter((_, a, b) => _ > 1)).deep.eq([2, 3])
+    expect(seq([1, 2, 3]).filter((_, a, b) => _ > 1)).deep.eq([2, 3])
   })
 
   it('filter + last', function () {
-    expect(Arr([1, 2, 3]).filter((_, a, b) => _ < 3).last).deep.eq(2)
+    expect(seq([1, 2, 3]).filter((_, a, b) => _ < 3).last()).deep.eq(2)
   })
 
   it('map', function () {
-    const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
-    expect(arr.map(_ => _.k1).get).deep.eq([1, 2])
+    const arr = seq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
+    expect(arr.map(_ => _.k1).get()).deep.eq([1, 2])
   })
 
   it('map + last', function () {
-    const arr = Arr([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
-    expect(arr.map(_ => _.k1).last).deep.eq(2)
+    const arr = seq([{k1: 1, k2: 'a'}, {k1: 2, k2: 'b'}])
+    expect(arr.map(_ => _.k1).last()).deep.eq(2)
   })
 
   it('sum', function () {
-    expect(Arr([1, 2]).sum()).eq(3)
+    expect(seq([1, 2]).sum()).eq(3)
   })
 
   it('sum objects', function () {
-    expect(Arr([{a: 4}, {a: 7}]).sum(_ => _.a)).eq(11)
+    expect(seq([{a: 4}, {a: 7}]).sum(_ => _.a)).eq(11)
   })
 
   it('distinct', function () {
-    expect(Arr([1, 1, 2]).distinct(_ => _)).deep.eq([1, 2])
+    expect(seq([1, 1, 2]).distinct(_ => _)).deep.eq([1, 2])
   })
 
   it('distinct objects', function () {
-    expect(Arr([{a: 4}, {a: 7}, {a: 4}]).distinct(_ => _.a)).deep.eq([{a: 4}, {a: 7}])
+    expect(seq([{a: 4}, {a: 7}, {a: 4}]).distinct(_ => _.a)).deep.eq([{a: 4}, {a: 7}])
   })
 
   it('flatMap', function () {
-    const res: number[] = Arr([1, [2, 3]]).flatMap(_ => _)
+    const res: number[] = seq([1, [2, 3]]).flatMap(_ => _)
     expect(res).deep.eq([1, 2, 3])
   })
 
   it('compact', function () {
     const before = [1, undefined, 2, null]
-    const after = Arr(before).compact().get
+    const after = seq(before).compact().get()
     expect(after).deep.eq([1, 2])
   })
 
   it('compact custom type', function () {
     type Name = 'name1' | 'name2'
     const before: (Name | undefined)[] = ['name1', undefined, 'name2', undefined]
-    const after: Name[] = Arr(before).compact().get.map(_ => _)
+    const after: Name[] = seq(before).compact().get().map(_ => _)
     expect(after).deep.eq(['name1', 'name2'])
   })
 
   describe('sumObjects', function () {
     it('should work with empty array', function () {
-      const data = Arr([] as {a: number}[])
+      const data = seq([] as {a: number}[])
       expect(data.sumObjects()).deep.eq(undefined)
     })
 
     it('should sum object keys', function () {
-      const data = Arr([{BK1: 1, HKF: 2}, {BK1: 5, HKF: 12}])
+      const data = seq([{BK1: 1, HKF: 2}, {BK1: 5, HKF: 12}])
       expect(data.sumObjects()).deep.eq({
         BK1: 6,
         HKF: 14,
@@ -86,7 +91,7 @@ describe('Arr', function () {
     })
 
     it('should sum object keys with missing value', function () {
-      const data = Arr([{BK1: 1, HKF: 2}, {BK1: 5}])
+      const data = seq([{BK1: 1, HKF: 2}, {BK1: 5}])
       expect(data.sumObjects()).deep.eq({
         BK1: 6,
         HKF: 2,
@@ -94,27 +99,21 @@ describe('Arr', function () {
     })
 
     it('should type as never if object contains string', function () {
-      const dataWrong = Arr([{BK1: '1', HKF: 2}, {BK1: '5', HKF: 12}])
+      const dataWrong = seq([{BK1: '1', HKF: 2}, {BK1: '5', HKF: 12}])
       const testType: never = dataWrong.sumObjects()
     })
   })
 
-  type Oblast = 'karkiv' | 'dni'
-
-  interface Form {
-    oblast?: Oblast
-  }
-
   describe('count', function () {
 
     it('should count', function () {
-      const arr = Arr([25, 30, 25, 35,])
+      const arr = seq([25, 30, 25, 35,])
       const res: number = arr.count()
       expect(res).eq(arr.length)
     })
 
     it('should count object property', function () {
-      const arr = Arr([
+      const arr = seq([
         {name: 'Alice', age: 25},
         {name: 'Bob', age: 30},
         {name: 'Charlie', age: 25},
@@ -126,7 +125,7 @@ describe('Arr', function () {
 
   describe('percent', function () {
     it('should compute percentage', function () {
-      const arr = Arr([
+      const arr = seq([
         {name: 'Alice', age: 25},
         {name: 'Bob', age: 30},
         {name: 'Charlie', age: 25},
@@ -147,7 +146,7 @@ describe('Arr', function () {
         {oblast: undefined},
         {oblast: 'dni'},
       ]
-      const res: Record<Oblast, number> = Arr(arr).reduceObject<Record<NonNullable<Oblast>, number>>((_, acc) => {
+      const res: Record<Oblast, number> = seq(arr).reduceObject<Record<NonNullable<Oblast>, number>>((_, acc) => {
         if (_.oblast !== 'dni') {
           return [_.oblast!, (acc[_.oblast!] ?? 0) + 1]
         }
@@ -159,7 +158,7 @@ describe('Arr', function () {
     })
 
     it('should works with undefined', function () {
-      const arr = Arr([1, undefined, 2, 2, 1, 3])
+      const arr = seq([1, undefined, 2, 2, 1, 3])
       const res = arr.reduceObject<Record<number, number>>((_, acc) => {
         return [_!, (acc[_!] ?? 0) + 1]
       })
@@ -170,7 +169,7 @@ describe('Arr', function () {
 
 
     it('should works', function () {
-      const users = Arr([
+      const users = seq([
         {name: 'Alice', age: 25},
         {name: 'Bob', age: 30},
         {name: 'Charlie', age: 25},
@@ -187,7 +186,7 @@ describe('Arr', function () {
     })
 
     it('should sum', function () {
-      const users = Arr([
+      const users = seq([
         {name: 'Charlie', age: 25},
         {name: 'Alice', age: 25},
         {name: 'Alice', age: 22},
@@ -210,26 +209,26 @@ describe('Arr', function () {
 
   describe('intersect', function () {
     it('should works', function () {
-      const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
+      const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
       expect(arr.intersect(['apple', 'orange', 'prune'])).deep.eq(['apple', 'orange'])
     })
 
     it('should works with empty array', function () {
-      const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
+      const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
       expect(arr.intersect([])).deep.eq([])
     })
   })
 
   describe('groupBy', function () {
     it('groupBy length', function () {
-      const arr = Arr(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
+      const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
       expect(arr.groupBy(_ => _.length)).deep.eq({
         5: ['apple', 'grape'], 6: ['banana', 'orange'], 4: ['pear', 'kiwi']
       })
     })
 
     it('groupBy by boolean', function () {
-      const arr = Arr([2, 4, 23, 342, 21, 4, 100,])
+      const arr = seq([2, 4, 23, 342, 21, 4, 100,])
       const test = arr.groupBy(_ => _ > 22)
       expect(arr.groupBy(_ => _ > 22)).deep.eq({
         false: [2, 4, 21, 4,],
@@ -238,7 +237,7 @@ describe('Arr', function () {
     })
 
     it('groupBy by value', function () {
-      const arr = Arr(['vin', 'vol', 'dnip', 'vol', 'vol', 'dnip'])
+      const arr = seq(['vin', 'vol', 'dnip', 'vol', 'vol', 'dnip'])
       expect(arr.groupBy(_ => _)).deep.eq({
         dnip: ['dnip', 'dnip'],
         vol: ['vol', 'vol', 'vol'],
@@ -247,7 +246,7 @@ describe('Arr', function () {
     })
 
     it('groupBy objects by value', function () {
-      const arr = Arr([
+      const arr = seq([
         {name: 'Alice', age: 25},
         {name: 'Bob', age: 30},
         {name: 'Charlie', age: 25},
@@ -262,7 +261,7 @@ describe('Arr', function () {
 
     it('should infer key type when is it a subset of string', function () {
       type Name = 'Alice' | 'Bob' | 'Charlie' | 'Dave'
-      const arr: _Arr<{name: Name, age: number}> = Arr([
+      const arr: Seq<{name: Name, age: number}> = seq([
         {name: 'Alice', age: 25},
         {name: 'Bob', age: 30},
         {name: 'Charlie', age: 25},
@@ -273,7 +272,7 @@ describe('Arr', function () {
 
     it('should infer key type when is it a subset of string', function () {
       type Name = 'Alice' | 'Bob' | 'Charlie' | 'Dave'
-      const arr: _Arr<{name: Name, adult: boolean}> = Arr([
+      const arr: Seq<{name: Name, adult: boolean}> = seq([
         {name: 'Alice', adult: true},
         {name: 'Bob', adult: false},
         {name: 'Charlie', adult: true},
@@ -283,7 +282,7 @@ describe('Arr', function () {
     })
 
     it('should works with undefined value', function () {
-      const arr = Arr([1, undefined, 2, 2, 1, 3])
+      const arr = seq([1, undefined, 2, 2, 1, 3])
       const res: Record<string, (number | undefined)[]> = arr.groupBy(_ => _)
       expect(res).deep.eq({
         1: [1, 1],

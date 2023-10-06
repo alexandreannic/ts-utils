@@ -96,7 +96,7 @@ describe('Enum', function () {
     })
   })
 
-  describe.only('entries', function () {
+  describe('entries', function () {
     it('', function () {
       const obj = new Enum({
         [Status.OK]: 1,
