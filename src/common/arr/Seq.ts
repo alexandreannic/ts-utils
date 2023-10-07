@@ -1,3 +1,5 @@
+import {RequiredProperty} from '../common/CommonType'
+
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
 interface Filter<T> {
@@ -63,6 +65,10 @@ export class Seq<T> extends Array<T> {
 
   compact(): T extends undefined | null ? never : Seq<T> {
     return this.filter(_ => _ !== undefined && _ !== null) as any
+  }
+
+  compactBy<K extends keyof T>(property: K): Seq<RequiredProperty<T, K>> {
+    return this.filter(_ => _[property] !== undefined && _[property] !== null) as any
   }
 
   sumObjects(): T extends Record<string, number> ? (Record<keyof T, number> | undefined) : never {
