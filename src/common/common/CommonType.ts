@@ -12,6 +12,9 @@ export type PromiseReturn<T> = T extends PromiseLike<infer U> ? U : T
 
 export type PromiseFnResult<T extends (...args: any[]) => Promise<object>> = PromiseReturn<ReturnType<T>>
 
+export type RequiredProperty<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+
+
 /**
  * Make some optional properties of an interface required. E.g:
  *
