@@ -20,6 +20,10 @@ export class Seq<T> extends Array<T> {
     return arr
   }
 
+  static distinct<T extends number | string | boolean>(array: T[]): T[] {
+    return [...new Set(array)]
+  }
+
   // @ts-ignore
   readonly count: (T extends number ? (fn?: PredicateFn<T, boolean>) => number : (fn: PredicateFn<T, boolean>) => number) = (fn = (value, index, array) => value) => {
     let x = 0
@@ -61,6 +65,14 @@ export class Seq<T> extends Array<T> {
     let sum = 0
     this.forEach((v, i, arr) => sum += fn(v, i, arr))
     return sum
+  }
+
+  static contains<T>(arr: T[], item: T) {
+    return arr.includes(item)
+  }
+
+  contains(item: T): boolean {
+    return this.includes(item)
   }
 
   compact(): T extends undefined | null ? never : Seq<T> {
