@@ -121,6 +121,39 @@ describe('Arr', function () {
       ])
     })
   })
+
+  describe('distinct', function () {
+    it('string array', function () {
+      const arr = ['aa', 'ba', 'aa', 'ca', 'aa', 'ba']
+      const res = Seq.distinct(arr)
+      expect(res).deep.eq(['aa', 'ba', 'ca'])
+    })
+  })
+
+  describe('contains', function () {
+    it('static', function () {
+      type YN = 'yes' | 'no'
+      const arr = ['yes', 'yes'] as YN[]
+      const s = Seq.contains(arr, 'aageaa')
+    })
+
+    it('union', function () {
+      type YN = 'yes' | 'no'
+      const s = seq(['yes', 'yes'] as YN[])
+      s.contains('yes')
+    })
+
+    it('enum', function () {
+      enum YN {
+        Yes = 'Yes',
+        No = 'No',
+      }
+
+      const s = seq([YN.Yes, YN.Yes] as YN[])
+      s.contains(YN.No)
+    })
+  })
+
   describe('count', function () {
 
     it('should count', function () {
