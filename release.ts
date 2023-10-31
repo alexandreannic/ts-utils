@@ -30,16 +30,17 @@ const getPackageVersion = () => JSON.parse(fs.readFileSync('package.json', 'utf8
 const isOnMainBranch = () => new RegExp(`${config.devBranch}\s*\n*`).test(execSync('git branch --show-current').toString())
 
 ;(async () => {
-  if (!isOnMainBranch()) {
-    console.error(`You must be on branch ${config.devBranch} to publish.`)
-  } else if (!gitWorkspaceIsEmpty()) {
+  // if (!isOnMainBranch()) {
+  //   console.error(`You must be on branch ${config.devBranch} to publish.`)
+  // } else
+  if (!gitWorkspaceIsEmpty()) {
     console.error(`Your git status must be clean before to publish.`)
   } else {
     await run(`npm run build`)
     // await run(`git commit -m "Release ${getPackageVersion()}"`)
-    await run(`git push`)
-    await run(`git checkout ${config.mainBranch}`)
-    await run(`git merge ${config.devBranch}`)
+    // await run(`git push`)
+    // await run(`git checkout ${config.mainBranch}`)
+    // await run(`git merge ${config.devBranch}`)
     await run(`git push`)
     await run(`npm version ${newversion}`)
     await run(`npm publish`)
