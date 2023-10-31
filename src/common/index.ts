@@ -1,4 +1,4 @@
-export * from './arr/Seq'
+export * from './seq/Seq'
 export * from './cache/Cache'
 export * from './common/Common'
 export * from './common/CommonType'

@@ -7,11 +7,13 @@ type Entries<T> = NonNullable<{
 //   [nu: number]: string
 // }
 
-export type _Enum<T = any> = Record<string | number, T>
+type Key = string | number
+
+export type _Enum<T = any> = Record<Key, T>
 
 export class Enum<T extends _Enum> {
 
-  static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
+  static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
     // static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
     return Object.entries(t) as any
   }
@@ -28,7 +30,7 @@ export class Enum<T extends _Enum> {
     return Enum.entries(t).find(([k, v]) => v === value)?.[0]
   }
 
-  static readonly transform = <K extends string, V extends any, NK extends string, NV>(o: Record<K, V>, map: (k: K, v: V, index: number) => [NK, NV]): Record<NK, NV> => {
+  static readonly transform = <K extends Key, V extends any, NK extends Key, NV>(o: Record<K, V>, map: (k: K, v: V, index: number) => [NK, NV]): Record<NK, NV> => {
     const res: Record<NK, NV> = {} as any
     Enum.entries(o).forEach(([k, v], i) => {
       const [newK, newV] = map(k, v, i)
@@ -48,7 +50,7 @@ export class Enum<T extends _Enum> {
   constructor(private o: T) {
   }
 
-  readonly transform = <NK extends string, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
+  readonly transform = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
     return new Enum(Enum.transform(this.o, fn))
   }
 

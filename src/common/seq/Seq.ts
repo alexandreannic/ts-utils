@@ -1,4 +1,5 @@
 import {RequiredProperty} from '../common/CommonType'
+import {Enum} from '../enum/Enum'
 
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
@@ -75,7 +76,7 @@ export class Seq<T> extends Array<T> {
     return this.includes(item)
   }
 
-  compact(): T extends undefined | null ? never : Seq<T> {
+  compact(): T extends (undefined | null) ? never : Seq<T> {
     return this.filter(_ => _ !== undefined && _ !== null) as any
   }
 
@@ -129,10 +130,28 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
+  groupByAndApply<K extends Key, R>(fn: (_: T) => K, apply: (_: Seq<T>) => R): Record<K, R> {
+    return new Enum(this.groupBy(fn))
+      .transform((k, v) => [k as K, apply(v)])
+      .get()
+  }
+
   percent(perdicate: PredicateFn<T, boolean>, base?: PredicateFn<T, boolean>): number {
     const v = this.count(perdicate)
     const total = base ? this.count(base) : this.length
     return v / total
+  }
+
+  sortByString(fn: (_: T) => string, orderBy: 'a-z' | 'z-a' = 'a-z') {
+    return this.sort((a, b) => {
+      return fn(a).localeCompare(fn(b)) * (orderBy === 'a-z' ? 1 : -1)
+    })
+  }
+
+  sortByNumber(fn: (_: T) => number, orderBy: '0-9' | '9-0' = '0-9') {
+    return this.sort((a, b) => {
+      return fn(a) - fn(b) * (orderBy === '0-9' ? 1 : -1)
+    })
   }
 
   intersect(array: T[]): Seq<T> {
@@ -161,7 +180,9 @@ export class Seq<T> extends Array<T> {
   }
 
   get() {
-    return this
+    const r: T[] = []
+    this.forEach(_ => r.push(_))
+    return r
   }
 }
 

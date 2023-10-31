@@ -72,8 +72,61 @@ describe('Arr', function () {
   it('compact custom type', function () {
     type Name = 'name1' | 'name2'
     const before: (Name | undefined)[] = ['name1', undefined, 'name2', undefined]
-    const after: Name[] = seq(before).compact().get().map(_ => _)
+    const after = seq(before).compact().get().map(_ => _)
     expect(after).deep.eq(['name1', 'name2'])
+  })
+
+  it('compact enum', function () {
+    enum AB {A = 'A', B = 'B'}
+
+    const before = seq([AB.A, AB.B, undefined])
+    const after = before.compact().get().map(_ => _)
+    expect(after).deep.eq([AB.A, AB.B,])
+  })
+
+  describe('sort', function () {
+    const users = seq([
+      {name: 'Dave', age: 35},
+      {name: 'Bob', age: 30},
+      {name: 'Charlie', age: 25},
+      {name: 'Alice', age: 25},
+    ])
+
+    it('by string asc', function () {
+      expect(users.sortByString(_ => _.name, 'a-z').get()).deep.eq([
+        {name: 'Alice', age: 25},
+        {name: 'Bob', age: 30},
+        {name: 'Charlie', age: 25},
+        {name: 'Dave', age: 35},
+      ])
+    })
+
+    it('by string desc', function () {
+      expect(users.sortByString(_ => _.name, 'z-a').get()).deep.eq([
+        {name: 'Dave', age: 35},
+        {name: 'Charlie', age: 25},
+        {name: 'Bob', age: 30},
+        {name: 'Alice', age: 25},
+      ])
+    })
+
+    it('by number asc', function () {
+      expect(users.sortByNumber(_ => _.age, '0-9').get()).deep.eq([
+        {name: 'Charlie', age: 25},
+        {name: 'Alice', age: 25},
+        {name: 'Bob', age: 30},
+        {name: 'Dave', age: 35},
+      ])
+    })
+
+    it('by number desc', function () {
+      expect(users.sortByNumber(_ => _.age, '9-0').get()).deep.eq([
+        {name: 'Charlie', age: 25},
+        {name: 'Alice', age: 25},
+        {name: 'Bob', age: 30},
+        {name: 'Dave', age: 35},
+      ])
+    })
   })
 
   describe('sumObjects', function () {
@@ -266,6 +319,41 @@ describe('Arr', function () {
     it('should works with empty array', function () {
       const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
       expect(arr.intersect([])).deep.eq([])
+    })
+  })
+
+  describe('groupByAndApply', function () {
+    it('count', function () {
+      const arr = seq([
+        {name: 'Dave', age: 25},
+        {name: 'Alice', age: 30},
+        {name: 'Charlie', age: 25},
+        {name: 'Dave', age: 35},
+        {name: 'Charlie', age: 35},
+        {name: 'Charlie', age: 35},
+      ])
+      expect(arr.groupByAndApply(_ => _.name, _ => _.length)).deep.eq({
+        Dave: 2,
+        Alice: 1,
+        Charlie: 3,
+      })
+    })
+
+    it('sum', function () {
+      const arr = seq([
+        {name: 'Dave', age: 1},
+        {name: 'Alice', age: 2},
+        {name: 'Charlie', age: 3},
+        {name: 'Dave', age: 4},
+        {name: 'Charlie', age: 5},
+        {name: 'Charlie', age: 6},
+      ])
+
+      expect(arr.groupByAndApply(_ => _.name, _ => _.sum(_ => _.age))).deep.eq({
+        Dave: 5,
+        Alice: 2,
+        Charlie: 14,
+      })
     })
   })
 
