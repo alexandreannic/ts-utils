@@ -322,6 +322,38 @@ describe('Arr', function () {
     })
   })
 
+  describe('groupByFirst', function () {
+    it('groupBy length', function () {
+      const arr = seq([
+        {name: 'Alice', age: 25},
+        {name: 'Bob', age: 30},
+        {name: 'Charlie', age: 25},
+        {name: 'Dave', age: 35},
+      ])
+      expect(arr.groupByFirst(_ => _.age)).deep.eq({
+        25: {name: 'Alice', age: 25},
+        30: {name: 'Bob', age: 30},
+        35: {name: 'Dave', age: 35},
+      })
+    })
+  })
+
+  describe('groupByFirst', function () {
+    it('groupBy length', function () {
+      const arr = seq([
+        {name: 'Alice', age: 25},
+        {name: 'Bob', age: 30},
+        {name: 'Charlie', age: 25},
+        {name: 'Dave', age: 35},
+      ])
+      expect(arr.groupByLast(_ => _.age)).deep.eq({
+        25: {name: 'Charlie', age: 25},
+        30: {name: 'Bob', age: 30},
+        35: {name: 'Dave', age: 35},
+      })
+    })
+  })
+
   describe('groupByAndApply', function () {
     it('count', function () {
       const arr = seq([

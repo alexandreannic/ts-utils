@@ -136,6 +136,28 @@ export class Seq<T> extends Array<T> {
       .get()
   }
 
+  groupByFirst<R extends Key>(fn: (_: T) => R): Record<R, T> {
+    const res: Record<Key, T> = {}
+    this.forEach(curr => {
+      const key = '' + fn(curr)
+      if (!res[key]) {
+        res[key] = curr
+      }
+      return res
+    }, {})
+    return res
+  }
+
+  groupByLast<R extends Key>(fn: (_: T) => R): Record<R, T> {
+    const res: Record<Key, T> = {}
+    this.forEach(curr => {
+      const key = '' + fn(curr)
+      res[key] = curr
+      return res
+    }, {})
+    return res
+  }
+
   percent(perdicate: PredicateFn<T, boolean>, base?: PredicateFn<T, boolean>): number {
     const v = this.count(perdicate)
     const total = base ? this.count(base) : this.length
