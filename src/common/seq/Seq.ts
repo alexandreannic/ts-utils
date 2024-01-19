@@ -117,10 +117,10 @@ export class Seq<T> extends Array<T> {
     return obj
   }
 
-  groupBy<R extends Key>(fn: (_: T) => R): Record<R, Seq<T>> {
+  groupBy<R extends Key>(fn: (_: T, i: number) => R): Record<R, Seq<T>> {
     const res: Record<Key, Seq<T>> = {}
-    this.forEach(curr => {
-      const key = '' + fn(curr)
+    this.forEach((curr, i) => {
+      const key = '' + fn(curr, i)
       if (!res[key]) {
         res[key] = seq()
       }
@@ -130,16 +130,16 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByAndApply<K extends Key, R>(fn: (_: T) => K, apply: (_: Seq<T>) => R): Record<K, R> {
-    return new Enum(this.groupBy(fn))
+  groupByAndApply<K extends Key, R>(fn: (_: T, i: number) => K, apply: (_: Seq<T>) => R): Record<K, R> {
+    return new Enum(this.groupBy((_, i) => fn(_, i)))
       .transform((k, v) => [k as K, apply(v)])
       .get()
   }
 
-  groupByFirst<R extends Key>(fn: (_: T) => R): Record<R, T> {
+  groupByFirst<R extends Key>(fn: (_: T, i: number) => R): Record<R, T> {
     const res: Record<Key, T> = {}
-    this.forEach(curr => {
-      const key = '' + fn(curr)
+    this.forEach((curr, i) => {
+      const key = '' + fn(curr, i)
       if (!res[key]) {
         res[key] = curr
       }
@@ -148,10 +148,10 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByLast<R extends Key>(fn: (_: T) => R): Record<R, T> {
+  groupByLast<R extends Key>(fn: (_: T, i: number) => R): Record<R, T> {
     const res: Record<Key, T> = {}
-    this.forEach(curr => {
-      const key = '' + fn(curr)
+    this.forEach((curr, i) => {
+      const key = '' + fn(curr, i)
       res[key] = curr
       return res
     }, {})

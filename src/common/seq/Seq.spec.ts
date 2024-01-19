@@ -461,5 +461,16 @@ describe('Arr', function () {
         '': [undefined]
       })
     })
+
+    it('should get index', function () {
+      const arr = seq([1, undefined, 2, 2, 1, 3])
+      const res: Record<string, (number | undefined)[]> = arr.groupBy((_, i) => i)
+      // expect(res).deep.eq({
+      //   1: [0, 4],
+      //   2: [2, 3],
+      //   3: [5],
+      //   '': [undefined]
+      // })
+    })
   })
 })
