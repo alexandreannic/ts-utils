@@ -14,6 +14,7 @@ export type PromiseFnResult<T extends (...args: any[]) => Promise<object>> = Pro
 
 export type RequiredProperty<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
+export type KeyStringOf<T> = Extract<keyof T, string>
 
 /**
  * Make some optional properties of an interface required. E.g:
