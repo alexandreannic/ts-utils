@@ -69,5 +69,9 @@ export class Enum<T extends _Enum> {
   // @ts-ignore
   readonly entries = () => Enum.entries<keyof T, T[keyof T]>(this.o)
 
+  readonly keys = () => Enum.keys<T>(this.o)
+
+  readonly values = () => Enum.values<T>(this.o)
+
   readonly get = () => this.o
 }

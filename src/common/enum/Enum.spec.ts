@@ -94,133 +94,153 @@ describe('Enum', function () {
         '_catwoman': 5,
       })
     })
-  })
 
-  describe('entries', function () {
-    it('', function () {
+    it('keys', function () {
       const obj = new Enum({
         [Status.OK]: 1,
         [Status.ERROR]: 1,
         [Status.WARNING]: 2,
       })
-      expect(obj.entries()).deep.eq([
-        [Status.OK, 1],
-        [Status.ERROR, 1],
-        [Status.WARNING, 2],
+      expect(obj.keys()).deep.eq([
+        Status.OK,
+        Status.ERROR,
+        Status.WARNING,
       ])
     })
-  })
 
-  describe('sort', function () {
+    it('values', function () {
+      const obj = new Enum({
+        [Status.OK]: 1,
+        [Status.ERROR]: 1,
+        [Status.WARNING]: 2,
+      })
+      expect(obj.values()).deep.eq([1, 1, 2])
+    })
 
-    const data = new Enum({
-      'ironman': 2,
-      'barman': 1,
-      'catwoman': 4,
-      'batman': 3,
-    } as Record<string, number>)
-
-    it('sort by key', function () {
-      const res = data.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk)).get()
-      expect(res).deep.eq({
-        'barman': 1,
-        'batman': 3,
-        'catwoman': 4,
-        'ironman': 2,
+    it('entries', function () {
+      it('', function () {
+        const obj = new Enum({
+          [Status.OK]: 1,
+          [Status.ERROR]: 1,
+          [Status.WARNING]: 2,
+        })
+        expect(obj.entries()).deep.eq([
+          [Status.OK, 1],
+          [Status.ERROR, 1],
+          [Status.WARNING, 2],
+        ])
       })
     })
 
-    it('sort by val', function () {
-      const res = data.sort(([ak, av], [bk, bv]) => bv - av).get()
-      expect(res).deep.eq({
-        'barman': 1,
+    describe('sort', function () {
+
+      const data = new Enum({
         'ironman': 2,
-        'batman': 3,
+        'barman': 1,
         'catwoman': 4,
+        'batman': 3,
+      } as Record<string, number>)
+
+      it('sort by key', function () {
+        const res = data.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk)).get()
+        expect(res).deep.eq({
+          'barman': 1,
+          'batman': 3,
+          'catwoman': 4,
+          'ironman': 2,
+        })
+      })
+
+      it('sort by val', function () {
+        const res = data.sort(([ak, av], [bk, bv]) => bv - av).get()
+        expect(res).deep.eq({
+          'barman': 1,
+          'ironman': 2,
+          'batman': 3,
+          'catwoman': 4,
+        })
       })
     })
-  })
 
-  describe('filter', function () {
+    describe('filter', function () {
 
-    it('filter by index', function () {
-      const obj = {
-        a: 'cat',
-        b: 'catwoman',
-        c: 'batman',
-      }
-      const filtered = Enum.filter(obj, (k, v, i) => i === 1)
-      expect(filtered).deep.eq({
-          b: 'catwoman',
-        }
-      )
-    })
-
-    it('filter by string value', function () {
-      const obj = {
-        a: 'cat',
-        b: 'catwoman',
-        c: 'batman',
-      }
-      const filtered = Enum.filter(obj, (k, v) => v.includes('cat'))
-      expect(filtered).deep.eq({
+      it('filter by index', function () {
+        const obj = {
           a: 'cat',
           b: 'catwoman',
+          c: 'batman',
         }
-      )
+        const filtered = Enum.filter(obj, (k, v, i) => i === 1)
+        expect(filtered).deep.eq({
+            b: 'catwoman',
+          }
+        )
+      })
+
+      it('filter by string value', function () {
+        const obj = {
+          a: 'cat',
+          b: 'catwoman',
+          c: 'batman',
+        }
+        const filtered = Enum.filter(obj, (k, v) => v.includes('cat'))
+        expect(filtered).deep.eq({
+            a: 'cat',
+            b: 'catwoman',
+          }
+        )
+      })
+
+      it('filter by number value', function () {
+        const obj = {
+          a: 1,
+          b: 2,
+          c: 3,
+        }
+        const filtered = Enum.filter(obj, (k, v) => v > 1)
+        expect(filtered).deep.eq({b: 2, c: 3,})
+      })
+
+      it('filter by key', function () {
+        const obj = {
+          a: 1,
+          b: 2,
+          c: 3,
+        }
+        const filtered = Enum.filter(obj, (k, v) => k === 'a')
+        expect(filtered).deep.eq({a: 1})
+      })
     })
 
-    it('filter by number value', function () {
-      const obj = {
-        a: 1,
-        b: 2,
-        c: 3,
-      }
-      const filtered = Enum.filter(obj, (k, v) => v > 1)
-      expect(filtered).deep.eq({b: 2, c: 3,})
-    })
+    describe('transform', function () {
 
-    it('filter by key', function () {
-      const obj = {
-        a: 1,
-        b: 2,
-        c: 3,
-      }
-      const filtered = Enum.filter(obj, (k, v) => k === 'a')
-      expect(filtered).deep.eq({a: 1})
+      it('should copy', function () {
+        const obj = {
+          a: '1',
+          b: '2',
+        }
+        const objCopy: {a: string, b: string} = Enum.transform(obj, (k, v) => [k, v])
+        expect(objCopy).deep.eq({a: '1', b: '2'})
+      })
+
+      it('should change keys', function () {
+        const obj = {
+          a: '1',
+          b: '2',
+        }
+        const transformKey = (k: keyof typeof obj): 'aa' | 'ab' => 'a' + k as any
+        const objCopy: {aa: string, ab: string,} = Enum.transform(obj, (k, v) => [transformKey(k), v])
+        expect(objCopy).deep.eq({aa: '1', ab: '2'})
+      })
+
+      it('should change values', function () {
+        const obj = {
+          a: '1',
+          b: '2',
+        }
+        const objCopy: {a: number, b: number,} = Enum.transform(obj, (k, v) => [k, parseInt(v)])
+        expect(objCopy).deep.eq({a: 1, b: 2})
+      })
     })
   })
-
-  describe('transform', function () {
-
-    it('should copy', function () {
-      const obj = {
-        a: '1',
-        b: '2',
-      }
-      const objCopy: {a: string, b: string} = Enum.transform(obj, (k, v) => [k, v])
-      expect(objCopy).deep.eq({a: '1', b: '2'})
-    })
-
-    it('should change keys', function () {
-      const obj = {
-        a: '1',
-        b: '2',
-      }
-      const transformKey = (k: keyof typeof obj): 'aa' | 'ab' => 'a' + k as any
-      const objCopy: {aa: string, ab: string,} = Enum.transform(obj, (k, v) => [transformKey(k), v])
-      expect(objCopy).deep.eq({aa: '1', ab: '2'})
-    })
-
-    it('should change values', function () {
-      const obj = {
-        a: '1',
-        b: '2',
-      }
-      const objCopy: {a: number, b: number,} = Enum.transform(obj, (k, v) => [k, parseInt(v)])
-      expect(objCopy).deep.eq({a: 1, b: 2})
-    })
-  })
-
-
 })
