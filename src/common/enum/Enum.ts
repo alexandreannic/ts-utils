@@ -14,7 +14,7 @@ export type _Enum<T = any> = Record<Key, T>
 export class Enum<T extends _Enum> {
 
   static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
-    // static readonly entries = <K extends string | number, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
+    // static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
     return Object.entries(t) as any
   }
 
@@ -30,6 +30,7 @@ export class Enum<T extends _Enum> {
     return Enum.entries(t).find(([k, v]) => v === value)?.[0]
   }
 
+  /**@deprecated use map instead*/
   static readonly transform = <K extends Key, V extends any, NK extends Key, NV>(o: Record<K, V>, map: (k: K, v: V, index: number) => [NK, NV]): Record<NK, NV> => {
     const res: Record<NK, NV> = {} as any
     Enum.entries(o).forEach(([k, v], i) => {
@@ -39,7 +40,26 @@ export class Enum<T extends _Enum> {
     return res
   }
 
-  static readonly filter = <K extends string, V extends any>(o: Record<K, V>, fn: (k: K, v: V, index: number) => boolean): Partial<Record<K, V>> => {
+  static readonly map = Enum.transform
+
+  static readonly mapValues = <K extends Key, V extends any, NV>(o: Record<K, V>, fn: (v: V, k: K, index: number) => NV): Record<K, NV> => {
+    const res: Record<K, NV> = {} as any
+    Enum.entries(o).forEach(([k, v], i) => {
+      res[k] = fn(v, k, i)
+    })
+    return res
+  }
+
+  static readonly mapKeys = <K extends Key, V extends any, NK extends Key>(o: Record<K, V>, fn: (k: K, v: V, index: number) => NK): Record<NK, V> => {
+    const res: Record<NK, V> = {} as any
+    Enum.entries(o).forEach(([k, v], i) => {
+      const newK = fn(k, v, i)
+      res[newK] = v
+    })
+    return res
+  }
+
+  static readonly filter = <K extends Key, V extends any>(o: Record<K, V>, fn: (k: K, v: V, index: number) => boolean): Partial<Record<K, V>> => {
     const res: Partial<Record<K, V>> = {} as any
     Enum.entries(o).forEach(([k, v], i) => {
       if (fn(k, v, i)) res[k] = v
@@ -50,11 +70,22 @@ export class Enum<T extends _Enum> {
   constructor(private o: T) {
   }
 
+  /**@deprecated use map instead*/
   readonly transform = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
     return new Enum(Enum.transform(this.o, fn))
   }
 
-  readonly filter = <NK extends string, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => boolean) => {
+  readonly map = this.transform
+
+  readonly mapValues = <NV>(fn: (k: keyof T, v: T[keyof T], index: number) => NV) => {
+    return new Enum(Enum.mapValues(this.o, fn))
+  }
+
+  readonly mapKeys = <NK extends Key>(fn: (k: keyof T, v: T[keyof T], index: number) => NK) => {
+    return new Enum(Enum.mapKeys(this.o, (k, v, i) => fn(k, v, i)))
+  }
+
+  readonly filter = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => boolean) => {
     return new Enum<Partial<T>>(Enum.filter(this.o, fn) as any)
   }
 

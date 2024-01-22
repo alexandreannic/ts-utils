@@ -13,6 +13,11 @@ const status = {
   WARNING: 'Warning',
 }
 
+const simpleObj = {
+  a: '1',
+  b: '2',
+}
+
 interface Oblast {
   koboKey: string
   name: string
@@ -212,34 +217,46 @@ describe('Enum', function () {
       })
     })
 
-    describe('transform', function () {
+    describe('map', function () {
 
       it('should copy', function () {
-        const obj = {
-          a: '1',
-          b: '2',
-        }
-        const objCopy: {a: string, b: string} = Enum.transform(obj, (k, v) => [k, v])
+        const objCopy: {a: string, b: string} = Enum.map(simpleObj, (k, v) => [k, v])
         expect(objCopy).deep.eq({a: '1', b: '2'})
       })
 
       it('should change keys', function () {
-        const obj = {
-          a: '1',
-          b: '2',
-        }
-        const transformKey = (k: keyof typeof obj): 'aa' | 'ab' => 'a' + k as any
-        const objCopy: {aa: string, ab: string,} = Enum.transform(obj, (k, v) => [transformKey(k), v])
+        const mapKey = (k: keyof typeof simpleObj): 'aa' | 'ab' => 'a' + k as any
+        const objCopy: {aa: string, ab: string,} = Enum.map(simpleObj, (k, v) => [mapKey(k), v])
         expect(objCopy).deep.eq({aa: '1', ab: '2'})
       })
 
       it('should change values', function () {
-        const obj = {
-          a: '1',
-          b: '2',
-        }
-        const objCopy: {a: number, b: number,} = Enum.transform(obj, (k, v) => [k, parseInt(v)])
+        const objCopy: {a: number, b: number,} = Enum.map(simpleObj, (k, v) => [k, parseInt(v)])
         expect(objCopy).deep.eq({a: 1, b: 2})
+      })
+    })
+
+    describe('mapValues', function () {
+      const obj = {
+        a: '1',
+        b: '2',
+      }
+
+      it('should multiply value', function () {
+        const objCopy: {a: number, b: number} = Enum.mapValues(obj, v => +v * 2)
+        expect(objCopy).deep.eq({a: 2, b: 4})
+      })
+    })
+
+    describe('mapKeys', function () {
+      const obj = {
+        a: '1',
+        b: '2',
+      }
+
+      it('should suffix key', function () {
+        const objCopy = Enum.mapKeys(obj, (k, v) => +v)
+        expect(objCopy).deep.eq({1: '1', 2: '2'})
       })
     })
   })
