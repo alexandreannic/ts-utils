@@ -1,5 +1,6 @@
-import {Enum} from './Enum'
+import {Obj} from './Obj'
 import {expect} from 'chai'
+import {Enum} from '../enum/Enum'
 
 enum Status {
   OK = 'Ok',
@@ -24,7 +25,7 @@ interface Oblast {
   iso: string
 }
 
-describe('Enum', function () {
+describe.only('Obj', function () {
 
   it('Should infer as string', function () {
     const x: string[] = Enum.values(Status)
@@ -84,7 +85,7 @@ describe('Enum', function () {
   describe('method', function () {
 
     it('test all', function () {
-      const res = new Enum({
+      const res = new Obj({
         'cat': 2,
         'bat': 1,
         'catwoman': 4,
@@ -101,7 +102,7 @@ describe('Enum', function () {
     })
 
     it('keys', function () {
-      const obj = new Enum({
+      const obj = new Obj({
         [Status.OK]: 1,
         [Status.ERROR]: 1,
         [Status.WARNING]: 2,
@@ -114,7 +115,7 @@ describe('Enum', function () {
     })
 
     it('values', function () {
-      const obj = new Enum({
+      const obj = new Obj({
         [Status.OK]: 1,
         [Status.ERROR]: 1,
         [Status.WARNING]: 2,
@@ -124,7 +125,7 @@ describe('Enum', function () {
 
     it('entries', function () {
       it('', function () {
-        const obj = new Enum({
+        const obj = new Obj({
           [Status.OK]: 1,
           [Status.ERROR]: 1,
           [Status.WARNING]: 2,
@@ -139,7 +140,7 @@ describe('Enum', function () {
 
     describe('sort', function () {
 
-      const data = new Enum({
+      const data = new Obj({
         'ironman': 2,
         'barman': 1,
         'catwoman': 4,

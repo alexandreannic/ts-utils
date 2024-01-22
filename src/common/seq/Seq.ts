@@ -1,5 +1,5 @@
 import {RequiredProperty} from '../common/CommonType'
-import {Enum} from '../enum/Enum'
+import {Obj} from '../obj/Obj'
 
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
@@ -131,7 +131,7 @@ export class Seq<T> extends Array<T> {
   }
 
   groupByAndApply<K extends Key, R>(fn: (_: T, i: number) => K, apply: (_: Seq<T>) => R): Record<K, R> {
-    return new Enum(this.groupBy((_, i) => fn(_, i)))
+    return new Obj(this.groupBy((_, i) => fn(_, i)))
       .transform((k, v) => [k as K, apply(v)])
       .get()
   }

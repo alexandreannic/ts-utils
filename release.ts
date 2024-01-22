@@ -44,7 +44,7 @@ const isOnMainBranch = () => new RegExp(`${config.devBranch}\s*\n*`).test(execSy
     await run(`git push`)
     await run(`npm version ${newversion}`)
     await run(`npm publish`)
-    await run(`git checkout ${config.devBranch}`)
+    // await run(`git checkout ${config.devBranch}`)
     console.log(`Successfully published version ${getPackageVersion()} !`)
   }
 })()

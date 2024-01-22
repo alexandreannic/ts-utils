@@ -11,10 +11,9 @@ export * from './fnSwitch/FnSwitch'
 export * from './lazy/Lazy'
 export * from './map/Map'
 export * from './mapPromise/MapPromise'
+export * from './obj/Obj'
 export * from './prefixLogger/prefixLogger'
 export * from './progress/Progress'
 export * from './validateObject/ValidateObject'
 export * from './validateObject/ValidateObjectDeep'
 export * from './validateObject/LogObject'
-
-
