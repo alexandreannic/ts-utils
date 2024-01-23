@@ -77,7 +77,7 @@ export class Obj<T extends ObjType> {
 
   readonly map = this.transform
 
-  readonly mapValues = <NV>(fn: (k: keyof T, v: T[keyof T], index: number) => NV) => {
+  readonly mapValues = <NV>(fn: (v: T[keyof T], k: keyof T, index: number) => NV) => {
     return new Obj(Obj.mapValues(this.o, fn))
   }
 

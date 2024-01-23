@@ -28,27 +28,27 @@ interface Oblast {
 describe.only('Obj', function () {
 
   it('Should infer as string', function () {
-    const x: string[] = Enum.values(Status)
+    const x: string[] = Obj.values(Status)
   })
 
   it('Should type and get keys correctly', function () {
-    const keys: readonly ('OK' | 'ERROR' | 'WARNING')[] = Enum.keys(Status)
+    const keys: readonly ('OK' | 'ERROR' | 'WARNING')[] = Obj.keys(Status)
     expect(keys).deep.eq(['OK', 'ERROR', 'WARNING'])
   })
 
   it('Should type and get values correctly', function () {
-    const keys: readonly ('Ok' | 'Error' | 'Warning')[] = Enum.values(Status)
+    const keys: readonly ('Ok' | 'Error' | 'Warning')[] = Obj.values(Status)
     expect(keys).deep.eq(['Ok', 'Error', 'Warning'])
   })
 
   it('Should type entries and get correctly', function () {
-    const entries: (['OK', Status] | ['ERROR', Status] | ['WARNING', Status])[] = Enum.entries(Status)
+    const entries: (['OK', Status] | ['ERROR', Status] | ['WARNING', Status])[] = Obj.entries(Status)
     expect(entries).deep.eq([['OK', 'Ok'], ['ERROR', 'Error'], ['WARNING', 'Warning']])
   })
 
   it('Should get value and handle type correctly', function () {
-    expect(Enum.getKeyByValue(Status, 'Warning')).eq('WARNING')
-    expect(Enum.getKeyByValue(Status, 'unknown value')).to.undefined
+    expect(Obj.getKeyByValue(Status, 'Warning')).eq('WARNING')
+    expect(Obj.getKeyByValue(Status, 'unknown value')).to.undefined
   })
 
   it('Should work when used in a regular object', function () {
@@ -66,7 +66,7 @@ describe.only('Obj', function () {
 
   it('Should correctly manage Partial<>', function () {
     const test = <T extends Record<any, any>>(t: Partial<T>) => {
-      Enum.entries(t).map(([k, v]) => {
+      Obj.entries(t).map(([k, v]) => {
         const _k: keyof T = k
         const _v: T[keyof T] = v
       })
@@ -75,7 +75,7 @@ describe.only('Obj', function () {
 
   it('Should correctly manage Partial<>', function () {
     const test = <T extends Record<any, any>>(t: T) => {
-      Enum.entries(t).reduce<T>((acc, [k, v]) => {
+      Obj.entries(t).reduce<T>((acc, [k, v]) => {
         const test = acc[k]
         return acc
       }, {} as T)
@@ -176,7 +176,7 @@ describe.only('Obj', function () {
           b: 'catwoman',
           c: 'batman',
         }
-        const filtered = Enum.filter(obj, (k, v, i) => i === 1)
+        const filtered = Obj.filter(obj, (k, v, i) => i === 1)
         expect(filtered).deep.eq({
             b: 'catwoman',
           }
@@ -189,7 +189,7 @@ describe.only('Obj', function () {
           b: 'catwoman',
           c: 'batman',
         }
-        const filtered = Enum.filter(obj, (k, v) => v.includes('cat'))
+        const filtered = Obj.filter(obj, (k, v) => v.includes('cat'))
         expect(filtered).deep.eq({
             a: 'cat',
             b: 'catwoman',
@@ -203,7 +203,7 @@ describe.only('Obj', function () {
           b: 2,
           c: 3,
         }
-        const filtered = Enum.filter(obj, (k, v) => v > 1)
+        const filtered = Obj.filter(obj, (k, v) => v > 1)
         expect(filtered).deep.eq({b: 2, c: 3,})
       })
 
@@ -213,7 +213,7 @@ describe.only('Obj', function () {
           b: 2,
           c: 3,
         }
-        const filtered = Enum.filter(obj, (k, v) => k === 'a')
+        const filtered = Obj.filter(obj, (k, v) => k === 'a')
         expect(filtered).deep.eq({a: 1})
       })
     })
@@ -221,30 +221,30 @@ describe.only('Obj', function () {
     describe('map', function () {
 
       it('should copy', function () {
-        const objCopy: {a: string, b: string} = Enum.map(simpleObj, (k, v) => [k, v])
+        const objCopy: {a: string, b: string} = Obj.map(simpleObj, (k, v) => [k, v])
         expect(objCopy).deep.eq({a: '1', b: '2'})
       })
 
       it('should change keys', function () {
         const mapKey = (k: keyof typeof simpleObj): 'aa' | 'ab' => 'a' + k as any
-        const objCopy: {aa: string, ab: string,} = Enum.map(simpleObj, (k, v) => [mapKey(k), v])
+        const objCopy: {aa: string, ab: string,} = Obj.map(simpleObj, (k, v) => [mapKey(k), v])
         expect(objCopy).deep.eq({aa: '1', ab: '2'})
       })
 
       it('should change values', function () {
-        const objCopy: {a: number, b: number,} = Enum.map(simpleObj, (k, v) => [k, parseInt(v)])
+        const objCopy: {a: number, b: number,} = Obj.map(simpleObj, (k, v) => [k, parseInt(v)])
         expect(objCopy).deep.eq({a: 1, b: 2})
       })
     })
 
     describe('mapValues', function () {
       const obj = {
-        a: '1',
-        b: '2',
+        a: 1,
+        b: 2,
       }
 
       it('should multiply value', function () {
-        const objCopy: {a: number, b: number} = Enum.mapValues(obj, v => +v * 2)
+        const objCopy: {a: number, b: number} = Obj.mapValues(obj, (v: number) => v * 2)
         expect(objCopy).deep.eq({a: 2, b: 4})
       })
     })
@@ -256,7 +256,7 @@ describe.only('Obj', function () {
       }
 
       it('should suffix key', function () {
-        const objCopy = Enum.mapKeys(obj, (k, v) => +v)
+        const objCopy = Obj.mapKeys(obj, (k, v) => +v)
         expect(objCopy).deep.eq({1: '1', 2: '2'})
       })
     })
