@@ -14,11 +14,12 @@ export class Seq<T> extends Array<T> {
 
   readonly isArr = true
 
-  static readonly fromArray = <TT>(t: TT[] = []) => {
-    if ((t as Seq<TT>).isArr) return t as Seq<TT>
-    const arr = new Seq<TT>()
-    t.forEach((item) => arr.push(item))
-    return arr
+  static readonly fromArray = <TT>(_: TT[] = []): Seq<TT> => {
+    if ((_ as Seq<TT>).isArr) return _ as Seq<TT>
+    const instance = new Seq<TT>()
+    Object.setPrototypeOf(instance, Seq.prototype)
+    Object.assign(instance, _)
+    return instance
   }
 
   static distinct<T extends number | string | boolean>(array: T[]): T[] {
