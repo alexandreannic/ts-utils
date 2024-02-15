@@ -13,6 +13,16 @@ export type ObjType<T = any> = Record<Key, T>
 
 export class Obj<T extends ObjType> {
 
+  static readonly toArray = <T extends ObjType, K extends string = 'name', V extends string = 'value'>(obj: T, {
+    keyName = 'name' as K,
+    valueName = 'value' as V
+  }: {
+    keyName?: K
+    valueName?: V
+  } = {}): ({ [KK in K]: keyof T } & { [VV in V]: T[keyof T] })[] => {
+    return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
+  }
+
   static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
     // static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
     return Object.entries(t) as any
@@ -103,6 +113,11 @@ export class Obj<T extends ObjType> {
   readonly keys = () => Obj.keys<T>(this.o)
 
   readonly values = () => Obj.values<T>(this.o)
+
+  readonly toArray = <K extends string = 'name', V extends string = 'value'>(params: {
+    keyName?: K,
+    valueName?: V
+  } = {}) => Obj.toArray<T, K, V>(this.o, params as any)
 
   readonly get = () => this.o
 }

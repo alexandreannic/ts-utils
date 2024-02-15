@@ -25,7 +25,7 @@ interface Oblast {
   iso: string
 }
 
-describe.only('Obj', function () {
+describe('Obj', function () {
 
   it('Should infer as string', function () {
     const x: string[] = Obj.values(Status)
@@ -165,6 +165,29 @@ describe.only('Obj', function () {
           'batman': 3,
           'catwoman': 4,
         })
+      })
+    })
+
+    describe('toArray', function () {
+      it('basic', function () {
+        expect(Obj.toArray({a: 1, b: 2})).deep.eq([
+          {name: 'a', value: 1},
+          {name: 'b', value: 2},
+        ])
+      })
+      it('override key value', function () {
+        const r: {k: string, v: number}[] = Obj.toArray({a: 1, b: 2}, {keyName: 'k', valueName: 'v'})
+        expect(r).deep.eq([
+          {k: 'a', v: 1},
+          {k: 'b', v: 2},
+        ])
+      })
+      it('method version', function () {
+        const r: {k: string, v: number}[] = new Obj({a: 1, b: 2}).toArray({keyName: 'k', valueName: 'v'})
+        expect(r).deep.eq([
+          {k: 'a', v: 1},
+          {k: 'b', v: 2},
+        ])
       })
     })
 
