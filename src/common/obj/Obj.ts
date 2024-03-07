@@ -1,6 +1,9 @@
+
+export type KeyOf<T> = Extract<keyof T, string>
+
 type Entries<T> = NonNullable<{
-  [K in keyof T]: NonNullable<[K, T[K]]>
-}>[keyof T][];
+  [K in KeyOf<T>]: NonNullable<[K, T[K]]>
+}>[KeyOf<T>][];
 
 // export type _Enum<T = any> = {
 //   [id: string]: T | string
@@ -19,7 +22,7 @@ export class Obj<T extends ObjType> {
   }: {
     keyName?: K
     valueName?: V
-  } = {}): ({ [KK in K]: keyof T } & { [VV in V]: T[keyof T] })[] => {
+  } = {}): ({ [KK in K]: KeyOf<T> } & { [VV in V]: T[KeyOf<T>] })[] => {
     return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
   }
 
@@ -28,8 +31,8 @@ export class Obj<T extends ObjType> {
     return Object.entries(t) as any
   }
 
-  static readonly keys = <T extends ObjType>(t: T): (keyof T)[] => {
-    return Object.keys(t)
+  static readonly keys = <T extends ObjType>(t: T): (KeyOf<T>)[] => {
+    return Object.keys(t) as any
   }
 
   static readonly values = <T extends ObjType>(t: T): (T[keyof T])[] => {
