@@ -1,4 +1,4 @@
-export const hashArgs = (args: any[]) => {
+export const hashArgs = (...args: any[]) => {
   let res = ''
   args.forEach(arg => {
     if (typeof arg == 'string' || typeof arg == 'boolean' || typeof arg == 'number') res += ('|' + arg)
@@ -8,10 +8,13 @@ export const hashArgs = (args: any[]) => {
   return res
 }
 
-export const lazy = <T, P extends Array<any>>(fn: ((...p: P) => T)): (...p: P) => T => {
+export const lazy = <T, P extends Array<any>>(
+  fn: ((...p: P) => T),
+  {key = hashArgs}: {key?: (...p: P) => string} = {}
+): (...p: P) => T => {
   const cache = new Map<string, T>()
   return (...p: P) => {
-    const argsHashed = hashArgs(p)
+    const argsHashed = key(...p)
     const cachedValue = cache.get(argsHashed)
     if (cachedValue === undefined) {
       const value = fn(...p)
@@ -20,4 +23,4 @@ export const lazy = <T, P extends Array<any>>(fn: ((...p: P) => T)): (...p: P) =
     }
     return cachedValue
   }
-};
+}

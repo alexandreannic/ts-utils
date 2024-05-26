@@ -39,4 +39,25 @@ describe('Lazy', function () {
     expect(findByUserId(3, {a: '2', b: 2})?.name).eq('n3')
     expect(sideEffect).eq(3)
   })
+
+  it.only('should handle custom key', function () {
+    let sideEffects = 0
+    const fn = lazy(
+      (user: {name: string, age: number}) => {
+        sideEffects++
+        return user
+      },
+      {key: (user: {name: string, age: number}) => user.name + user.age}
+    )
+    const user1 = {name: 'Okooo', age: 1}
+    const user2 = {name: 'Ihhim', age: 12}
+    fn(user1)
+    expect(sideEffects).eq(1)
+    fn(user1)
+    expect(sideEffects).eq(1)
+    fn(user2)
+    expect(sideEffects).eq(2)
+    fn(user1)
+    expect(sideEffects).eq(2)
+  })
 })
