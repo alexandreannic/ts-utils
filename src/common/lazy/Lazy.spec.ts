@@ -40,7 +40,7 @@ describe('Lazy', function () {
     expect(sideEffect).eq(3)
   })
 
-  it.only('should handle custom key', function () {
+  it('should handle custom key', function () {
     let sideEffects = 0
     const fn = lazy(
       (user: {name: string, age: number}) => {

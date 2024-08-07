@@ -191,6 +191,22 @@ describe('Obj', function () {
       })
     })
 
+    describe('filterValue', function () {
+      it('filter by string value', function () {
+        const obj = {
+          a: 'cat',
+          b: 'catwoman',
+          c: 'batman',
+        }
+        const filtered = Obj.filterValue(obj, v => v.includes('cat'))
+        expect(filtered).deep.eq({
+            a: 'cat',
+            b: 'catwoman',
+          }
+        )
+      })
+    })
+
     describe('filter', function () {
 
       it('filter by index', function () {

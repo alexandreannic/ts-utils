@@ -1,4 +1,3 @@
-
 export type KeyOf<T> = Extract<keyof T, string>
 
 type Entries<T> = NonNullable<{
@@ -76,6 +75,14 @@ export class Obj<T extends ObjType> {
     const res: Partial<Record<K, V>> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
       if (fn(k, v, i)) res[k] = v
+    })
+    return res
+  }
+
+  static readonly filterValue = <K extends Key, V extends any>(o: Record<K, V>, fn: (v: V) => boolean): Record<K, V> => {
+    const res: Record<K, V> = {} as any
+    Obj.entries(o).forEach(([k, v], i) => {
+      if (fn(v)) res[k] = v
     })
     return res
   }

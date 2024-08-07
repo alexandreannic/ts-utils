@@ -9,7 +9,7 @@ interface Form {
 
 describe('Arr', function () {
 
-  it.only('check nested call', function () {
+  it('check nested call', function () {
     expect((seq(seq(seq(seq([1, 2])))).get() as any).isArr).undefined
     expect(seq(seq(seq(seq([1, 2])))).isArr).true
   })
