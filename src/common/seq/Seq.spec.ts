@@ -11,7 +11,7 @@ describe('Arr', function () {
 
   it('check nested call', function () {
     expect((seq(seq(seq(seq([1, 2])))).get() as any).isArr).undefined
-    expect(seq(seq(seq(seq([1, 2])))).isArr).true
+    expect(seq(seq(seq(seq([1, 2])))).isSeq).true
   })
 
   it('get', function () {
@@ -318,12 +318,24 @@ describe('Arr', function () {
   describe('intersect', function () {
     it('should works', function () {
       const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
-      expect(arr.intersect(['apple', 'orange', 'prune'])).deep.eq(['apple', 'orange'])
+      expect(arr.intersect(['apple', 'orange', 'prune']).get()).deep.eq(['apple', 'orange'])
     })
 
     it('should works with empty array', function () {
       const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
-      expect(arr.intersect([])).deep.eq([])
+      expect(arr.intersect([]).get()).deep.eq([])
+    })
+  })
+
+  describe('difference', function () {
+    it('should works', function () {
+      const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
+      expect(arr.difference(['apple', 'orange', 'prune']).get()).deep.eq(['banana', 'pear', 'kiwi', 'grape', 'prune'])
+    })
+
+    it('should works with empty array', function () {
+      const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
+      expect(arr.difference([]).get()).deep.eq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])
     })
   })
 

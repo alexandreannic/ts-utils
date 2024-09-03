@@ -12,10 +12,10 @@ type Key = number | string
 
 export class Seq<T> extends Array<T> {
 
-  readonly isArr = true
+  readonly isSeq = true
 
   static readonly fromArray = <TT>(_: TT[] = []): Seq<TT> => {
-    if ((_ as Seq<TT>).isArr) return _ as Seq<TT>
+    if ((_ as Seq<TT>).isSeq) return _ as Seq<TT>
     const instance = new Seq<TT>()
     Object.setPrototypeOf(instance, Seq.prototype)
     Object.assign(instance, _)
@@ -133,7 +133,7 @@ export class Seq<T> extends Array<T> {
 
   groupByAndApply<K extends Key, R>(fn: (_: T, i: number) => K, apply: (_: Seq<T>) => R): Record<K, R> {
     return new Obj(this.groupBy((_, i) => fn(_, i)))
-      .transform((k, v) => [k as K, apply(v)])
+      .mapValues((v) => apply(v))
       .get()
   }
 
@@ -175,6 +175,13 @@ export class Seq<T> extends Array<T> {
     return this.sort((a, b) => {
       return fn(a) - fn(b) * (orderBy === '0-9' ? 1 : -1)
     })
+  }
+
+  difference(array: T[]): Seq<T> {
+    return seq([
+      ...this.filter(_ => !array.includes(_)),
+      ...array.filter(_ => !this.includes(_)),
+    ])
   }
 
   intersect(array: T[]): Seq<T> {
