@@ -177,11 +177,21 @@ export class Seq<T> extends Array<T> {
     })
   }
 
-  difference(array: T[]): Seq<T> {
-    return seq([
-      ...this.filter(_ => !array.includes(_)),
-      ...array.filter(_ => !this.includes(_)),
-    ])
+  difference(target: T[]): Seq<T> {
+    const thisSet = new Set(this)
+    const targetSet = new Set(target)
+    const res: Seq<T> = seq()
+    for (const item of thisSet) {
+      if (!targetSet.has(item)) {
+        res.push(item)
+      }
+    }
+    for (const item of targetSet) {
+      if (!thisSet.has(item)) {
+        res.push(item)
+      }
+    }
+    return res
   }
 
   intersect(array: T[]): Seq<T> {
