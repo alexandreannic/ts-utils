@@ -327,6 +327,15 @@ describe('Arr', function () {
     })
   })
 
+  describe.only('equals', function () {
+    it('should not', function () {
+      expect(seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape']).equals(['apple', 'orange', 'prune'])).deep.eq(false)
+    })
+    it('should', function () {
+      expect(seq(['apple', 'orange', 'prune']).equals(['apple', 'orange', 'prune'])).deep.eq(false)
+    })
+  })
+
   describe('difference', function () {
     it('should works', function () {
       const arr = seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape'])

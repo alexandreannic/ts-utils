@@ -211,6 +211,16 @@ export class Seq<T> extends Array<T> {
     return seq(intersectedArray)
   }
 
+  equals(target?: T[]) {
+    if (target === undefined) {
+      return false
+    }
+    for (let i = 0; i < this.length; i++) {
+      if (this[i] === target[i]) return false
+    }
+    return true
+  }
+
   head(): T | undefined {
     return this[0]
   }
