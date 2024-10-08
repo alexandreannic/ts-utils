@@ -87,6 +87,20 @@ export class Obj<T extends ObjType> {
     return res
   }
 
+  static readonly sort = <K extends Key, V extends any>(o: Record<K, V>, predicate: (a: [K, V], b: [K, V]) => number) => {
+    const res: any = {}
+    Obj.entries(o).sort(predicate).forEach(([k, v]) => {
+      res[k] = v
+    })
+    return res as Record<K, V>
+  }
+
+  static readonly sortManual = <K extends Key, V extends any>(o: Record<K, V>, order: K[]) => {
+    return Obj.sort(o, ([aK, aV], [bK, bV]) => {
+      return order.indexOf(aK) - order.indexOf(bK)
+    })
+  }
+
   constructor(private o: T) {
   }
 
@@ -110,17 +124,11 @@ export class Obj<T extends ObjType> {
   }
 
   readonly sort = (predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number) => {
-    const res: any = {}
-    Obj.entries(this.o).sort(predicate).forEach(([k, v]) => {
-      res[k] = v
-    })
-    return new Obj(res as T)
+    return new Obj(Obj.sort<KeyOf<T>, T[keyof T]>(this.o, predicate))
   }
 
-  readonly sortManual = (order: (keyof T)[]) => {
-    return this.sort(([aK, aV], [bK, bV]) => {
-      return order.indexOf(aK) - order.indexOf(bK)
-    })
+  readonly sortManual = (order: (KeyOf<T>)[]) => {
+    return new Obj(Obj.sortManual(this.o, order))
   }
 
   // @ts-ignore
