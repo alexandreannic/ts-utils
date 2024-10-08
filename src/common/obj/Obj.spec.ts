@@ -138,6 +138,28 @@ describe('Obj', function () {
       })
     })
 
+    describe('sortManual', function () {
+      it('sort by key', function () {
+        const res = new Obj({
+          'ironman': 2,
+          'barman': 1,
+          'catwoman': 4,
+          'batman': 3,
+        }).sortManual([
+          'catwoman',
+          'barman',
+          'ironman',
+          'batman',
+        ]).get()
+        expect(res).deep.eq({
+          'catwoman': 4,
+          'barman': 1,
+          'ironman': 2,
+          'batman': 3,
+        })
+      })
+    })
+
     describe('sort', function () {
 
       const data = new Obj({

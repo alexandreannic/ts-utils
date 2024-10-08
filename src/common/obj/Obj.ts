@@ -117,6 +117,12 @@ export class Obj<T extends ObjType> {
     return new Obj(res as T)
   }
 
+  readonly sortManual = (order: (keyof T)[]) => {
+    return this.sort(([aK, aV], [bK, bV]) => {
+      return order.indexOf(aK) - order.indexOf(bK)
+    })
+  }
+
   // @ts-ignore
   readonly entries = () => Obj.entries<keyof T, T[keyof T]>(this.o)
 

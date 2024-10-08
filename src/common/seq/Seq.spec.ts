@@ -327,7 +327,7 @@ describe('Arr', function () {
     })
   })
 
-  describe.only('equals', function () {
+  describe('equals', function () {
     it('should not', function () {
       expect(seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape']).equals(['apple', 'orange', 'prune'])).deep.eq(false)
     })
