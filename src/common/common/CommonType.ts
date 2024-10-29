@@ -16,6 +16,10 @@ export type RequiredProperty<T, K extends keyof T> = Omit<T, K> & Required<Pick<
 
 export type KeyStringOf<T> = Extract<keyof T, string>
 
+export type KeyOfType<T, V extends number | undefined | string | string[]> = {
+  [K in keyof T]: T[K] extends V ? K : never;
+}[keyof T]
+
 /**
  * Make some optional properties of an interface required. E.g:
  *
