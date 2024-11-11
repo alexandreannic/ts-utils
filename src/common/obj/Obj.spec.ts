@@ -138,7 +138,7 @@ describe('Obj', function () {
       })
     })
 
-    describe.only('sortManual', function () {
+    describe('sortManual', function () {
       it('sort by key', function () {
         const res = new Obj({
           'ironman': 2,

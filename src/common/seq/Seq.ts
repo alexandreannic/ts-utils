@@ -212,11 +212,9 @@ export class Seq<T> extends Array<T> {
   }
 
   equals(target?: T[]) {
-    if (target === undefined) {
-      return false
-    }
+    if (target === undefined || this.length !== target.length) return false
     for (let i = 0; i < this.length; i++) {
-      if (this[i] === target[i]) return false
+      if (this[i] !== target[i]) return false
     }
     return true
   }

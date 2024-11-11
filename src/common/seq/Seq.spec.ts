@@ -328,11 +328,14 @@ describe('Arr', function () {
   })
 
   describe('equals', function () {
-    it('should not', function () {
+    it('should be false', function () {
       expect(seq(['apple', 'banana', 'pear', 'orange', 'kiwi', 'grape']).equals(['apple', 'orange', 'prune'])).deep.eq(false)
     })
-    it('should', function () {
-      expect(seq(['apple', 'orange', 'prune']).equals(['apple', 'orange', 'prune'])).deep.eq(false)
+    it('should be true', function () {
+      expect(seq(['apple', 'orange', 'prune']).equals(['apple', 'orange', 'prune'])).deep.eq(true)
+    })
+    it('empty', function () {
+      expect(seq([]).equals([])).deep.eq(true)
     })
   })
 
