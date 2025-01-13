@@ -30,6 +30,13 @@ export class Progress {
       remainingTimeAvg,
       linesPerSecond,
       linesPerSecondAvg,
+      toString: () => {
+        const totalLinesStr = this.totalLines.toLocaleString()
+        return `${percent.toFixed(1).padStart(5)}%\t`
+          + `${lines.toLocaleString().padStart(totalLinesStr.length)}/${totalLinesStr}\t`
+          + `Remaining: ${remainingTimeAvg.toString().padStart(20)}\t`
+          + `${linesPerSecondAvg.toFixed(2)} Lines/s`
+      }
     }
   }
 
@@ -38,6 +45,10 @@ export class Progress {
     const elapsedTime = t1 - t0
     const linesPerSecond = linesDone / duration(elapsedTime).toSeconds
     const remainingTime = (this.totalLines - t1Lines) / (linesDone / elapsedTime)
-    return {elapsedTime: duration(elapsedTime), remainingTime: duration(remainingTime), linesPerSecond,}
+    return {
+      elapsedTime: duration(elapsedTime),
+      remainingTime: duration(remainingTime),
+      linesPerSecond,
+    }
   }
 }
