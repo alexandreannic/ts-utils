@@ -44,7 +44,7 @@ export class Progress {
     const linesDone = t1Lines - t0Lines
     const elapsedTime = t1 - t0
     const linesPerSecond = linesDone / duration(elapsedTime).toSeconds
-    const remainingTime = (this.totalLines - t1Lines) / (linesDone / elapsedTime)
+    const remainingTime = linesDone === 0 || elapsedTime === 0 ? Number.POSITIVE_INFINITY : (this.totalLines - t1Lines) / (linesDone / elapsedTime)
     return {
       elapsedTime: duration(elapsedTime),
       remainingTime: duration(remainingTime),

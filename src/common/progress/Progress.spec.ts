@@ -6,7 +6,15 @@ describe('progress', function () {
 
   this.timeout(10000)
 
-  it.only('should works', async function () {
+  it.only('should complete', async function () {
+    const p = new Progress(1000)
+    p.snapshot(0)
+    await sleep(50)
+    await sleep(50)
+    console.log('' + p.snapshot(1000))
+  })
+
+  it('should works', async function () {
     const p = new Progress(1000)
     await sleep(2000)
     const t1 = p.snapshot(20)
