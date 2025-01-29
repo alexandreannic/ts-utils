@@ -1,6 +1,6 @@
 {
   "name": "@alexandreannic/ts-utils",
-  "version": "2.1.17",
+  "version": "2.1.18",
   "description": "Bunch of utils methods and features",
   "main": "lib/index.js",
   "private": false,
@@ -23,6 +23,7 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
+    "@supercharge/promise-pool": "^3.2.0",
     "byline": "^5.0.0",
     "fs-extra": "^8.1.0",
     "lodash.get": "^4.4.2",

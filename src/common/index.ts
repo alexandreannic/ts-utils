@@ -1,5 +1,6 @@
 export * from './seq/Seq'
 export * from './cache/Cache'
+export * from './chunkify/Chunkify'
 export * from './common/Common'
 export * from './common/CommonType'
 export * from './delay/Delay'
