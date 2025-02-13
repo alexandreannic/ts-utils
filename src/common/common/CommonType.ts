@@ -6,7 +6,7 @@ export type DeepPartial<T> = {
       : DeepPartial<T[P]>
 };
 
-export type Index<T> = {[key: string]: T};
+export type Index<T> = { [key: string]: T };
 
 export type PromiseReturn<T> = T extends PromiseLike<infer U> ? U : T
 
@@ -39,3 +39,5 @@ export type KeyOfType<T, V extends number | undefined | string | string[]> = {
  * }
  */
 export type MakeRequired<T extends object, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
+export type MakeOptional<T extends object, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
