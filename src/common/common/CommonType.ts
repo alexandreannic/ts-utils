@@ -4,20 +4,20 @@ export type DeepPartial<T> = {
     : T[P] extends ReadonlyArray<infer U>
       ? ReadonlyArray<DeepPartial<U>>
       : DeepPartial<T[P]>
-};
+}
 
-export type Index<T> = { [key: string]: T };
+export type Index<T> = {[key: string]: T}
 
 export type PromiseReturn<T> = T extends PromiseLike<infer U> ? U : T
 
 export type PromiseFnResult<T extends (...args: any[]) => Promise<object>> = PromiseReturn<ReturnType<T>>
 
-export type RequiredProperty<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+export type RequiredProperty<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 export type KeyStringOf<T> = Extract<keyof T, string>
 
 export type KeyOfType<T, V extends number | undefined | string | string[]> = {
-  [K in keyof T]: T[K] extends V ? K : never;
+  [K in keyof T]: T[K] extends V ? K : never
 }[keyof T]
 
 /**

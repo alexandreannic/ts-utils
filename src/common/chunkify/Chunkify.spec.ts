@@ -19,11 +19,7 @@ describe.only('chunkify', () => {
       },
     })
 
-    expect(result).to.deep.equal([
-      [2, 4],
-      [6, 8],
-      [10],
-    ])
+    expect(result).to.deep.equal([[2, 4], [6, 8], [10]])
     expect(callCount).to.equal(3)
     expect(getTime() - t0).to.deep.equal(3)
   })
@@ -59,7 +55,7 @@ describe.only('chunkify', () => {
     const result = await chunkify({
       size: 2,
       data: [],
-      fn: async (d) => d,
+      fn: async d => d,
     })
 
     expect(result).to.deep.equal([])
@@ -69,11 +65,9 @@ describe.only('chunkify', () => {
     const result = await chunkify({
       size: 10,
       data: [1, 2, 3],
-      fn: async (d) => d.map(_ => _ * 2),
+      fn: async d => d.map(_ => _ * 2),
     })
-    expect(result).to.deep.equal([
-      [2, 4, 6],
-    ])
+    expect(result).to.deep.equal([[2, 4, 6]])
   })
 
   it('should process all chunks even if size is 1', async () => {
@@ -81,17 +75,13 @@ describe.only('chunkify', () => {
     const result = await chunkify({
       size: 1,
       data: [1, 2, 3],
-      fn: async (d) => {
+      fn: async d => {
         callCount++
         return d.map(_ => _ * 2)
       },
     })
 
-    expect(result).to.deep.equal([
-      [2],
-      [4],
-      [6],
-    ])
+    expect(result).to.deep.equal([[2], [4], [6]])
 
     expect(callCount).to.equal(3)
   })

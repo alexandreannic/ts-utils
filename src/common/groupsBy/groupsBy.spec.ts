@@ -12,8 +12,8 @@ describe.only('groupsBy', () => {
 
     const result = groupsBy({
       data,
-      groups: [{by: (item) => item.category}],
-      finalTransform: (items) => items.reduce((sum, item) => sum + item.value, 0),
+      groups: [{by: item => item.category}],
+      finalTransform: items => items.reduce((sum, item) => sum + item.value, 0),
     })
 
     expect(result.groups).to.deep.equal({
@@ -33,11 +33,8 @@ describe.only('groupsBy', () => {
 
     const result = groupsBy({
       data,
-      groups: [
-        {by: (item) => item.category},
-        {by: (item) => item.type},
-      ],
-      finalTransform: (items) => items.reduce((sum, item) => sum + item.value, 0),
+      groups: [{by: item => item.category}, {by: item => item.type}],
+      finalTransform: items => items.reduce((sum, item) => sum + item.value, 0),
     })
 
     expect(result.groups).to.deep.equal({
@@ -60,8 +57,8 @@ describe.only('groupsBy', () => {
 
     const result = groupsBy({
       data,
-      groups: [{by: (item) => item.category, sort: (a, b) => a.localeCompare(b)}],
-      finalTransform: (items) => items.length,
+      groups: [{by: item => item.category, sort: (a, b) => a.localeCompare(b)}],
+      finalTransform: items => items.length,
     })
 
     expect(Object.keys(result.groups)).to.deep.equal(['A', 'B'])

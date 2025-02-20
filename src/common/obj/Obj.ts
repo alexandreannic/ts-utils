@@ -2,7 +2,7 @@ export type KeyOf<T> = Extract<keyof T, string>
 
 type Entries<T> = NonNullable<{
   [K in KeyOf<T>]: NonNullable<[K, T[K]]>
-}>[KeyOf<T>][];
+}>[KeyOf<T>][]
 
 // export type _Enum<T = any> = {
 //   [id: string]: T | string
@@ -14,14 +14,16 @@ type Key = string | number
 export type ObjType<T = any> = Record<Key, T>
 
 export class Obj<T extends ObjType> {
-
-  static readonly toArray = <T extends ObjType, K extends string = 'name', V extends string = 'value'>(obj: T, {
-    keyName = 'name' as K,
-    valueName = 'value' as V
-  }: {
-    keyName?: K
-    valueName?: V
-  } = {}): ({ [KK in K]: KeyOf<T> } & { [VV in V]: T[KeyOf<T>] })[] => {
+  static readonly toArray = <T extends ObjType, K extends string = 'name', V extends string = 'value'>(
+    obj: T,
+    {
+      keyName = 'name' as K,
+      valueName = 'value' as V,
+    }: {
+      keyName?: K
+      valueName?: V
+    } = {},
+  ): ({[KK in K]: KeyOf<T>} & {[VV in V]: T[KeyOf<T>]})[] => {
     return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
   }
 
@@ -30,20 +32,23 @@ export class Obj<T extends ObjType> {
     return Object.entries(t) as any
   }
 
-  static readonly keys = <T extends ObjType>(t: T): (KeyOf<T>)[] => {
+  static readonly keys = <T extends ObjType>(t: T): KeyOf<T>[] => {
     return Object.keys(t) as any
   }
 
-  static readonly values = <T extends ObjType>(t: T): (T[keyof T])[] => {
+  static readonly values = <T extends ObjType>(t: T): T[keyof T][] => {
     return Object.values(t)
   }
 
-  static readonly getKeyByValue = <T extends ObjType>(t: T, value: string/*T[keyof T]*/): keyof T | undefined => {
+  static readonly getKeyByValue = <T extends ObjType>(t: T, value: string /*T[keyof T]*/): keyof T | undefined => {
     return Obj.entries(t).find(([k, v]) => v === value)?.[0]
   }
 
   /**@deprecated use map instead*/
-  static readonly transform = <K extends Key, V extends any, NK extends Key, NV>(o: Record<K, V>, map: (k: K, v: V, index: number) => [NK, NV]): Record<NK, NV> => {
+  static readonly transform = <K extends Key, V extends any, NK extends Key, NV>(
+    o: Record<K, V>,
+    map: (k: K, v: V, index: number) => [NK, NV],
+  ): Record<NK, NV> => {
     const res: Record<NK, NV> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
       const [newK, newV] = map(k, v, i)
@@ -54,7 +59,10 @@ export class Obj<T extends ObjType> {
 
   static readonly map = Obj.transform
 
-  static readonly mapValues = <K extends Key, V extends any, NV>(o: Record<K, V>, fn: (v: V, k: K, index: number) => NV): Record<K, NV> => {
+  static readonly mapValues = <K extends Key, V extends any, NV>(
+    o: Record<K, V>,
+    fn: (v: V, k: K, index: number) => NV,
+  ): Record<K, NV> => {
     const res: Record<K, NV> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
       res[k] = fn(v, k, i)
@@ -62,7 +70,10 @@ export class Obj<T extends ObjType> {
     return res
   }
 
-  static readonly mapKeys = <K extends Key, V extends any, NK extends Key>(o: Record<K, V>, fn: (k: K, v: V, index: number) => NK): Record<NK, V> => {
+  static readonly mapKeys = <K extends Key, V extends any, NK extends Key>(
+    o: Record<K, V>,
+    fn: (k: K, v: V, index: number) => NK,
+  ): Record<NK, V> => {
     const res: Record<NK, V> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
       const newK = fn(k, v, i)
@@ -71,7 +82,10 @@ export class Obj<T extends ObjType> {
     return res
   }
 
-  static readonly filter = <K extends Key, V extends any>(o: Record<K, V>, fn: (k: K, v: V, index: number) => boolean): Partial<Record<K, V>> => {
+  static readonly filter = <K extends Key, V extends any>(
+    o: Record<K, V>,
+    fn: (k: K, v: V, index: number) => boolean,
+  ): Partial<Record<K, V>> => {
     const res: Partial<Record<K, V>> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
       if (fn(k, v, i)) res[k] = v
@@ -79,7 +93,10 @@ export class Obj<T extends ObjType> {
     return res
   }
 
-  static readonly filterValue = <K extends Key, V extends any>(o: Record<K, V>, fn: (v: V) => boolean): Record<K, V> => {
+  static readonly filterValue = <K extends Key, V extends any>(
+    o: Record<K, V>,
+    fn: (v: V) => boolean,
+  ): Record<K, V> => {
     const res: Record<K, V> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
       if (fn(v)) res[k] = v
@@ -87,11 +104,16 @@ export class Obj<T extends ObjType> {
     return res
   }
 
-  static readonly sort = <K extends Key, V extends any>(o: Record<K, V>, predicate: (a: [K, V], b: [K, V]) => number) => {
+  static readonly sort = <K extends Key, V extends any>(
+    o: Record<K, V>,
+    predicate: (a: [K, V], b: [K, V]) => number,
+  ) => {
     const res: any = {}
-    Obj.entries(o).sort(predicate).forEach(([k, v]) => {
-      res[k] = v
-    })
+    Obj.entries(o)
+      .sort(predicate)
+      .forEach(([k, v]) => {
+        res[k] = v
+      })
     return res as Record<K, V>
   }
 
@@ -101,8 +123,7 @@ export class Obj<T extends ObjType> {
     })
   }
 
-  constructor(private o: T) {
-  }
+  constructor(private o: T) {}
 
   /**@deprecated use map instead*/
   readonly transform = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
@@ -127,7 +148,7 @@ export class Obj<T extends ObjType> {
     return new Obj(Obj.sort<KeyOf<T>, T[keyof T]>(this.o, predicate))
   }
 
-  readonly sortManual = (order: (KeyOf<T>)[]) => {
+  readonly sortManual = (order: KeyOf<T>[]) => {
     return new Obj(Obj.sortManual(this.o, order))
   }
 
@@ -138,11 +159,12 @@ export class Obj<T extends ObjType> {
 
   readonly values = () => Obj.values<T>(this.o)
 
-  readonly toArray = <K extends string = 'name', V extends string = 'value'>(params: {
-    keyName?: K,
-    valueName?: V
-  } = {}) => Obj.toArray<T, K, V>(this.o, params as any)
+  readonly toArray = <K extends string = 'name', V extends string = 'value'>(
+    params: {
+      keyName?: K
+      valueName?: V
+    } = {},
+  ) => Obj.toArray<T, K, V>(this.o, params as any)
 
   readonly get = () => this.o
 }
-

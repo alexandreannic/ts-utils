@@ -20,6 +20,6 @@ export const chunkify = <T, R>({
     return PromisePool.withConcurrency(concurrency)
       .for(chunkedSubmissions)
       .process(fn)
-      .then((_) => _.results)
+      .then(_ => _.results)
   return Promise.all(chunkedSubmissions.map(fn))
 }

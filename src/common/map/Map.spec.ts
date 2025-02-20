@@ -2,7 +2,6 @@ import {expect} from 'chai'
 import {map} from './Map'
 
 describe('Map', function () {
-
   interface Obj {
     key: {
       subArr?: string[] | undefined
@@ -16,7 +15,7 @@ describe('Map', function () {
       subArr: ['a', 'b'],
       subNumber: 2,
       subNumberUndefined: undefined,
-    }
+    },
   }
 
   const square = (x: number) => x * x
@@ -42,8 +41,15 @@ describe('Map', function () {
   })
 
   it('should call with 5 args', async function () {
-    expect(map('a', 1, true, {}, [], (a: string, b: number, c: boolean, d: object, e: []) =>
-      a + b + c + JSON.stringify(d) + JSON.stringify(e))
+    expect(
+      map(
+        'a',
+        1,
+        true,
+        {},
+        [],
+        (a: string, b: number, c: boolean, d: object, e: []) => a + b + c + JSON.stringify(d) + JSON.stringify(e),
+      ),
     ).eq('a1true{}[]')
   })
 })

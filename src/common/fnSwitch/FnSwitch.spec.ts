@@ -1,15 +1,14 @@
 import {expect} from 'chai'
 import {fnSwitch} from './FnSwitch'
 
-
 describe('FnSwitch', function () {
   it('Should works when all cases are set', function () {
     type Value = 'yes' | 'no' | 'unknown'
     const value = 'yes' as Value
     const port = fnSwitch(value, {
-      'yes': 1,
-      'no': 2,
-      'unknown': 3,
+      yes: 1,
+      no: 2,
+      unknown: 3,
     })
     expect(port).to.eq(1)
   })
@@ -17,9 +16,13 @@ describe('FnSwitch', function () {
   it('Should fall in the default case function', function () {
     type Value = 'yes' | 'no' | 'unknown'
     const value = 'no' as Value
-    const port = fnSwitch(value, {
-      'yes': 1,
-    }, _ => 3)
+    const port = fnSwitch(
+      value,
+      {
+        yes: 1,
+      },
+      _ => 3,
+    )
     expect(port).to.eq(3)
   })
 
@@ -40,11 +43,15 @@ describe('FnSwitch', function () {
 
     const value = Value.yes as Value
 
-    const port = fnSwitch(value, {
-      [Value.yes]: undefined,
-      [Value.no]: 2,
-      [Value.unknown]: 3,
-    }, _ => 4)
+    const port = fnSwitch(
+      value,
+      {
+        [Value.yes]: undefined,
+        [Value.no]: 2,
+        [Value.unknown]: 3,
+      },
+      _ => 4,
+    )
     expect(port).to.eq(undefined)
   })
 })

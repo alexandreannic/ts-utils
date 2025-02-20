@@ -6,15 +6,15 @@ type GroupByKey = string | number
 export const groupsBy: {
   <T extends Record<GroupByKey, any>, A extends GroupByKey, R extends any>(_: {
     data: T[]
-    groups: [{ by: (_: T) => A; sort?: (a: A, b: A) => number }]
+    groups: [{by: (_: T) => A; sort?: (a: A, b: A) => number}]
     finalTransform: (_: Seq<T>, groups: [A]) => R
-  }): { groups: Record<A, R>; transforms: R[] }
+  }): {groups: Record<A, R>; transforms: R[]}
 
   <T extends Record<GroupByKey, any>, A extends GroupByKey, B extends GroupByKey, R extends any>(_: {
     data: T[]
-    groups: [{ by: (_: T) => A; sort?: (a: A, b: A) => number }, { by: (_: T) => B; sort?: (a: B, b: B) => number }]
+    groups: [{by: (_: T) => A; sort?: (a: A, b: A) => number}, {by: (_: T) => B; sort?: (a: B, b: B) => number}]
     finalTransform: (_: Seq<T>, groups: [A, B]) => R
-  }): { groups: Record<A, Record<B, R>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, R>>; transforms: R[]}
 
   <
     T extends Record<GroupByKey, any>,
@@ -25,12 +25,12 @@ export const groupsBy: {
   >(_: {
     data: T[]
     groups: [
-      { by: (_: T) => A; sort?: (a: A, b: A) => number },
-      { by: (_: T) => B; sort?: (a: B, b: B) => number },
-      { by: (_: T) => C; sort?: (a: C, b: C) => number },
+      {by: (_: T) => A; sort?: (a: A, b: A) => number},
+      {by: (_: T) => B; sort?: (a: B, b: B) => number},
+      {by: (_: T) => C; sort?: (a: C, b: C) => number},
     ]
     finalTransform: (_: Seq<T>, groups: [A, B, C]) => R
-  }): { groups: Record<A, Record<B, Record<C, R>>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, Record<C, R>>>; transforms: R[]}
 
   <
     T extends Record<GroupByKey, any>,
@@ -42,13 +42,13 @@ export const groupsBy: {
   >(_: {
     data: T[]
     groups: [
-      { by: (_: T) => A; sort?: (a: A, b: A) => number },
-      { by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number },
-      { by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number },
-      { by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number },
+      {by: (_: T) => A; sort?: (a: A, b: A) => number},
+      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
+      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
+      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
     ]
     finalTransform: (_: Seq<T>, groups: [A, B, C, D]) => R
-  }): { groups: Record<A, Record<B, Record<C, Record<D, R>>>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, Record<C, Record<D, R>>>>; transforms: R[]}
 
   <
     T extends Record<GroupByKey, any>,
@@ -61,14 +61,14 @@ export const groupsBy: {
   >(_: {
     data: T[]
     groups: [
-      { by: (_: T) => A; sort?: (a: A, b: A) => number },
-      { by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number },
-      { by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number },
-      { by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number },
-      { by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number },
+      {by: (_: T) => A; sort?: (a: A, b: A) => number},
+      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
+      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
+      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
+      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
     ]
     finalTransform: (_: Seq<T>, groups: [A, B, C, D, E]) => R
-  }): { groups: Record<A, Record<B, Record<C, Record<D, Record<E, R>>>>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, R>>>>>; transforms: R[]}
 
   <
     T extends Record<GroupByKey, any>,
@@ -82,15 +82,15 @@ export const groupsBy: {
   >(_: {
     data: T[]
     groups: [
-      { by: (_: T) => A; sort?: (a: A, b: A) => number },
-      { by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number },
-      { by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number },
-      { by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number },
-      { by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number },
-      { by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number },
+      {by: (_: T) => A; sort?: (a: A, b: A) => number},
+      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
+      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
+      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
+      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
+      {by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number},
     ]
     finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F]) => R
-  }): { groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, F>>>>>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, F>>>>>>; transforms: R[]}
 
   <
     T extends Record<GroupByKey, any>,
@@ -105,16 +105,16 @@ export const groupsBy: {
   >(_: {
     data: T[]
     groups: [
-      { by: (_: T) => A; sort?: (a: A, b: A) => number },
-      { by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number },
-      { by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number },
-      { by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number },
-      { by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number },
-      { by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number },
-      { by: (_: T, groups: [A, B, C, D, E, F]) => G; sort?: (a: G, b: G) => number },
+      {by: (_: T) => A; sort?: (a: A, b: A) => number},
+      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
+      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
+      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
+      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
+      {by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number},
+      {by: (_: T, groups: [A, B, C, D, E, F]) => G; sort?: (a: G, b: G) => number},
     ]
     finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F, G]) => R
-  }): { groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, Record<E, G>>>>>>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, Record<E, G>>>>>>>; transforms: R[]}
 
   // <T extends Record<GroupByKey, any>, A extends GroupByKey, B extends GroupByKey, C extends GroupByKey, D extends GroupByKey, E extends GroupByKey, R extends any>(_: {
   //   data: T[],
@@ -141,20 +141,20 @@ export const groupsBy: {
   >(_: {
     data: T[]
     groups: [
-      { by: (_: T) => A; sort?: (a: A, b: A) => number },
-      { by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number },
-      { by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number },
-      { by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number },
-      { by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number },
-      { by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number },
-      { by: (_: T, groups: [A, B, C, D, E, F]) => G; sort?: (a: G, b: G) => number },
+      {by: (_: T) => A; sort?: (a: A, b: A) => number},
+      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
+      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
+      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
+      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
+      {by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number},
+      {by: (_: T, groups: [A, B, C, D, E, F]) => G; sort?: (a: G, b: G) => number},
     ]
     finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F, G]) => R
-  }): { groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, Record<E, G>>>>>>>; transforms: R[] }
+  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, Record<E, G>>>>>>>; transforms: R[]}
 
   <T extends Record<GroupByKey, any>>(_: {
     data: T[]
-    groups: { by: (_: T) => GroupByKey; sort?: (a: string, b: string) => number }[]
+    groups: {by: (_: T) => GroupByKey; sort?: (a: string, b: string) => number}[]
     finalTransform: (_: Seq<T>, groups: GroupByKey[]) => any
   }): Record<GroupByKey, any>
 } = ({data, groups, finalTransform, collectedGroup = []}: any) => {
@@ -166,7 +166,7 @@ export const groupsBy: {
     }
   }
   const [group, ...rest] = groups
-  const res = seq(data).groupBy((_) => group.by(_, collectedGroup))
+  const res = seq(data).groupBy(_ => group.by(_, collectedGroup))
   const collectedTransforms: any[] = []
   const ress = new Obj(res)
     .sort(([a], [b]) => (group.sort ? group.sort(a, b) : a.localeCompare(b)))

@@ -7,7 +7,6 @@ interface User {
 }
 
 describe('Delay', function () {
-
   it('should delay promise', async function () {
     const getUser = (): Promise<User> => Promise.resolve({name: 'a'})
     const t0 = getTime()

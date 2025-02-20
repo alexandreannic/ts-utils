@@ -3,22 +3,24 @@ import {filterUndefined} from '../common/Common'
 import {hashArgs} from '../lazy/Lazy'
 
 export interface CacheData<V> {
-  lastUpdate: Date;
-  expiration?: number;
-  value: V;
+  lastUpdate: Date
+  expiration?: number
+  value: V
 }
 
 export interface CacheParams {
-  ttl?: Duration,
-  cleaningCheckupInterval?: Duration,
+  ttl?: Duration
+  cleaningCheckupInterval?: Duration
 }
 export class Cache<V = undefined> {
-
   /**
    * TODO(Alex): Really similar to lazy(). Check if it could be factorized.
    * TODO(Alex): Also check if to force Promise return type is necessary.
    */
-  static readonly request = <T, P extends Array<any>>(fn: ((...p: P) => Promise<T>), params?: CacheParams): (...p: P) => Promise<T> => {
+  static readonly request = <T, P extends Array<any>>(
+    fn: (...p: P) => Promise<T>,
+    params?: CacheParams,
+  ): ((...p: P) => Promise<T>) => {
     const cache = new Cache(params)
     return async (...p: P) => {
       const argsHashed = hashArgs(p)
@@ -30,12 +32,9 @@ export class Cache<V = undefined> {
       }
       return cachedValue
     }
-  };
+  }
 
-  constructor({
-    ttl = duration(1, 'hour'),
-    cleaningCheckupInterval = duration(2, 'day'),
-  }: CacheParams = {}) {
+  constructor({ttl = duration(1, 'hour'), cleaningCheckupInterval = duration(2, 'day')}: CacheParams = {}) {
     this.ttl = ttl
     this.cleaningCheckupInterval = cleaningCheckupInterval
     this.intervalRef = setInterval(this.cleanCheckup, cleaningCheckupInterval)
@@ -49,7 +48,8 @@ export class Cache<V = undefined> {
 
   private cache: Map<string, CacheData<V>> = new Map()
 
-  private readonly isExpired = (_: CacheData<V>) => _.expiration && _.lastUpdate.getTime() + _.expiration < new Date().getTime()
+  private readonly isExpired = (_: CacheData<V>) =>
+    _.expiration && _.lastUpdate.getTime() + _.expiration < new Date().getTime()
 
   readonly get = <T = any>(key: string): undefined | (V extends undefined ? T : V) => {
     const data = this.cache.get(key)

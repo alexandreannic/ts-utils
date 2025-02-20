@@ -5,7 +5,6 @@ import {sleep} from '../delay/Delay'
 export const getTime = () => parseInt('' + new Date().getTime() / 1000)
 
 describe('Lazy', function () {
-
   it('should prevent function computation at the 2nd call', async function () {
     const longValueToGet = lazy(async () => {
       await sleep(1000)
@@ -24,8 +23,14 @@ describe('Lazy', function () {
   it('should considers arguments when using cache', async function () {
     let sideEffect = 0
 
-    const users = [{id: 1, name: 'n1'}, {id: 2, name: 'n2'}, {id: 3, name: 'n3'}, {id: 4, name: 'n4'}, {id: 5, name: 'n5'}]
-    const findByUserId = lazy((id: number, complexArgs: {a: string, b: number}, uselessArgForTypeChecking?: string) => {
+    const users = [
+      {id: 1, name: 'n1'},
+      {id: 2, name: 'n2'},
+      {id: 3, name: 'n3'},
+      {id: 4, name: 'n4'},
+      {id: 5, name: 'n5'},
+    ]
+    const findByUserId = lazy((id: number, complexArgs: {a: string; b: number}, uselessArgForTypeChecking?: string) => {
       ++sideEffect
       return users.find(_ => _.id === id)
     })
@@ -43,11 +48,11 @@ describe('Lazy', function () {
   it('should handle custom key', function () {
     let sideEffects = 0
     const fn = lazy(
-      (user: {name: string, age: number}) => {
+      (user: {name: string; age: number}) => {
         sideEffects++
         return user
       },
-      {key: (user: {name: string, age: number}) => user.name + user.age}
+      {key: (user: {name: string; age: number}) => user.name + user.age},
     )
     const user1 = {name: 'Okooo', age: 1}
     const user2 = {name: 'Ihhim', age: 12}

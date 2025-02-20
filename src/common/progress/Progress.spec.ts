@@ -3,7 +3,6 @@ import {expect} from 'chai'
 import {sleep} from '../delay/Delay'
 
 describe('progress', function () {
-
   this.timeout(10000)
 
   it.only('should complete', async function () {

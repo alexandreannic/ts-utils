@@ -17,17 +17,18 @@ interface Activity {
 }
 
 describe('Cache', function () {
-
   const user: User = {
-    name: 'Francis Ngannou', address: {city: 'Paris', zip: 75000}
+    name: 'Francis Ngannou',
+    address: {city: 'Paris', zip: 75000},
   }
 
   const user2: User = {
-    name: 'Mike Horn', address: {city: 'Lausanne', zip: 1000}
+    name: 'Mike Horn',
+    address: {city: 'Lausanne', zip: 1000},
   }
 
   const activity: Activity = {
-    activity: 'blabla'
+    activity: 'blabla',
   }
 
   it('should save and get', async function () {
@@ -38,23 +39,23 @@ describe('Cache', function () {
 
   it('should get before expiration', async function () {
     const cache = new Cache<User>()
-    cache.set('francis', user, duration(.5, 'second'))
-    await sleep(duration(.4, 'second'))
+    cache.set('francis', user, duration(0.5, 'second'))
+    await sleep(duration(0.4, 'second'))
     expect(cache.get('francis')).deep.eq(user)
   })
 
   it('should not get after expiration', async function () {
     const cache = new Cache<User>()
-    cache.set('francis', user, duration(.4, 'second'))
-    await sleep(duration(.5, 'second'))
+    cache.set('francis', user, duration(0.4, 'second'))
+    await sleep(duration(0.5, 'second'))
     expect(cache.get('francis')).eq(undefined)
   })
 
   it('should get only not expired', async function () {
     const cache = new Cache<User>()
-    cache.set('mike', user2, duration(.1, 'second'))
-    cache.set('francis', user, duration(.3, 'second'))
-    await sleep(duration(.2, 'second'))
+    cache.set('mike', user2, duration(0.1, 'second'))
+    cache.set('francis', user, duration(0.3, 'second'))
+    await sleep(duration(0.2, 'second'))
     expect(cache.getAll()).deep.eq([user])
   })
 
@@ -95,10 +96,13 @@ describe('Cache', function () {
 
   it('should avoid reprocess request', async function () {
     let sideEffect = 0
-    const request = Cache.request(async (id: number) => {
-      ++sideEffect
-      return id
-    }, {ttl: duration(10, 'minute')})
+    const request = Cache.request(
+      async (id: number) => {
+        ++sideEffect
+        return id
+      },
+      {ttl: duration(10, 'minute')},
+    )
 
     expect(await request(3)).eq(3)
     expect(sideEffect).eq(1)
@@ -115,10 +119,13 @@ describe('Cache', function () {
 
   it('should consider ttl', async function () {
     let sideEffect = 0
-    const request = Cache.request(async (id: number) => {
-      ++sideEffect
-      return id
-    }, {ttl: duration(.5, 'second')})
+    const request = Cache.request(
+      async (id: number) => {
+        ++sideEffect
+        return id
+      },
+      {ttl: duration(0.5, 'second')},
+    )
 
     await request(3)
     expect(sideEffect).eq(1)

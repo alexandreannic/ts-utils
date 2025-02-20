@@ -11,7 +11,6 @@ interface Filter<T> {
 type Key = number | string
 
 export class Seq<T> extends Array<T> {
-
   readonly isSeq = true
 
   static readonly fromArray = <TT>(_: TT[] = []): Seq<TT> => {
@@ -27,7 +26,9 @@ export class Seq<T> extends Array<T> {
   }
 
   // @ts-ignore
-  readonly count: (T extends number ? (fn?: PredicateFn<T, boolean>) => number : (fn: PredicateFn<T, boolean>) => number) = (fn = (value, index, array) => value) => {
+  readonly count: T extends number
+    ? (fn?: PredicateFn<T, boolean>) => number
+    : (fn: PredicateFn<T, boolean>) => number = (fn = (value, index, array) => value) => {
     let x = 0
     this.forEach((v, i, a) => {
       if (fn(v, i, a)) x += 1
@@ -43,10 +44,7 @@ export class Seq<T> extends Array<T> {
     return seq(super.map(callback, thisArg))
   }
 
-  flatMap<U>(
-    callback: (value: T, index: number, array: T[]) => U | ReadonlyArray<U>,
-    thisArg?: any
-  ): Seq<U> {
+  flatMap<U>(callback: (value: T, index: number, array: T[]) => U | ReadonlyArray<U>, thisArg?: any): Seq<U> {
     return seq(super.flatMap(callback, thisArg))
   }
 
@@ -63,9 +61,11 @@ export class Seq<T> extends Array<T> {
   }
 
   // @ts-ignore
-  sum: (T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number) = (fn = (value, index, array) => value) => {
+  sum: T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number = (
+    fn = (value, index, array) => value,
+  ) => {
     let sum = 0
-    this.forEach((v, i, arr) => sum += fn(v, i, arr))
+    this.forEach((v, i, arr) => (sum += fn(v, i, arr)))
     return sum
   }
 
@@ -77,7 +77,7 @@ export class Seq<T> extends Array<T> {
     return this.includes(item)
   }
 
-  compact(): T extends (undefined | null) ? never : Seq<T> {
+  compact(): T extends undefined | null ? never : Seq<T> {
     return this.filter(_ => _ !== undefined && _ !== null) as any
   }
 
@@ -85,7 +85,7 @@ export class Seq<T> extends Array<T> {
     return this.filter(_ => _[property] !== undefined && _[property] !== null) as any
   }
 
-  sumObjects(): T extends Record<string, number> ? (Record<keyof T, number> | undefined) : never {
+  sumObjects(): T extends Record<string, number> ? Record<keyof T, number> | undefined : never {
     if (!this.head()) {
       return undefined as any
     }
@@ -105,9 +105,7 @@ export class Seq<T> extends Array<T> {
   /**
    * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
    */
-  reduceObject<R extends Record<any, any>>(
-    fn: (_: T, acc: R) => undefined | [keyof R, R[keyof R]]
-  ): R {
+  reduceObject<R extends Record<any, any>>(fn: (_: T, acc: R) => undefined | [keyof R, R[keyof R]]): R {
     const obj: R = {} as R
     this.map(t => {
       const kv = fn(t, obj)
@@ -132,9 +130,7 @@ export class Seq<T> extends Array<T> {
   }
 
   groupByAndApply<K extends Key, R>(fn: (_: T, i: number) => K, apply: (_: Seq<T>) => R): Record<K, R> {
-    return new Obj(this.groupBy((_, i) => fn(_, i)))
-      .mapValues((v) => apply(v))
-      .get()
+    return new Obj(this.groupBy((_, i) => fn(_, i))).mapValues(v => apply(v)).get()
   }
 
   groupByFirst<R extends Key>(fn: (_: T, i: number) => R): Record<R, T> {
@@ -235,4 +231,3 @@ export class Seq<T> extends Array<T> {
 }
 
 export const seq = Seq.fromArray
-
