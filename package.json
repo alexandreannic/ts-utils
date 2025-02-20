@@ -1,14 +1,19 @@
 {
   "name": "@alexandreannic/ts-utils",
   "version": "2.1.20",
-  "description": "Bunch of utils methods and features",
-  "main": "lib/index.js",
+  "description": "Set of utils methods and features",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "private": false,
   "scripts": {
     "test": "npm run build && mocha",
-    "build": "tsc",
     "prepublish": "npm run build",
     "release": "ts-node release.ts"
+    "release-patch": "./release.sh patch",
+    "release-minor": "./release.sh minor",
+    "release-major": "./release.sh major",
+    "build": "tsup"
   },
   "devDependencies": {
     "@types/byline": "^4.2.31",
@@ -20,6 +25,7 @@
     "@types/winston": "^2.4.4",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
+    "tsup": "^8.3.6",
     "typescript": "4.9.5"
   },
   "dependencies": {
