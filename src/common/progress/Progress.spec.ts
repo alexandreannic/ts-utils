@@ -5,7 +5,7 @@ import {sleep} from '../delay/Delay'
 describe('progress', function () {
   this.timeout(10000)
 
-  it.only('should complete', async function () {
+  it('should complete', async function () {
     const p = new Progress(1000)
     p.snapshot(0)
     await sleep(50)

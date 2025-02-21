@@ -2,7 +2,7 @@
   "name": "@mediarithmics-ps/utils",
   "version": "1.2.1",
   "description": "Bunch of utils methods and features",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "npm run build && mocha",
     "build": "tsc"

@@ -5,6 +5,7 @@ type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
 interface Filter<T> {
   <S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any): Seq<S>
+
   (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): Seq<T>
 }
 
@@ -28,7 +29,7 @@ export class Seq<T> extends Array<T> {
   // @ts-ignore
   readonly count: T extends number
     ? (fn?: PredicateFn<T, boolean>) => number
-    : (fn: PredicateFn<T, boolean>) => number = (fn = (value, index, array) => value) => {
+    : (fn: PredicateFn<T, boolean>) => number = (fn = (value: T, index: number, array: T[]) => value) => {
     let x = 0
     this.forEach((v, i, a) => {
       if (fn(v, i, a)) x += 1
@@ -62,7 +63,7 @@ export class Seq<T> extends Array<T> {
 
   // @ts-ignore
   sum: T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number = (
-    fn = (value, index, array) => value,
+    fn = (value: T, index: number, array: T[]): number => value as number,
   ) => {
     let sum = 0
     this.forEach((v, i, arr) => (sum += fn(v, i, arr)))

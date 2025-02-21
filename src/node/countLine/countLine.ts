@@ -5,14 +5,14 @@ import {createWriteStream} from 'fs'
 import byline from 'byline'
 
 /**
- * Only working for an UNIX env
+ * Only working on UNIX env
  */
 export const countLines = async (filePath: string): Promise<number> => {
   return promisify(exec)(`wc -l ${filePath}`).then(res => parseInt(res.stdout))
 }
 
 /**
- * Only working for an UNIX env
+ * Only working on UNIX env
  */
 export const countLinesSync = (filePath: string): number => {
   return parseInt(execSync(`wc -l ${filePath}`).toString())

@@ -3,7 +3,7 @@ import {chunkify} from './Chunkify'
 import {getTime} from '../lazy/Lazy.spec'
 import {sleep} from '../delay/Delay'
 
-describe.only('chunkify', () => {
+describe('chunkify', () => {
   it('should split data into chunks of the specified size and process without concurrency', async () => {
     let callCount = 0
     const t0 = getTime()

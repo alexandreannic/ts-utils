@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import {groupsBy} from './groupsBy'
 
-describe.only('groupsBy', () => {
+describe('groupsBy', () => {
   it('should group data by a single key', () => {
     const data = [
       {id: 1, category: 'A', value: 10},
