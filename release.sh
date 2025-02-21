@@ -25,7 +25,7 @@ fi
 NEW_VERSION=$(npm version $VERSION_TYPE)
 
 # Push changes
-git push origin main --tags
+git push origin master --tags
 
 # Publish to npm
 npm publish --access public
