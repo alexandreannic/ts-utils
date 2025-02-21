@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import {match} from './Match'
 
-describe.only('Match', function () {
+describe('Match', function () {
   type UnionString = 'yes' | 'no' | 'unknown'
 
   enum Enum {

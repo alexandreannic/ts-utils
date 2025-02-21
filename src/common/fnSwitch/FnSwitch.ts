@@ -8,12 +8,15 @@ interface FnSwitch {
   ): R
 }
 
+/**
+ * @deprecated Use `match` instead.
+ */
 export const fnSwitch: FnSwitch = (value, cases, defaultCase?) => {
   const isHandled = Object.keys(cases).includes(value as any)
   if (!isHandled) {
     if (!defaultCase) {
       throw new Error(`
-        [fnSwtich] ${String(value)} does not match any of theses cases ${Object.keys(cases).join(', ')}
+        [fnSwitch] ${String(value)} does not match any of theses cases ${Object.keys(cases).join(', ')}
         and defaultCase parameter is not provided.
       `)
     }
