@@ -1,5 +1,5 @@
 {
-  "name": "@alexandreannic/ts-utils",
+  "name": "@axanc/ts-utils",
   "version": "2.1.20",
   "description": "Set of utils methods and features",
   "main": "dist/index.cjs",
