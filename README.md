@@ -1,4 +1,4 @@
-# ts-utils ![npm](https://img.shields.io/npm/v/ts-utils)
+# ts-utils ![npm](https://img.shields.io/npm/v/@alexandreannic/ts-utils)
 
 ### About
 
@@ -11,4 +11,14 @@ npm install --save @alexandreannic/ts-utils
 ```
 ### Details
 
-Components are splitted by 
+Components from `browser` and `node` directory only works in their related environment.
+
+### Examples
+
+#### Obj
+#### Seq
+#### groupsBy
+#### match
+
+
+
