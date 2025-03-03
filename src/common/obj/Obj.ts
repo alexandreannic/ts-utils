@@ -47,11 +47,11 @@ export class Obj<T extends ObjType> {
   /**@deprecated use map instead*/
   static readonly transform = <K extends Key, V extends any, NK extends Key, NV>(
     o: Record<K, V>,
-    map: (k: K, v: V, index: number) => [NK, NV],
+    applyFn: (k: K, v: V, index: number) => [NK, NV],
   ): Record<NK, NV> => {
     const res: Record<NK, NV> = {} as any
     Obj.entries(o).forEach(([k, v], i) => {
-      const [newK, newV] = map(k, v, i)
+      const [newK, newV] = applyFn(k, v, i)
       res[newK] = newV
     })
     return res
