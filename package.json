@@ -27,13 +27,13 @@
     "mocha": "^6.2.2",
     "prettier": "^3.5.1",
     "tsup": "^8.3.6",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
     "@supercharge/promise-pool": "^3.2.0",
     "byline": "^5.0.0",
     "fs-extra": "^11.3.0",
-    "lodash.get": "^4.4.2",
-    "ts-node": "^10.9.2"
+    "lodash.get": "^4.4.2"
   }
 }
