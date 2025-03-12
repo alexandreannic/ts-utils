@@ -6,12 +6,17 @@ import byline from 'byline'
 import {countLinesSync} from '../countLine/countLine'
 import {mapFor} from '../../common'
 
-export const fileSplitter = (
+export const fileSplitter = ({
+  filepath,
+  maxFileSizeMB,
+  outputDirPath = path.dirname(filepath) + path.sep + 'split',
+  logger,
+}: {
   filepath: string,
   maxFileSizeMB: number,
-  outputDirPath: string = path.dirname(filepath) + path.sep + 'split',
+  outputDirPath?: string,
   logger?: (msg: string) => void,
-): Promise<string[]> => {
+}): Promise<string[]> => {
   const log = (msg: string) => logger && logger(msg)
 
   fs.ensureDirSync(outputDirPath)
