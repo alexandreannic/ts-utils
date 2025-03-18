@@ -1,4 +1,4 @@
-import PromisePool from '@supercharge/promise-pool'
+import {PromisePool} from '@supercharge/promise-pool'
 
 export const chunkify = <T, R>({
   size,
@@ -16,6 +16,7 @@ export const chunkify = <T, R>({
     chunks[chunks.length - 1].push(id)
     return chunks
   }, [] as T[][])
+  console.log('PromisePool', PromisePool)
   if (concurrency)
     return PromisePool.withConcurrency(concurrency)
       .for(chunkedSubmissions)

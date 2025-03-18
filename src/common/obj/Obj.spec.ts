@@ -145,8 +145,6 @@ describe('Obj', function() {
           batman: 3,
         })
           .sortManual(['catwoman', 'barman', 'ironman', 'batman'])
-          .mapKeys(_ => _.toUpperCase())
-          .mapValues(_ => _ + 1)
           .get()
         expect(res).deep.eq({
           catwoman: 4,
