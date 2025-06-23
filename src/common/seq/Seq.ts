@@ -170,7 +170,7 @@ export class Seq<T> extends Array<T> {
 
   sortByNumber(fn: (_: T) => number, orderBy: '0-9' | '9-0' = '0-9') {
     return this.sort((a, b) => {
-      return fn(a) - fn(b) * (orderBy === '0-9' ? 1 : -1)
+      return (fn(a) - fn(b)) * (orderBy === '0-9' ? 1 : -1)
     })
   }
 
