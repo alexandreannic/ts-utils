@@ -1,6 +1,6 @@
 {
   "name": "@axanc/ts-utils",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "Set of utils methods and features",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
