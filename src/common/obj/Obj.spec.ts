@@ -155,6 +155,25 @@ describe('Obj', function() {
       })
     })
 
+    describe('sortKeys', function() {
+      const data = new Obj({
+        ironman: 2,
+        barman: 1,
+        catwoman: 4,
+        batman: 3,
+      } as Record<string, number>)
+
+      it('sort by key', function() {
+        const res = data.sortKeys((ak, bk) => ak.localeCompare(bk)).get()
+        expect(res).deep.eq({
+          barman: 1,
+          batman: 3,
+          catwoman: 4,
+          ironman: 2,
+        })
+      })
+    })
+
     describe('sort', function() {
       const data = new Obj({
         ironman: 2,

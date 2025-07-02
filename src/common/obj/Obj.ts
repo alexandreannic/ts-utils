@@ -23,7 +23,7 @@ export class Obj<T extends ObjType> {
       keyName?: K
       valueName?: V
     } = {},
-  ): ({[KK in K]: KeyOf<T>} & {[VV in V]: T[KeyOf<T>]})[] => {
+  ): ({ [KK in K]: KeyOf<T> } & { [VV in V]: T[KeyOf<T>] })[] => {
     return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
   }
 
@@ -117,13 +117,27 @@ export class Obj<T extends ObjType> {
     return res as Record<K, V>
   }
 
+  static readonly sortKeys = <K extends Key, V extends any>(
+    o: Record<K, V>,
+    predicate: (a: K, b: K) => number,
+  ) => {
+    const res: any = {}
+    Obj.entries(o)
+      .sort(([a], [b]) => predicate(a, b))
+      .forEach(([k, v]) => {
+        res[k] = v
+      })
+    return res as Record<K, V>
+  }
+
   static readonly sortManual = <K extends Key, V extends any>(o: Record<K, V>, order: K[]) => {
     return Obj.sort(o, ([aK, aV], [bK, bV]) => {
       return order.indexOf(aK) - order.indexOf(bK)
     })
   }
 
-  constructor(private o: T) {}
+  constructor(private o: T) {
+  }
 
   /**@deprecated use map instead*/
   readonly transform = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
@@ -146,6 +160,10 @@ export class Obj<T extends ObjType> {
 
   readonly sort = (predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number) => {
     return new Obj(Obj.sort<KeyOf<T>, T[keyof T]>(this.o, predicate))
+  }
+
+  readonly sortKeys = (predicate: (a: keyof T, b: keyof T) => number) => {
+    return new Obj(Obj.sortKeys<KeyOf<T>, T[keyof T]>(this.o, predicate))
   }
 
   readonly sortManual = (order: KeyOf<T>[]) => {
