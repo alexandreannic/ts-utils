@@ -199,9 +199,19 @@ describe('Arr', function() {
   })
 
   describe('compactBy', function() {
-    it('should filter', function() {
+    it('should filter undefined', function() {
       const arr = seq([{name: 'Alice', age: 25}, {name: 'Bob'}, {name: 'Charlie', age: 25}, {age: 35}] as {
         name?: string
+        age?: number
+      }[])
+      const res = arr.compactBy('name')
+      const shouldBeString: string = res[0].name
+      expect(res).deep.eq([{name: 'Alice', age: 25}, {name: 'Bob'}, {name: 'Charlie', age: 25}])
+    })
+
+    it('should filter null', function() {
+      const arr = seq([{name: 'Alice', age: 25}, {name: 'Bob'}, {name: 'Charlie', age: 25}, {age: 35}] as {
+        name: string | null
         age?: number
       }[])
       const res = arr.compactBy('name')
