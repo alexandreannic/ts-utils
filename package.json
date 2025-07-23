@@ -2,9 +2,23 @@
   "name": "@axanc/ts-utils",
   "version": "2.3.6",
   "description": "Set of utils methods and features",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/browser.mjs",
+      "require": "./dist/browser.js",
+      "types": "./dist/browser.d.ts"
+    },
+    "./node": {
+      "import": "./dist/node.mjs",
+      "require": "./dist/node.js",
+      "types": "./dist/node.d.ts"
+    }
+  },
   "private": false,
   "scripts": {
     "test": "mocha -r ts-node/register 'src/**/*.spec.ts'",
