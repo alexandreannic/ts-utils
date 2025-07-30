@@ -125,7 +125,6 @@ export class Seq<T> extends Array<T> {
         res[key] = seq()
       }
       res[key].push(curr)
-      return res
     }, {})
     return res
   }
@@ -138,10 +137,7 @@ export class Seq<T> extends Array<T> {
     const res: Record<Key, T> = {}
     this.forEach((curr, i) => {
       const key = '' + fn(curr, i)
-      if (!res[key]) {
-        res[key] = curr
-      }
-      return res
+      if (!res[key]) res[key] = curr
     }, {})
     return res
   }
@@ -152,6 +148,49 @@ export class Seq<T> extends Array<T> {
       const key = '' + fn(curr, i)
       res[key] = curr
       return res
+    }, {})
+    return res
+  }
+
+  groupByToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, Seq<T>> {
+    const res = new Map<R, Seq<T>>
+    this.forEach((curr, i) => {
+      const key = fn(curr, i)
+      if (!res.has(key)) {
+        res.set(key, seq())
+      }
+      res.get(key)!.push(curr)
+      return res
+    }, {})
+    return res
+  }
+
+
+  groupByAndApplyToMap<K extends Key, R>(
+    fn: (_: T, i: number) => K,
+    applyFn: (group: Seq<T>) => R,
+  ): Map<K, R> {
+    const grouped = this.groupByToMap(fn)
+    for (const [key, items] of grouped) {
+      grouped.set(key, applyFn(items) as any)
+    }
+    return grouped as Map<K, R>
+  }
+
+  groupByFirstToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, T> {
+    const res = new Map<R, T>()
+    this.forEach((curr, i) => {
+      const key = fn(curr, i)
+      res.set(key, curr)
+    }, {})
+    return res
+  }
+
+  groupByLastToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, T> {
+    const res = new Map<R, T>()
+    this.forEach((curr, i) => {
+      const key = fn(curr, i)
+      res.set(key, curr)
     }, {})
     return res
   }

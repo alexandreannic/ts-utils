@@ -7,7 +7,7 @@ interface Form {
   oblast?: Oblast
 }
 
-describe('Arr', function() {
+describe('Seq', function() {
   it('check nested call', function() {
     expect((seq(seq(seq(seq([1, 2])))).get() as any).isArr).undefined
     expect(seq(seq(seq(seq([1, 2])))).isSeq).true
@@ -429,6 +429,28 @@ describe('Arr', function() {
     })
   })
 
+  describe('groupByAndApplyToMap', function() {
+    it('count', function() {
+      const arr = seq([
+        {name: 'Dave', age: 25},
+        {name: 'Alice', age: 30},
+        {name: 'Charlie', age: 25},
+        {name: 'Dave', age: 35},
+        {name: 'Charlie', age: 35},
+        {name: 'Charlie', age: 35},
+      ])
+      expect(
+        Array.from(arr.groupByAndApplyToMap(
+          _ => _.name,
+          _ => _.length,
+        ).entries()),
+      ).deep.eq(Object.entries({
+        Dave: 2,
+        Alice: 1,
+        Charlie: 3,
+      }))
+    })
+  })
   describe('groupByAndApply', function() {
     it('count', function() {
       const arr = seq([
