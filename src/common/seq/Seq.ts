@@ -106,10 +106,10 @@ export class Seq<T> extends Array<T> {
   /**
    * Simpler and faster API for reduce((acc, curr) => ({...acc, [xxx]: yyy}), {} as BlaBla)
    */
-  reduceObject<R extends Record<any, any>>(fn: (_: T, acc: R) => undefined | [keyof R, R[keyof R]]): R {
+  reduceObject<R extends Record<any, any>>(fn: (_: T, acc: R, index: number) => undefined | [keyof R, R[keyof R]]): R {
     const obj: R = {} as R
-    this.map(t => {
-      const kv = fn(t, obj)
+    this.map((t, i) => {
+      const kv = fn(t, obj, i)
       if (kv) {
         obj[kv[0]] = kv[1]
       }
