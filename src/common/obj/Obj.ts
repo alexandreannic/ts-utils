@@ -27,6 +27,13 @@ export class Obj<T extends ObjType> {
     return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
   }
 
+  static readonly hasValue = (obj: Record<string, any>): boolean => {
+    for (const key in obj) {
+      if (obj[key] != null) return true
+    }
+    return false
+  }
+
   static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): Entries<Record<K, V>> => {
     // static readonly entries = <K extends Key, V>(t: Record<K, V> | Partial<Record<K, V>>): [K, V][] => {
     return Object.entries(t) as any
@@ -145,6 +152,10 @@ export class Obj<T extends ObjType> {
   }
 
   readonly map = this.transform
+
+  readonly hasValue = () => {
+    return Obj.hasValue(this.o)
+  }
 
   readonly mapValues = <NV>(fn: (v: T[keyof T], k: keyof T, index: number) => NV) => {
     return new Obj(Obj.mapValues(this.o, fn))
