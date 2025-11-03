@@ -1,5 +1,5 @@
 import {RequiredProperty} from '../common/CommonType'
-import {Obj} from '../obj/Obj'
+import {KeyOf, Obj} from '../obj/Obj'
 
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
@@ -9,7 +9,7 @@ interface Filter<T> {
   (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): Seq<T>
 }
 
-type Key = number | string
+type KeyOfGroupBy = number | string
 
 export type OrderByString = 'a-z' | 'z-a'
 
@@ -141,10 +141,10 @@ export class Seq<T> extends Array<T> {
     return obj
   }
 
-  groupBy<R extends Key>(fn: (_: T, i: number) => R): Record<R, Seq<T>> {
-    const res: Record<Key, Seq<T>> = {}
+  groupBy<K extends KeyOfGroupBy>(fn: (_: T, i: number) => K): Record<K, Seq<T>> {
+    const res = {} as Record<K, Seq<T>>
     this.forEach((curr, i) => {
-      const key = '' + fn(curr, i)
+      const key = ('' + fn(curr, i)) as K
       if (!res[key]) {
         res[key] = seq()
       }
@@ -153,12 +153,12 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByAndApply<K extends Key, R>(fn: (_: T, i: number) => K, apply: (_: Seq<T>) => R): Record<K, R> {
+  groupByAndApply<K extends KeyOfGroupBy, R>(fn: (_: T, i: number) => K, apply: (_: Seq<T>) => R): Record<KeyOf<K>, R> {
     return new Obj(this.groupBy((_, i) => fn(_, i))).mapValues(v => apply(v)).get()
   }
 
-  groupByFirst<R extends Key>(fn: (_: T, i: number) => R): Record<R, T> {
-    const res: Record<Key, T> = {}
+  groupByFirst<R extends KeyOfGroupBy>(fn: (_: T, i: number) => R): Record<R, T> {
+    const res: Record<KeyOfGroupBy, T> = {}
     this.forEach((curr, i) => {
       const key = '' + fn(curr, i)
       if (!res[key]) res[key] = curr
@@ -166,8 +166,8 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByLast<R extends Key>(fn: (_: T, i: number) => R): Record<R, T> {
-    const res: Record<Key, T> = {}
+  groupByLast<R extends KeyOfGroupBy>(fn: (_: T, i: number) => R): Record<R, T> {
+    const res: Record<KeyOfGroupBy, T> = {}
     this.forEach((curr, i) => {
       const key = '' + fn(curr, i)
       res[key] = curr
@@ -176,7 +176,7 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, Seq<T>> {
+  groupByToMap<R extends KeyOfGroupBy>(fn: (_: T, i: number) => R): Map<R, Seq<T>> {
     const res = new Map<R, Seq<T>>()
     this.forEach((curr, i) => {
       const key = fn(curr, i)
@@ -189,7 +189,10 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByAndApplyToMap<K extends Key, R>(fn: (_: T, i: number) => K, applyFn: (group: Seq<T>) => R): Map<K, R> {
+  groupByAndApplyToMap<K extends KeyOfGroupBy, R>(
+    fn: (_: T, i: number) => K,
+    applyFn: (group: Seq<T>) => R,
+  ): Map<K, R> {
     const grouped = this.groupByToMap(fn)
     for (const [key, items] of grouped) {
       grouped.set(key, applyFn(items) as any)
@@ -197,7 +200,7 @@ export class Seq<T> extends Array<T> {
     return grouped as Map<K, R>
   }
 
-  groupByFirstToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, T> {
+  groupByFirstToMap<R extends KeyOfGroupBy>(fn: (_: T, i: number) => R): Map<R, T> {
     const res = new Map<R, T>()
     this.forEach((curr, i) => {
       const key = fn(curr, i)
@@ -206,7 +209,7 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-  groupByLastToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, T> {
+  groupByLastToMap<R extends KeyOfGroupBy>(fn: (_: T, i: number) => R): Map<R, T> {
     const res = new Map<R, T>()
     this.forEach((curr, i) => {
       const key = fn(curr, i)
