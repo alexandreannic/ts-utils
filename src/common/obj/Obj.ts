@@ -182,7 +182,7 @@ export class Obj<T extends ObjType> {
   constructor(private o: T) {
   }
 
-  readonly take = (n?: number) => Obj.take(this.o, n)
+  readonly take = (n?: number) => new Obj(Obj.take(this.o, n))
 
   /**@deprecated use map instead*/
   readonly transform = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
