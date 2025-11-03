@@ -4,7 +4,8 @@ export type Key = string
 export type KeyOf<T> = Extract<keyof T, string>
 
 export class Obj<K extends Key, V extends any> {
-  constructor(private o: Record<K, V>) {}
+  constructor(private o: Record<K, V>) {
+  }
 
   static readonly hasValue = (obj: Record<string, any>): boolean => {
     for (const key in obj) {
@@ -47,7 +48,7 @@ export class Obj<K extends Key, V extends any> {
       keyName?: KName
       valueName?: VName
     } = {},
-  ): ({[KK in KName]: K} & {[VV in VName]: V})[] => {
+  ): ({ [KK in KName]: K } & { [VV in VName]: V })[] => {
     return Object.entries(obj).map(([k, v]) => ({[keyName]: k, [valueName]: v})) as any
   }
 
@@ -210,10 +211,11 @@ export class Obj<K extends Key, V extends any> {
   }
 
   // ===== sortManual =====
-  static readonly sortManual = <K extends Key, V extends any>(o: Record<K, V>, order: K[]): Record<K, V> => {
+  static readonly sortManual = <K extends Key, V extends any>(o: Record<K, V>, order?: K[]): Record<K, V> => {
+    if (!order) return o
     return Obj.sort(o, ([aK], [bK]) => order.indexOf(aK) - order.indexOf(bK))
   }
-  readonly sortManual = (order: K[]): Obj<K, V> => {
+  readonly sortManual = (order?: K[]): Obj<K, V> => {
     return new Obj<K, V>(Obj.sortManual(this.o, order))
   }
 
