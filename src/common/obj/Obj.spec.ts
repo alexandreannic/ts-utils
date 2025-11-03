@@ -1,6 +1,5 @@
 import {Obj} from './Obj'
 import {expect} from 'chai'
-import {Enum} from '../enum/Enum'
 
 enum Status {
   OK = 'Ok',
@@ -328,6 +327,58 @@ describe('Obj', function() {
         const objCopy = Obj.mapKeys(obj, (k, v) => +v)
         expect(objCopy).deep.eq({1: '1', 2: '2'})
       })
+    })
+  })
+
+  describe('sortByString', () => {
+    it('should sort by string ascending (a-z)', () => {
+      const data = {a: 3, b: 1, c: 2}
+      const result = Obj.sortByString(data, (v, k) => k, 'a-z')
+      expect(Object.keys(result)).to.deep.equal(['a', 'b', 'c'])
+    })
+
+    it('should sort by string descending (z-a)', () => {
+      const data = {a: 3, b: 1, c: 2}
+      const result = Obj.sortByString(data, (v, k) => k, 'z-a')
+      expect(Object.keys(result)).to.deep.equal(['c', 'b', 'a'])
+    })
+
+    it('should handle undefined values correctly', () => {
+      const data = {a: 'zzz', b: undefined as any, c: 'aaa'}
+      const result = Obj.sortByString(data, (v) => v, 'a-z')
+      expect(Object.keys(result)).to.deep.equal(['c', 'a', 'b'])
+    })
+
+    it('should not crash with all undefined sort keys', () => {
+      const data = {a: 1, b: 2}
+      const result = Obj.sortByString(data, () => undefined)
+      expect(Object.keys(result)).to.deep.equal(['a', 'b'])
+    })
+  })
+
+  describe('sortByNumber', () => {
+    it('should sort by number ascending (0-9)', () => {
+      const data = {a: {age: 3}, b: {age: 1}, c: {age: 2}}
+      const result = Obj.sortByNumber(data, (_) => _.age, '0-9')
+      expect(Object.keys(result)).to.deep.equal(['b', 'c', 'a'])
+    })
+
+    it('should sort by number descending (9-0)', () => {
+      const data = {a: 3, b: 1, c: 2}
+      const result = Obj.sortByNumber(data, (v) => v, '9-0')
+      expect(Object.keys(result)).to.deep.equal(['a', 'c', 'b'])
+    })
+
+    it('should handle undefined values correctly', () => {
+      const data = {a: 3, b: undefined as any, c: 2}
+      const result = Obj.sortByNumber(data, (v) => v, '0-9')
+      expect(Object.keys(result)).to.deep.equal(['c', 'a', 'b'])
+    })
+
+    it('should not crash with all undefined sort keys', () => {
+      const data = {a: 1, b: 2}
+      const result = Obj.sortByNumber(data, () => undefined)
+      expect(Object.keys(result)).to.deep.equal(['a', 'b'])
     })
   })
 })

@@ -1,3 +1,5 @@
+import {OrderByNumber, OrderByString, Seq, seq} from '../seq/Seq'
+
 export type KeyOf<T> = Extract<keyof T, string>
 
 type Entries<T> = NonNullable<{
@@ -115,14 +117,43 @@ export class Obj<T extends ObjType> {
     o: Record<K, V>,
     predicate: (a: [K, V], b: [K, V]) => number,
   ) => {
-    const res: any = {}
-    Obj.entries(o)
+    return Obj.entries(o)
       .sort(predicate)
-      .forEach(([k, v]) => {
-        res[k] = v
-      })
-    return res as Record<K, V>
+      .reduce((res, [k, v]) => {
+        res[k as K] = v
+        return res
+      }, {} as Record<K, V>)
   }
+
+  private static readonly sortBy =
+    <K extends Key, V, T>(
+      o: Record<K, V>,
+      fn: (v: V, k: K) => T | undefined,
+      compare: (a?: T, b?: T) => number,
+    ): Record<K, V> => {
+      const entries = Object.entries(o).map(([k, v]) => ({
+        k: k as K,
+        v: v as V,
+        sortKey: fn(v as V, k as K),
+      }))
+      entries.sort((a, b) => compare(a.sortKey, b.sortKey))
+      return entries.reduce((res, e) => {
+        res[e.k] = e.v
+        return res
+      }, {} as Record<K, V>)
+    }
+
+  static readonly sortByString = <K extends Key, V>(
+    o: Record<K, V>,
+    fn: (v: V, k: K) => string | undefined,
+    orderBy: OrderByString = 'a-z',
+  ) => this.sortBy(o, fn, Seq.getSortByStringFn(orderBy))
+
+  static readonly sortByNumber = <K extends Key, V>(
+    o: Record<K, V>,
+    fn: (v: V, k: K) => number | undefined,
+    orderBy: OrderByNumber = '0-9',
+  ) => this.sortBy(o, fn, Seq.getSortByNumberFn(orderBy))
 
   static readonly sortKeys = <K extends Key, V extends any>(
     o: Record<K, V>,
@@ -143,8 +174,15 @@ export class Obj<T extends ObjType> {
     })
   }
 
+  static readonly take = <K extends Key, V extends any>(o: Record<K, V>, n?: number) => {
+    if (n) return seq(Obj.entries(o).splice(0, n)).reduceObject(_ => _)
+    return o
+  }
+
   constructor(private o: T) {
   }
+
+  readonly take = (n?: number) => Obj.take(this.o, n)
 
   /**@deprecated use map instead*/
   readonly transform = <NK extends Key, NV>(fn: (k: keyof T, v: T[keyof T], index: number) => [NK, NV]) => {
@@ -171,6 +209,20 @@ export class Obj<T extends ObjType> {
 
   readonly sort = (predicate: (a: [keyof T, T[keyof T]], b: [keyof T, T[keyof T]]) => number) => {
     return new Obj(Obj.sort<KeyOf<T>, T[keyof T]>(this.o, predicate))
+  }
+
+  readonly sortByNumber = (
+    fn: (v: T[ keyof T], k: keyof T) => number | undefined,
+    orderBy?: OrderByNumber,
+  ) => {
+    return new Obj(Obj.sortByNumber<KeyOf<T>, T[keyof T]>(this.o, fn, orderBy))
+  }
+
+  readonly sortByString = (
+    fn: (v: T[ keyof T], k: keyof T) => string | undefined,
+    orderBy?: OrderByString,
+  ) => {
+    return new Obj(Obj.sortByString<KeyOf<T>, T[keyof T]>(this.o, fn, orderBy))
   }
 
   readonly sortKeys = (predicate: (a: keyof T, b: keyof T) => number) => {

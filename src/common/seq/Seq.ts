@@ -11,6 +11,10 @@ interface Filter<T> {
 
 type Key = number | string
 
+export type OrderByString = 'a-z' | 'z-a'
+
+export type OrderByNumber = '0-9' | '9-0'
+
 export class Seq<T> extends Array<T> {
   readonly isSeq = true
 
@@ -24,6 +28,26 @@ export class Seq<T> extends Array<T> {
 
   static distinct<T extends number | string | boolean>(array: T[]): T[] {
     return [...new Set(array)]
+  }
+
+  static getSortByStringFn(orderBy: OrderByString = 'a-z') {
+    const asc = orderBy === 'a-z'
+    return (a?: string, b?: string) => {
+      if (a === undefined && b === undefined) return 0
+      if (a === undefined) return asc ? 1 : -1
+      if (b === undefined) return asc ? -1 : 1
+      return asc ? a.localeCompare(b) : b.localeCompare(a)
+    }
+  }
+
+  static getSortByNumberFn(orderBy: OrderByNumber = '0-9') {
+    const asc = orderBy === '0-9'
+    return (a?: number, b?: number) => {
+      if (a === b) return 0
+      if (a === undefined) return asc ? 1 : -1
+      if (b === undefined) return asc ? -1 : 1
+      return asc ? a - b : b - a
+    }
   }
 
   // @ts-ignore
@@ -201,16 +225,14 @@ export class Seq<T> extends Array<T> {
     return v / total
   }
 
-  sortByString(fn: (_: T) => string, orderBy: 'a-z' | 'z-a' = 'a-z') {
-    return this.sort((a, b) => {
-      return fn(a).localeCompare(fn(b)) * (orderBy === 'a-z' ? 1 : -1)
-    })
+  sortByString(fn: (_: T) => string, orderBy: OrderByString = 'a-z') {
+    const compare = Seq.getSortByStringFn(orderBy)
+    return this.sort((a, b) => compare(fn(a), fn(b)))
   }
 
-  sortByNumber(fn: (_: T) => number, orderBy: '0-9' | '9-0' = '0-9') {
-    return this.sort((a, b) => {
-      return (fn(a) - fn(b)) * (orderBy === '0-9' ? 1 : -1)
-    })
+  sortByNumber(fn: (_: T) => number, orderBy: OrderByNumber = '0-9') {
+    const compare = Seq.getSortByNumberFn(orderBy)
+    return this.sort((a, b) => compare(fn(a), fn(b)))
   }
 
   difference(target: T[]): Seq<T> {
