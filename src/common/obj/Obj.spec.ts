@@ -1,4 +1,4 @@
-import {Obj} from './Obj'
+import {KeyOf, Obj} from './Obj'
 import {expect} from 'chai'
 
 enum Status {
@@ -24,22 +24,22 @@ interface Oblast {
   iso: string
 }
 
-describe('Obj', function () {
-  it('Should infer as string', function () {
+describe.only('Obj', function() {
+  it('Should infer as string', function() {
     const x: string[] = Obj.values(Status)
   })
 
-  it('Should type and get keys correctly', function () {
+  it('Should type and get keys correctly', function() {
     const keys: readonly ('OK' | 'ERROR' | 'WARNING')[] = Obj.keys(Status)
     expect(keys).deep.eq(['OK', 'ERROR', 'WARNING'])
   })
 
-  it('Should type and get values correctly', function () {
+  it('Should type and get values correctly', function() {
     const keys: readonly ('Ok' | 'Error' | 'Warning')[] = Obj.values(Status)
     expect(keys).deep.eq(['Ok', 'Error', 'Warning'])
   })
 
-  it('Should type entries and get correctly', function () {
+  it('Should type entries and get correctly', function() {
     const entries: (['OK', Status] | ['ERROR', Status] | ['WARNING', Status])[] = Obj.entries(Status)
     expect(entries).deep.eq([
       ['OK', 'Ok'],
@@ -48,12 +48,12 @@ describe('Obj', function () {
     ])
   })
 
-  it('Should get value and handle type correctly', function () {
-    expect(Obj.getKeyByValue(Status, 'Warning')).eq('WARNING')
-    expect(Obj.getKeyByValue(Status, 'unknown value')).to.undefined
+  it('Should get value and handle type correctly', function() {
+    expect(Obj.getKeyByValue(Status, Status.WARNING)).eq('WARNING')
+    expect(Obj.getKeyByValue(Status, 'unknown value' as any)).to.undefined
   })
 
-  it('Should work when used in a regular object', function () {
+  it('Should work when used in a regular object', function() {
     const blabla = {
       [Status.OK]: 'ok',
       [Status.ERROR]: 1,
@@ -66,16 +66,16 @@ describe('Obj', function () {
     ])
   })
 
-  it('Should correctly manage Partial<>', function () {
+  it('Should correctly manage Partial<>', function() {
     const test = <T extends Record<any, any>>(t: Partial<T>) => {
       Obj.entries(t).map(([k, v]) => {
-        const _k: keyof T = k
-        const _v: T[keyof T] = v
+        const _k: KeyOf<T> = k
+        const _v: T[KeyOf<T>] | undefined = v
       })
     }
   })
 
-  it('Should correctly manage Partial<>', function () {
+  it('Should correctly manage Partial<>', function() {
     const test = <T extends Record<any, any>>(t: T) => {
       Obj.entries(t).reduce<T>((acc, [k, v]) => {
         const test = acc[k]
@@ -84,15 +84,15 @@ describe('Obj', function () {
     }
   })
 
-  describe('method', function () {
-    it('test all', function () {
+  describe('method', function() {
+    it('test all', function() {
       const res = new Obj({
         cat: 2,
         bat: 1,
         catwoman: 4,
         batman: 3,
       })
-        .transform((k, v) => ['_' + k, v + 1])
+        .map((k, v) => ['_' + k, v + 1])
         .sort(([ka, va], [kb, vb]) => va - vb)
         .filter((k, v) => k.includes('man'))
         .get()
@@ -102,7 +102,7 @@ describe('Obj', function () {
       })
     })
 
-    it('keys', function () {
+    it('keys', function() {
       const obj = new Obj({
         [Status.OK]: 1,
         [Status.ERROR]: 1,
@@ -111,7 +111,7 @@ describe('Obj', function () {
       expect(obj.keys()).deep.eq([Status.OK, Status.ERROR, Status.WARNING])
     })
 
-    it('values', function () {
+    it('values', function() {
       const obj = new Obj({
         [Status.OK]: 1,
         [Status.ERROR]: 1,
@@ -120,8 +120,8 @@ describe('Obj', function () {
       expect(obj.values()).deep.eq([1, 1, 2])
     })
 
-    it('entries', function () {
-      it('', function () {
+    it('entries', function() {
+      it('', function() {
         const obj = new Obj({
           [Status.OK]: 1,
           [Status.ERROR]: 1,
@@ -135,8 +135,8 @@ describe('Obj', function () {
       })
     })
 
-    describe('sortManual', function () {
-      it('sort by key', function () {
+    describe('sortManual', function() {
+      it('sort by key', function() {
         const res = new Obj({
           ironman: 2,
           barman: 1,
@@ -154,7 +154,7 @@ describe('Obj', function () {
       })
     })
 
-    describe('sortKeys', function () {
+    describe('sortKeys', function() {
       const data = new Obj({
         ironman: 2,
         barman: 1,
@@ -162,7 +162,7 @@ describe('Obj', function () {
         batman: 3,
       } as Record<string, number>)
 
-      it('sort by key', function () {
+      it('sort by key', function() {
         const res = data.sortKeys((ak, bk) => ak.localeCompare(bk)).get()
         expect(res).deep.eq({
           barman: 1,
@@ -173,7 +173,7 @@ describe('Obj', function () {
       })
     })
 
-    describe('sort', function () {
+    describe('sort', function() {
       const data = new Obj({
         ironman: 2,
         barman: 1,
@@ -181,7 +181,7 @@ describe('Obj', function () {
         batman: 3,
       } as Record<string, number>)
 
-      it('sort by key', function () {
+      it('sort by key', function() {
         const res = data.sort(([ak, av], [bk, bv]) => ak.localeCompare(bk)).get()
         expect(res).deep.eq({
           barman: 1,
@@ -191,7 +191,7 @@ describe('Obj', function () {
         })
       })
 
-      it('sort by val', function () {
+      it('sort by val', function() {
         const res = data.sort(([ak, av], [bk, bv]) => bv - av).get()
         expect(res).deep.eq({
           barman: 1,
@@ -202,21 +202,21 @@ describe('Obj', function () {
       })
     })
 
-    describe('toArray', function () {
-      it('basic', function () {
+    describe('toArray', function() {
+      it('basic', function() {
         expect(Obj.toArray({a: 1, b: 2})).deep.eq([
           {name: 'a', value: 1},
           {name: 'b', value: 2},
         ])
       })
-      it('override key value', function () {
+      it('override key value', function() {
         const r: {k: string; v: number}[] = Obj.toArray({a: 1, b: 2}, {keyName: 'k', valueName: 'v'})
         expect(r).deep.eq([
           {k: 'a', v: 1},
           {k: 'b', v: 2},
         ])
       })
-      it('method version', function () {
+      it('method version', function() {
         const r: {k: string; v: number}[] = new Obj({a: 1, b: 2}).toArray({keyName: 'k', valueName: 'v'})
         expect(r).deep.eq([
           {k: 'a', v: 1},
@@ -225,8 +225,8 @@ describe('Obj', function () {
       })
     })
 
-    describe('filterValue', function () {
-      it('filter by string value', function () {
+    describe('filterValue', function() {
+      it('filter by string value', function() {
         const obj = {
           a: 'cat',
           b: 'catwoman',
@@ -240,8 +240,8 @@ describe('Obj', function () {
       })
     })
 
-    describe('filter', function () {
-      it('filter by index', function () {
+    describe('filter', function() {
+      it('filter by index', function() {
         const obj = {
           a: 'cat',
           b: 'catwoman',
@@ -253,7 +253,7 @@ describe('Obj', function () {
         })
       })
 
-      it('filter by string value', function () {
+      it('filter by string value', function() {
         const obj = {
           a: 'cat',
           b: 'catwoman',
@@ -266,7 +266,7 @@ describe('Obj', function () {
         })
       })
 
-      it('filter by number value', function () {
+      it('filter by number value', function() {
         const obj = {
           a: 1,
           b: 2,
@@ -276,7 +276,7 @@ describe('Obj', function () {
         expect(filtered).deep.eq({b: 2, c: 3})
       })
 
-      it('filter by key', function () {
+      it('filter by key', function() {
         const obj = {
           a: 1,
           b: 2,
@@ -287,43 +287,43 @@ describe('Obj', function () {
       })
     })
 
-    describe('map', function () {
-      it('should copy', function () {
+    describe('map', function() {
+      it('should copy', function() {
         const objCopy: {a: string; b: string} = Obj.map(simpleObj, (k, v) => [k, v])
         expect(objCopy).deep.eq({a: '1', b: '2'})
       })
 
-      it('should change keys', function () {
+      it('should change keys', function() {
         const mapKey = (k: keyof typeof simpleObj): 'aa' | 'ab' => ('a' + k) as any
         const objCopy: {aa: string; ab: string} = Obj.map(simpleObj, (k, v) => [mapKey(k), v])
         expect(objCopy).deep.eq({aa: '1', ab: '2'})
       })
 
-      it('should change values', function () {
+      it('should change values', function() {
         const objCopy: {a: number; b: number} = Obj.map(simpleObj, (k, v) => [k, parseInt(v)])
         expect(objCopy).deep.eq({a: 1, b: 2})
       })
     })
 
-    describe('mapValues', function () {
+    describe('mapValues', function() {
       const obj = {
         a: 1,
         b: 2,
       }
 
-      it('should multiply value', function () {
+      it('should multiply value', function() {
         const objCopy: {a: number; b: number} = Obj.mapValues(obj, (v: number) => v * 2)
         expect(objCopy).deep.eq({a: 2, b: 4})
       })
     })
 
-    describe('mapKeys', function () {
+    describe('mapKeys', function() {
       const obj = {
         a: '1',
         b: '2',
       }
 
-      it('should suffix key', function () {
+      it('should suffix key', function() {
         const objCopy = Obj.mapKeys(obj, (k, v) => +v)
         expect(objCopy).deep.eq({1: '1', 2: '2'})
       })

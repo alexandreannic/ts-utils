@@ -170,7 +170,7 @@ export const groupsBy: {
   const collectedTransforms: any[] = []
   const ress = new Obj(res)
     .sort(([a], [b]) => (group.sort ? group.sort(a, b) : a.localeCompare(b)))
-    .transform((k, v) => {
+    .map((k, v) => {
       const gbb = groupsBy({
         data: v,
         groups: rest,
