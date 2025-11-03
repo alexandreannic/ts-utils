@@ -13,7 +13,7 @@ export type PromiseReturn<T> = T extends PromiseLike<infer U> ? U : T
 export type PromiseFnResult<T extends (...args: any[]) => Promise<object>> = PromiseReturn<ReturnType<T>>
 
 export type RequiredProperty<T, K extends keyof T> = T & {
-  [P in K]-?: Exclude<T[P], null | undefined>;
+  [P in K]-?: Exclude<T[P], null | undefined>
 }
 
 export type KeyStringOf<T> = Extract<keyof T, string>

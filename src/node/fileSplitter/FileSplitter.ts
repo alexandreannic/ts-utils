@@ -12,10 +12,10 @@ export const fileSplitter = ({
   outputDirPath = path.dirname(filepath) + path.sep + 'split',
   logger,
 }: {
-  filepath: string,
-  maxFileSizeMB: number,
-  outputDirPath?: string,
-  logger?: (msg: string) => void,
+  filepath: string
+  maxFileSizeMB: number
+  outputDirPath?: string
+  logger?: (msg: string) => void
 }): Promise<string[]> => {
   const log = (msg: string) => logger && logger(msg)
 

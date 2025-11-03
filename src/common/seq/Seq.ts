@@ -177,7 +177,7 @@ export class Seq<T> extends Array<T> {
   }
 
   groupByToMap<R extends Key>(fn: (_: T, i: number) => R): Map<R, Seq<T>> {
-    const res = new Map<R, Seq<T>>
+    const res = new Map<R, Seq<T>>()
     this.forEach((curr, i) => {
       const key = fn(curr, i)
       if (!res.has(key)) {
@@ -189,11 +189,7 @@ export class Seq<T> extends Array<T> {
     return res
   }
 
-
-  groupByAndApplyToMap<K extends Key, R>(
-    fn: (_: T, i: number) => K,
-    applyFn: (group: Seq<T>) => R,
-  ): Map<K, R> {
+  groupByAndApplyToMap<K extends Key, R>(fn: (_: T, i: number) => K, applyFn: (group: Seq<T>) => R): Map<K, R> {
     const grouped = this.groupByToMap(fn)
     for (const [key, items] of grouped) {
       grouped.set(key, applyFn(items) as any)

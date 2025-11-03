@@ -1,9 +1,9 @@
 interface FnSwitch {
-  <T extends string | number | symbol, R = any>(value: T, cases: { [key in T]: ((_: T) => R) | R }): R
+  <T extends string | number | symbol, R = any>(value: T, cases: {[key in T]: ((_: T) => R) | R}): R
 
   <T extends string | number | symbol, R = any>(
     value: T,
-    cases: Partial<{ [key in T]: ((_: T) => R) | R }>,
+    cases: Partial<{[key in T]: ((_: T) => R) | R}>,
     defaultCase: (_: T) => R,
   ): R
 }
