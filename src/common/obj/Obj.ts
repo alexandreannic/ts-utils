@@ -2,6 +2,7 @@ import {OrderByNumber, OrderByString, Seq, seq} from '../seq/Seq'
 
 export type Key = string
 export type KeyOf<T> = Extract<keyof T, string>
+export type ValueOf<T> = T[KeyOf<T>]
 
 export class Obj<K extends Key, V extends any> {
   constructor(private o: Record<K, V>) {
@@ -16,20 +17,20 @@ export class Obj<K extends Key, V extends any> {
   readonly hasValue = () => Obj.hasValue(this.o)
 
   // ===== entries =====
-  static readonly entries = <K extends Key, V extends any>(t: Record<K, V>): [K, V][] => {
-    return Object.entries(t).map(([k, v]) => [k as K, v as V]) as [K, V][]
+  static readonly entries = <T extends object>(t: T): [KeyOf<T>, ValueOf<T>][] => {
+    return Object.entries(t).map(([k, v]) => [k, v]) as any[]
   }
   readonly entries = (): [K, V][] => Obj.entries(this.o)
 
   // ===== keys =====
-  static readonly keys = <K extends Key, V extends any>(t: Partial<Record<K, V>>): K[] => {
-    return Object.keys(t) as K[]
+  static readonly keys = <T extends object>(t: T): KeyOf<T>[] => {
+    return Object.keys(t) as any[]
   }
   readonly keys = (): K[] => Obj.keys(this.o)
 
   // ===== values =====
-  static readonly values = <K extends Key, V extends any>(t: Record<K, V>): V[] => {
-    return Object.values(t) as V[]
+  static readonly values = <T extends object>(t: T): ValueOf<T>[] => {
+    return Object.values(t) as any[]
   }
   readonly values = (): Record<K, V>[K][] => Obj.values(this.o)
 
