@@ -22,7 +22,7 @@ export class Obj<K extends Key, V extends any> {
   readonly entries = (): [K, V][] => Obj.entries(this.o)
 
   // ===== keys =====
-  static readonly keys = <K extends Key, V extends any>(t: Record<K, V>): K[] => {
+  static readonly keys = <K extends Key, V extends any>(t: Partial<Record<K, V>>): K[] => {
     return Object.keys(t) as K[]
   }
   readonly keys = (): K[] => Obj.keys(this.o)
@@ -229,6 +229,5 @@ export class Obj<K extends Key, V extends any> {
   }
   readonly take = (n?: number) => new Obj<K, V>(Obj.take(this.o, n) as any)
 
-  // ===== get =====
   readonly get = () => this.o
 }
