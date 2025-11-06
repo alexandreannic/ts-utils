@@ -229,6 +229,15 @@ export class Seq<T> extends Array<T> {
     return this.sort((a, b) => compare(fn(a), fn(b)))
   }
 
+  sortByManual<K extends string>(fn: (_: T) => K, order: readonly K[]) {
+    const orderMap = new Map(order.map((key, i) => [key, i]))
+    return this.sort((a, b) => {
+      const rankA = orderMap.get(fn(a)) ?? Infinity
+      const rankB = orderMap.get(fn(b)) ?? Infinity
+      return rankA - rankB
+    })
+  }
+
   sortByNumber(fn: (_: T) => number, orderBy: OrderByNumber = '0-9') {
     const compare = Seq.getSortByNumberFn(orderBy)
     return this.sort((a, b) => compare(fn(a), fn(b)))
