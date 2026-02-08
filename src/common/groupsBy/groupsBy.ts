@@ -3,187 +3,56 @@ import {Obj} from '../obj/Obj'
 
 type GroupByKey = string | number
 
-export const groupsBy: {
-  <T extends Record<GroupByKey, any>, A extends GroupByKey, R extends any>(_: {
-    data: T[]
-    groups: [{by: (_: T) => A; sort?: (a: A, b: A) => number}]
-    finalTransform: (_: Seq<T>, groups: [A]) => R
-  }): {groups: Record<A, R>; transforms: R[]}
+type GroupDef<T, Prev extends any[]> = {
+  by: (item: T, groups: Prev) => GroupByKey
+  sort?: (a: GroupByKey, b: GroupByKey) => number
+}
 
-  <T extends Record<GroupByKey, any>, A extends GroupByKey, B extends GroupByKey, R extends any>(_: {
-    data: T[]
-    groups: [{by: (_: T) => A; sort?: (a: A, b: A) => number}, {by: (_: T) => B; sort?: (a: B, b: B) => number}]
-    finalTransform: (_: Seq<T>, groups: [A, B]) => R
-  }): {groups: Record<A, Record<B, R>>; transforms: R[]}
+type ExtractGroups<G extends readonly any[]> = {
+  [K in keyof G]: G[K] extends GroupDef<any, any> ? ReturnType<G[K]['by']> : never
+}
 
-  <
-    T extends Record<GroupByKey, any>,
-    A extends GroupByKey,
-    B extends GroupByKey,
-    C extends GroupByKey,
-    R extends any,
-  >(_: {
-    data: T[]
-    groups: [
-      {by: (_: T) => A; sort?: (a: A, b: A) => number},
-      {by: (_: T) => B; sort?: (a: B, b: B) => number},
-      {by: (_: T) => C; sort?: (a: C, b: C) => number},
-    ]
-    finalTransform: (_: Seq<T>, groups: [A, B, C]) => R
-  }): {groups: Record<A, Record<B, Record<C, R>>>; transforms: R[]}
+type GroupsByRow<G extends readonly any[], R> = {
+  groups: ExtractGroups<G>
+  groupedData: R
+}
 
-  <
-    T extends Record<GroupByKey, any>,
-    A extends GroupByKey,
-    B extends GroupByKey,
-    C extends GroupByKey,
-    D extends GroupByKey,
-    R extends any,
-  >(_: {
-    data: T[]
-    groups: [
-      {by: (_: T) => A; sort?: (a: A, b: A) => number},
-      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
-      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
-      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
-    ]
-    finalTransform: (_: Seq<T>, groups: [A, B, C, D]) => R
-  }): {groups: Record<A, Record<B, Record<C, Record<D, R>>>>; transforms: R[]}
+export async function groupsBy<T, G extends readonly GroupDef<T, any[]>[], R>(params: {
+  data: T[]
+  groups: G
+  finalTransform: (rows: Seq<T>, groups: ExtractGroups<G>) => Promise<R> | R
+}): Promise<GroupsByRow<G, R>[]> {
+  const {data, groups, finalTransform} = params
 
-  <
-    T extends Record<GroupByKey, any>,
-    A extends GroupByKey,
-    B extends GroupByKey,
-    C extends GroupByKey,
-    D extends GroupByKey,
-    E extends GroupByKey,
-    R extends any,
-  >(_: {
-    data: T[]
-    groups: [
-      {by: (_: T) => A; sort?: (a: A, b: A) => number},
-      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
-      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
-      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
-      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
-    ]
-    finalTransform: (_: Seq<T>, groups: [A, B, C, D, E]) => R
-  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, R>>>>>; transforms: R[]}
+  const rows: GroupsByRow<G, R>[] = []
 
-  <
-    T extends Record<GroupByKey, any>,
-    A extends GroupByKey,
-    B extends GroupByKey,
-    C extends GroupByKey,
-    D extends GroupByKey,
-    E extends GroupByKey,
-    F extends GroupByKey,
-    R extends any,
-  >(_: {
-    data: T[]
-    groups: [
-      {by: (_: T) => A; sort?: (a: A, b: A) => number},
-      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
-      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
-      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
-      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
-      {by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number},
-    ]
-    finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F]) => R
-  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, F>>>>>>; transforms: R[]}
+  const recurse = async (rowsData: T[], depth: number, collected: GroupByKey[]) => {
+    // LEAF
+    if (depth === groups.length) {
+      const result = await finalTransform(seq(rowsData), collected as any)
 
-  <
-    T extends Record<GroupByKey, any>,
-    A extends GroupByKey,
-    B extends GroupByKey,
-    C extends GroupByKey,
-    D extends GroupByKey,
-    E extends GroupByKey,
-    F extends GroupByKey,
-    G extends GroupByKey,
-    R extends any,
-  >(_: {
-    data: T[]
-    groups: [
-      {by: (_: T) => A; sort?: (a: A, b: A) => number},
-      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
-      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
-      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
-      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
-      {by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number},
-      {by: (_: T, groups: [A, B, C, D, E, F]) => G; sort?: (a: G, b: G) => number},
-    ]
-    finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F, G]) => R
-  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, Record<E, G>>>>>>>; transforms: R[]}
+      rows.push({
+        groups: [...collected] as ExtractGroups<G>,
+        groupedData: result,
+      })
 
-  // <T extends Record<GroupByKey, any>, A extends GroupByKey, B extends GroupByKey, C extends GroupByKey, D extends GroupByKey, E extends GroupByKey, R extends any>(_: {
-  //   data: T[],
-  //   groups: [
-  //     {by: ((_: T) => A), sort?: (a: A, b: A) => number},
-  //     {by: ((_: T) => B), sort?: (a: B, b: B) => number},
-  //     {by: ((_: T) => C), sort?: (a: C, b: C) => number},
-  //     {by: ((_: T) => D), sort?: (a: D, b: D) => number},
-  //     {by: ((_: T) => E), sort?: (a: E, b: E) => number},
-  //   ],
-  //   finalTransform: (_: Seq<T>, groups: [A, B, C, D, E]) => R
-  // }): {groups: Record<A, Record<B, Record<C, Record<D, Record<D, R>>>>>, transforms: R[]}
+      return
+    }
 
-  <
-    T extends Record<GroupByKey, any>,
-    A extends GroupByKey,
-    B extends GroupByKey,
-    C extends GroupByKey,
-    D extends GroupByKey,
-    E extends GroupByKey,
-    F extends GroupByKey,
-    G extends GroupByKey,
-    R extends any,
-  >(_: {
-    data: T[]
-    groups: [
-      {by: (_: T) => A; sort?: (a: A, b: A) => number},
-      {by: (_: T, groups: [A]) => B; sort?: (a: B, b: B) => number},
-      {by: (_: T, groups: [A, B]) => C; sort?: (a: C, b: C) => number},
-      {by: (_: T, groups: [A, B, C]) => D; sort?: (a: D, b: D) => number},
-      {by: (_: T, groups: [A, B, C, D]) => E; sort?: (a: E, b: E) => number},
-      {by: (_: T, groups: [A, B, C, D, E]) => F; sort?: (a: F, b: F) => number},
-      {by: (_: T, groups: [A, B, C, D, E, F]) => G; sort?: (a: G, b: G) => number},
-    ]
-    finalTransform: (_: Seq<T>, groups: [A, B, C, D, E, F, G]) => R
-  }): {groups: Record<A, Record<B, Record<C, Record<D, Record<E, Record<E, Record<E, G>>>>>>>; transforms: R[]}
+    const group = groups[depth]
 
-  <T extends Record<GroupByKey, any>>(_: {
-    data: T[]
-    groups: {by: (_: T) => GroupByKey; sort?: (a: string, b: string) => number}[]
-    finalTransform: (_: Seq<T>, groups: GroupByKey[]) => any
-  }): Record<GroupByKey, any>
-} = ({data, groups, finalTransform, collectedGroup = []}: any) => {
-  if (groups.length === 0) {
-    const x = finalTransform(seq(data), collectedGroup)
-    return {
-      groups: x,
-      transforms: [x],
+    const grouped = seq(rowsData).groupBy(row => group.by(row, collected))
+
+    const ordered = new Obj(grouped)
+      .sort(([a], [b]) => (group.sort ? group.sort(a, b) : String(a).localeCompare(String(b))))
+      .get()
+
+    for (const [key, subset] of Object.entries(ordered)) {
+      await recurse(subset, depth + 1, [...collected, key])
     }
   }
-  const [group, ...rest] = groups
-  const res = seq(data).groupBy(_ => group.by(_, collectedGroup))
-  const collectedTransforms: any[] = []
-  const ress = new Obj(res)
-    .sort(([a], [b]) => (group.sort ? group.sort(a, b) : a.localeCompare(b)))
-    .map((k, v) => {
-      const gbb = groupsBy({
-        data: v,
-        groups: rest,
-        finalTransform,
-        lastIndex: Obj.keys(res).length,
-        collectedGroup: [...collectedGroup, k],
-      } as any)
-      collectedTransforms.push(...(gbb.transforms as any))
-      return [k, gbb.groups]
-    })
-    .get() as Record<GroupByKey, any>
-  return {
-    groups: ress,
-    transforms: collectedTransforms,
-  }
+
+  await recurse(data, 0, [])
+
+  return rows
 }

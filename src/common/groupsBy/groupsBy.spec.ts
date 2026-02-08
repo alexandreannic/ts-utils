@@ -1,76 +1,86 @@
+import {groupsBy} from './GroupsBy'
 import {expect} from 'chai'
-import {groupsBy} from './groupsBy'
 
-describe('groupsBy', () => {
-  it('should group data by a single key', () => {
-    const data = [
-      {id: 1, category: 'A', value: 10},
-      {id: 2, category: 'B', value: 20},
-      {id: 3, category: 'A', value: 15},
-      {id: 4, category: 'B', value: 25},
-    ]
+type Row = {
+  country: string
+  city: string
+  category: string
+  value: number
+}
 
-    const result = groupsBy({
+const data: Row[] = [
+  {country: 'France', city: 'Paris', category: 'A', value: 10},
+  {country: 'France', city: 'Paris', category: 'B', value: 20},
+  {country: 'France', city: 'Lyon', category: 'A', value: 5},
+  {country: 'Spain', city: 'Madrid', category: 'A', value: 7},
+]
+
+describe.only('groupsByFlat', () => {
+  it('groups by one field', async () => {
+    const res = await groupsBy({
       data,
-      groups: [{by: item => item.category}],
-      finalTransform: items => items.reduce((sum, item) => sum + item.value, 0),
+      groups: [{by: r => r.country}],
+      finalTransform: rows => rows.sum(r => r.value),
     })
 
-    expect(result.groups).to.deep.equal({
-      A: 25,
-      B: 45,
-    })
+    expect(res).to.deep.equal([
+      {groups: ['France'], groupedData: 35},
+      {groups: ['Spain'], groupedData: 7},
+    ])
   })
 
-  it('should group data by multiple keys', () => {
-    const data = [
-      {id: 1, category: 'A', type: 'X', value: 10},
-      {id: 2, category: 'B', type: 'Y', value: 20},
-      {id: 3, category: 'A', type: 'Y', value: 15},
-      {id: 4, category: 'B', type: 'X', value: 25},
-      {id: 5, category: 'A', type: 'X', value: 5},
-    ]
-
-    const result = groupsBy({
+  it('groups by two fields', async () => {
+    const res = await groupsBy({
       data,
-      groups: [{by: item => item.category}, {by: item => item.type}],
-      finalTransform: items => items.reduce((sum, item) => sum + item.value, 0),
+      groups: [{by: r => r.country}, {by: r => r.city}],
+      finalTransform: rows => rows.sum(r => r.value),
     })
 
-    expect(result.groups).to.deep.equal({
-      A: {
-        X: 15,
-        Y: 15,
+    expect(res).to.deep.equal([
+      {groups: ['France', 'Lyon'], groupedData: 5},
+      {groups: ['France', 'Paris'], groupedData: 30},
+      {groups: ['Spain', 'Madrid'], groupedData: 7},
+    ])
+  })
+
+  it('supports sorting', async () => {
+    const res = await groupsBy({
+      data,
+      groups: [
+        {
+          by: r => r.country,
+          sort: (a, b) => String(b).localeCompare(String(a)), // reverse
+        },
+      ],
+      finalTransform: rows => rows.length,
+    })
+
+    expect(res.map(r => r.groups[0])).to.deep.equal(['Spain', 'France'])
+  })
+
+  it('supports async transform', async () => {
+    const res = await groupsBy({
+      data,
+      groups: [{by: r => r.category}],
+      finalTransform: async rows => {
+        await new Promise(r => setTimeout(r, 10))
+        return rows.length
       },
-      B: {
-        X: 25,
-        Y: 20,
-      },
-    })
-  })
-
-  it('should sort grouped keys if sorting function is provided', () => {
-    const data = [
-      {id: 1, category: 'B', value: 10},
-      {id: 2, category: 'A', value: 20},
-    ]
-
-    const result = groupsBy({
-      data,
-      groups: [{by: item => item.category, sort: (a, b) => a.localeCompare(b)}],
-      finalTransform: items => items.length,
     })
 
-    expect(Object.keys(result.groups)).to.deep.equal(['A', 'B'])
+    expect(res).to.deep.equal([
+      {groups: ['A'], groupedData: 3},
+      {groups: ['B'], groupedData: 1},
+    ])
   })
 
-  it('should return empty groups when given an empty dataset', () => {
-    const result = groupsBy({
+  it('returns empty array for empty input', async () => {
+    const res = await groupsBy({
       data: [],
-      groups: [{by: (item: any) => item.category}],
-      finalTransform: (items: any) => items.length,
+      groups: [{by: (r: Row) => r.country}],
+      finalTransform: rows => rows.length,
     })
 
-    expect(result.groups).to.deep.equal({})
+    expect(res).to.deep.equal([])
   })
 })
