@@ -18,6 +18,9 @@ export const chunkify = <T, R>({
   }, [] as T[][])
   if (concurrency)
     return PromisePool.withConcurrency(concurrency)
+      .handleError((error, item) => {
+        throw error
+      })
       .for(chunkedSubmissions)
       .process(fn)
       .then(_ => _.results)
