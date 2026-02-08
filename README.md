@@ -109,23 +109,27 @@ match(value)
 Groups an array of objects by multiple criteria and maps the results.
 
 ```ts
-const data = [
-  {id: 1, category: 'A', type: 'X', value: 10},
-  {id: 2, category: 'B', type: 'Y', value: 20},
-  {id: 3, category: 'A', type: 'Y', value: 15},
-  {id: 4, category: 'B', type: 'X', value: 25},
-  {id: 5, category: 'A', type: 'X', value: 5},
+const students = [
+  {name: 'Emma', class: 'Grade 9', subject: 'Math', score: 80},
+  {name: 'Liam', class: 'Grade 9', subject: 'English', score: 70},
+  {name: 'Olivia', class: 'Grade 9', subject: 'English', score: 90},
+  {name: 'Noah', class: 'Grade 10', subject: 'Math', score: 85},
+  {name: 'Ava', class: 'Grade 10', subject: 'Math', score: 75},
 ]
 
 const result = groupsBy({
-  data,
-  groups: [{by: item => item.category}, {by: item => item.type}],
-  finalTransform: items => items.reduce((sum, item) => sum + item.value, 0),
+  data: students,
+  groups: [
+    {by: s => s.class},
+    {by: s => s.subject},
+  ],
+  finalTransform: items =>
+    items.reduce((sum, s) => sum + s.score, 0),
 })
 
 // result → {
-//   A: { X: 15, Y: 15 },
-//   B: { X: 25, Y: 20 },
+//   "Grade 9": { Math: 80, English: 160 },
+//   "Grade 10": { Math: 160 },
 // }
 ```
 
