@@ -146,6 +146,40 @@ seq([1, 2, 3, 4, 5]).chunk(2)
 // ]
 ```
 
+### Pipe
+
+A fully typed utility to compose transformations with method chaining.
+
+```ts
+const result = pipe(42)
+  .map(x => x * 2)
+  .map(x => x.toString())
+  .get()
+
+// result: "84"
+```
+
+Use `chain` when the function already returns a `Pipe`:
+
+```ts
+const result = pipe('42')
+  .chain(value => pipe(Number(value)))
+  .map(value => value * 2)
+  .get()
+```
+
+Available helpers
+
+```ts
+pipe(value)
+  .map(fn)        // transform value
+  .tap(fn)        // side effect, keeps value
+  .chain(fn)      // compose another Pipe
+  .when(cond, fn) // conditional transform
+  .match(...)     // pattern matching
+  .get()          // extract final value
+```
+
 ### Match
 
 Simple and type-safe pattern matching. Fully infer `Enum` and strings union.

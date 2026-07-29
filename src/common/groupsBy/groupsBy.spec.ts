@@ -15,7 +15,7 @@ const data: Row[] = [
   {country: 'Spain', city: 'Madrid', category: 'A', value: 7},
 ]
 
-describe.only('groupsByFlat', () => {
+describe('groupsByFlat', () => {
   it('groups by one field', async () => {
     const res = await groupsBy({
       data,
