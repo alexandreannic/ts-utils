@@ -15,7 +15,7 @@ export class Seq<T> extends Array<T> {
     return array instanceof Seq ? array : new Seq(...array)
   }
 
-  static distinct<T extends number | string | boolean>(array: T[]): T[] {
+  static distinct<T>(array: T[]): T[] {
     return [...new Set(array)]
   }
 
@@ -66,16 +66,18 @@ export class Seq<T> extends Array<T> {
     return seq(super.flatMap(callback))
   }
 
-  distinct(fn: (element: T) => any): Seq<T> {
-    const uniqueValues: Record<any, boolean> = {}
-    return this.get().reduce((result: Seq<T>, currentValue: T) => {
-      const key = fn(currentValue)
-      if (!uniqueValues[key]) {
-        uniqueValues[key] = true
-        result.push(currentValue)
-      }
-      return result
-    }, seq([]))
+  distinctBy<K>(fn: (element: T) => K): Seq<T> {
+    const seen = new Set<K>()
+    return this.filter(item => {
+      const key = fn(item)
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+  }
+
+  distinct(): Seq<T> {
+    return seq(Seq.distinct(this))
   }
 
   sum(): number
