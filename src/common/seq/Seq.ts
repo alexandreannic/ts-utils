@@ -294,6 +294,84 @@ export class Seq<T> extends Array<T> {
     this.forEach(_ => r.push(_))
     return r
   }
+
+  static minBy<T, R extends number | string>(array: T[], fn: (_: T) => R): T | undefined {
+    if (array.length === 0) return undefined
+
+    let min = array[0]
+    let minValue = fn(min)
+
+    for (let i = 1; i < array.length; i++) {
+      const value = fn(array[i])
+
+      if (value < minValue) {
+        min = array[i]
+        minValue = value
+      }
+    }
+
+    return min
+  }
+
+  static maxBy<T, R extends number | string>(array: T[], fn: (_: T) => R): T | undefined {
+    if (array.length === 0) return undefined
+
+    let max = array[0]
+    let maxValue = fn(max)
+
+    for (let i = 1; i < array.length; i++) {
+      const value = fn(array[i])
+
+      if (value > maxValue) {
+        max = array[i]
+        maxValue = value
+      }
+    }
+
+    return max
+  }
+
+  static partition<T>(array: T[], fn: PredicateFn<T, boolean>): [T[], T[]] {
+    const yes: T[] = []
+    const no: T[] = []
+
+    array.forEach((item, i, arr) => {
+      ;(fn(item, i, arr) ? yes : no).push(item)
+    })
+
+    return [yes, no]
+  }
+
+  static chunk<T>(array: T[], size: number): T[][] {
+    if (size <= 0) {
+      throw new Error('Chunk size must be greater than zero')
+    }
+
+    const result: T[][] = []
+
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size))
+    }
+
+    return result
+  }
+
+  minBy<R extends number | string>(fn: (_: T) => R): T | undefined {
+    return Seq.minBy(this, fn)
+  }
+
+  maxBy<R extends number | string>(fn: (_: T) => R): T | undefined {
+    return Seq.maxBy(this, fn)
+  }
+
+  partition(fn: PredicateFn<T, boolean>): [Seq<T>, Seq<T>] {
+    const [yes, no] = Seq.partition(this, fn)
+    return [seq(yes), seq(no)]
+  }
+
+  chunk(size: number): Seq<Seq<T>> {
+    return seq(Seq.chunk(this, size).map(seq))
+  }
 }
 
 export const seq = Seq.fromArray

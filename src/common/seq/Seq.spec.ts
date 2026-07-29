@@ -10,7 +10,7 @@ interface Form {
 describe('Seq', function() {
   it('check nested call', function() {
     expect((seq(seq(seq(seq([1, 2])))).get() as any).isArr).undefined
-    expect(seq(seq(seq(seq([1, 2])))).isSeq).true
+    expect(seq(seq(seq(seq([1, 2]))))).instanceOf(Seq)
   })
 
   it('get', function() {
@@ -77,11 +77,11 @@ describe('Seq', function() {
   })
 
   it('distinct', function() {
-    expect(seq([1, 1, 2]).distinct(_ => _)).deep.eq([1, 2])
+    expect(seq([1, 1, 2]).distinctBy(_ => _)).deep.eq([1, 2])
   })
 
   it('distinct objects', function() {
-    expect(seq([{a: 4}, {a: 7}, {a: 4}]).distinct(_ => _.a)).deep.eq([{a: 4}, {a: 7}])
+    expect(seq([{a: 4}, {a: 7}, {a: 4}]).distinctBy(_ => _.a)).deep.eq([{a: 4}, {a: 7}])
   })
 
   it('flatMap', function() {
@@ -648,6 +648,64 @@ describe('Seq', function() {
       //   3: [5],
       //   '': [undefined]
       // })
+    })
+  })
+
+  describe('partition', function() {
+    it('should split array based on predicate', function() {
+      const [adults, children] = seq([10, 18, 20, 5]).partition(_ => _ >= 18)
+
+      expect(adults).deep.eq([18, 20])
+      expect(children).deep.eq([10, 5])
+    })
+
+    it('should return Seq instances', function() {
+      const [yes, no] = seq([1, 2, 3]).partition(_ => _ > 1)
+
+      expect(yes).instanceOf(Seq)
+      expect(no).instanceOf(Seq)
+    })
+
+    it('should work static', function() {
+      expect(Seq.partition([1, 2, 3], _ => _ > 1)).deep.eq([
+        [2, 3],
+        [1],
+      ])
+    })
+  })
+
+  describe('chunk', function() {
+    it('should split array into chunks', function() {
+      expect(seq([1, 2, 3, 4, 5]).chunk(2)).deep.eq([
+        [1, 2],
+        [3, 4],
+        [5],
+      ])
+    })
+
+    it('should work with exact division', function() {
+      expect(seq([1, 2, 3, 4]).chunk(2)).deep.eq([
+        [1, 2],
+        [3, 4],
+      ])
+    })
+
+    it('should throw when size is invalid', function() {
+      expect(() => seq([1, 2, 3]).chunk(0)).throw('Chunk size must be greater than zero')
+    })
+
+    it('should return Seq chunks', function() {
+      const result = seq([1, 2, 3]).chunk(2)
+
+      expect(result).instanceOf(Seq)
+      expect(result[0]).instanceOf(Seq)
+    })
+
+    it('should work static', function() {
+      expect(Seq.chunk([1, 2, 3, 4, 5], 3)).deep.eq([
+        [1, 2, 3],
+        [4, 5],
+      ])
     })
   })
 })
