@@ -59,20 +59,91 @@ const a = seq([
   {name: 'Charlie', age: 25},
   {name: 'Alice', age: 25},
 ])
-a.distinct(_ => _.age)                // → [{name: 'Dave', age: 35}, {name: 'Bob', age: 30}]
-a.sortByString(_ => _.name, 'z-a')    // → [{name: 'Alice', age: 25}, {name: 'Charlie', age: 25}, {name: 'Dave', age: 35}]
-a.sortByNumber(_ => _.age, '0-9')     // → [{name: 'Charlie', age: 25}, {name: 'Alice', age: 25}, {name: 'Dave', age: 35}]
-a.count(_ => _.age > 26)              // → 1
-a.groupBy(_ => _.age)                 // → {25: [{name: 'Charlie', age: 25}, {name: 'Alice', age: 25}], 35: [{name: 'Dave', age: 35}]}
-a.groupByFirst(_ => _.age)            // → {25: {name: 'Charlie', age: 25}, 35: {name: 'Dave', age: 35}}
-a.groupByFirstAndApply(_ => _.age, _ => _.length) // →  {25: 2, 35: 1}
-a.sum(_ => _.age)                     // → 85
-a.head()                              // → {name: 'Dave', age: 35}
-a.last()                              // → {name: 'Alice', age: 25}
-a.reduceObject(_ => [_.name, _.age])  // → {Dave: 35, Charlie: 25, Alice: 25}
-a.percent(_ => _.age === 35)          // → 33.33..%  
-[1, 2].difference([1, 2, 3])          // → [3]
-[1, 2].intersect([1, 2, 3])           // → [1, 2]
+
+a.distinctBy(_ => _.age)
+// → [{name: 'Dave', age: 35}, {name: 'Charlie', age: 25}]
+
+a.sortByString(_ => _.name, 'z-a')
+// → [{name: 'Dave', age: 35}, {name: 'Charlie', age: 25}, {name: 'Alice', age: 25}]
+
+a.sortByNumber(_ => _.age, '0-9')
+// → [{name: 'Charlie', age: 25}, {name: 'Alice', age: 25}, {name: 'Dave', age: 35}]
+
+a.sortByManual(_ => _.name, ['Charlie', 'Dave', 'Alice'])
+// → [{name: 'Charlie', age: 25}, {name: 'Dave', age: 35}, {name: 'Alice', age: 25}]
+
+a.count(_ => _.age > 26)
+// → 1
+
+a.groupBy(_ => _.age)
+// → {
+//   25: [
+//     {name: 'Charlie', age: 25},
+//     {name: 'Alice', age: 25},
+//   ],
+//   35: [
+//     {name: 'Dave', age: 35},
+//   ],
+// }
+
+a.groupByFirst(_ => _.age)
+// → {
+//   25: {name: 'Charlie', age: 25},
+//   35: {name: 'Dave', age: 35},
+// }
+
+a.groupByAndApply(_ => _.age, _ => _.length)
+// → {
+//   25: 2,
+//   35: 1,
+// }
+
+a.sum(_ => _.age)
+// → 85
+
+a.head()
+// → {name: 'Dave', age: 35}
+
+a.last()
+// → {name: 'Alice', age: 25}
+
+a.reduceObject(_ => [_.name, _.age])
+// → {
+//   Dave: 35,
+//   Charlie: 25,
+//   Alice: 25,
+// }
+
+a.percent(_ => _.age === 35)
+// → 0.333...
+
+a.minBy(_ => _.age)
+// → {name: 'Charlie', age: 25}
+
+a.maxBy(_ => _.age)
+// → {name: 'Dave', age: 35}
+
+a.partition(_ => _.age >= 30)
+// → [
+//   [{name: 'Dave', age: 35}],
+//   [
+//     {name: 'Charlie', age: 25},
+//     {name: 'Alice', age: 25},
+//   ],
+// ]
+
+seq([1, 2]).difference([1, 2, 3])
+// → [3]
+
+seq([1, 2]).intersect([1, 2, 3])
+// → [1, 2]
+
+seq([1, 2, 3, 4, 5]).chunk(2)
+// → [
+//   [1, 2],
+//   [3, 4],
+//   [5],
+// ]
 ```
 
 ### Match
