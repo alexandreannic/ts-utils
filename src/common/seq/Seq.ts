@@ -3,12 +3,6 @@ import {KeyOf, Obj} from '../obj/Obj'
 
 type PredicateFn<T, R> = (_: T, index: number, array: T[]) => R
 
-interface Filter<T> {
-  <S extends T>(predicate: (value: T, index: number, array: T[]) => value is S, thisArg?: any): Seq<S>
-
-  (predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): Seq<T>
-}
-
 type KeyOfGroupBy = number | string
 
 export type OrderByString = 'a-z' | 'z-a'
@@ -56,8 +50,10 @@ export class Seq<T> extends Array<T> {
     return x
   }
 
-  filter: Filter<T> = (predicate: any, thisArg: any) => {
-    return seq(super.filter(predicate, thisArg))
+  filter<S extends T>(predicate: (value: T, index: number, array: T[]) => value is S): Seq<S>
+  filter(predicate: (value: T, index: number, array: T[]) => unknown): Seq<T>
+  filter(predicate: any): Seq<T> {
+    return seq(super.filter(predicate))
   }
 
   map<U>(callback: (value: T, index: number, array: T[]) => U, thisArg?: any): Seq<U> {
