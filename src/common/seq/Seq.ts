@@ -58,12 +58,12 @@ export class Seq<T> extends Array<T> {
     return seq(super.filter(predicate))
   }
 
-  map<U>(callback: (value: T, index: number, array: T[]) => U, thisArg?: any): Seq<U> {
-    return seq(super.map(callback, thisArg))
+  map<U>(callback: (value: T, index: number, array: T[]) => U): Seq<U> {
+    return seq(super.map(callback))
   }
 
-  flatMap<U>(callback: (value: T, index: number, array: T[]) => U | ReadonlyArray<U>, thisArg?: any): Seq<U> {
-    return seq(super.flatMap(callback, thisArg))
+  flatMap<U>(callback: (value: T, index: number, array: T[]) => U | ReadonlyArray<U>): Seq<U> {
+    return seq(super.flatMap(callback))
   }
 
   distinct(fn: (element: T) => any): Seq<T> {
