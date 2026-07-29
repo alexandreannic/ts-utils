@@ -16,14 +16,9 @@ export type OrderByString = 'a-z' | 'z-a'
 export type OrderByNumber = '0-9' | '9-0'
 
 export class Seq<T> extends Array<T> {
-  readonly isSeq = true
 
-  static readonly fromArray = <TT>(_: TT[] = []): Seq<TT> => {
-    if ((_ as Seq<TT>).isSeq) return _ as Seq<TT>
-    const instance = new Seq<TT>()
-    Object.setPrototypeOf(instance, Seq.prototype)
-    Object.assign(instance, _)
-    return instance
+  static fromArray<TT>(array: TT[] = []): Seq<TT> {
+    return array instanceof Seq ? array : new Seq(...array)
   }
 
   static distinct<T extends number | string | boolean>(array: T[]): T[] {
