@@ -39,15 +39,17 @@ export class Seq<T> extends Array<T> {
     }
   }
 
-  // @ts-ignore
-  readonly count: T extends number
-    ? (fn?: PredicateFn<T, boolean>) => number
-    : (fn: PredicateFn<T, boolean>) => number = (fn = (value: T, index: number, array: T[]) => value) => {
-    let x = 0
-    this.forEach((v, i, a) => {
-      if (fn(v, i, a)) x += 1
+  count(): number
+  count(fn: PredicateFn<T, boolean>): number
+  count(fn?: PredicateFn<T, boolean>): number {
+    if (!fn) {
+      return this.length
+    }
+    let count = 0
+    this.forEach((value, index, array) => {
+      if (fn(value, index, array)) count++
     })
-    return x
+    return count
   }
 
   filter<S extends T>(predicate: (value: T, index: number, array: T[]) => value is S): Seq<S>
