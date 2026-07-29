@@ -78,13 +78,14 @@ export class Seq<T> extends Array<T> {
     }, seq([]))
   }
 
-  // @ts-ignore
-  sum: T extends number ? (fn?: PredicateFn<T, number>) => number : (fn: PredicateFn<T, number>) => number = (
-    fn = (value: T, index: number, array: T[]): number => value as number,
-  ) => {
-    let sum = 0
-    this.forEach((v, i, arr) => (sum += fn(v, i, arr)))
-    return sum
+  sum(): number
+  sum(fn: PredicateFn<T, number>): number
+  sum(fn?: PredicateFn<T, number>): number {
+    let total = 0
+    this.forEach((value, index, array) => {
+      total += fn ? fn(value, index, array) : (value as unknown as number)
+    })
+    return total
   }
 
   static contains<T>(arr: T[], item: T) {
