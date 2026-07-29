@@ -16,6 +16,7 @@ Components from `browser/` and `node/` directory only works in their related env
 
 - [Obj](#obj) – Utility functions for `Object` manipulation.
 - [Seq](#seq) – Enhanced `Array`
+- [Pipe](#pipe) – Chained functional pipe operator 
 - [Match](#match) – Type-safe pattern matching for `Enum` and string unions.
 - [GroupsBy](#groupsby) – Groups an array of objects by multiple criteria and maps the results.
 - [Chunkify](#chunkify) – Processes an array in batches with an asynchronous function, supporting concurrency control.
